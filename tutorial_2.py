@@ -25,9 +25,14 @@ infile = 'x_nature.pkl'
 sv = state_vector()
 sv = sv.load(infile)
 x_nature = sv.getTrajectory()
+
+#-----------------------------------------------------------------------
+# Initialize the timesteps
+#-----------------------------------------------------------------------
 t_nature = sv.getTimes()
-tsteps=10
-dtau = (t_nature[1] - t_nature[0])
+ainc_step = 1  # (how frequently to perform an analysis)
+dtau = (t_nature[ainc_step] - t_nature[0])
+tsteps=10 * ainc_step
 dt = dtau/tsteps
 maxit,xdim = np.shape(x_nature)
 
@@ -86,14 +91,14 @@ print(das.H)
 # OI
 method='OI'
 # 3D-Var
-method='3DVar'
+#method='3DVar'
 
 #-----------
 # Session 2:
 # Ensemble methods
 #-----------
 # Particle filter
-#method='PF'
+method='PF'
 # EnKF
 #method='ETKF'
 
@@ -126,7 +131,7 @@ das.setMethod(method)
 xa = sv.x0
 xa_history = np.zeros_like(x_nature)
 KH_history = []
-for i in range(maxit):
+for i in range(0,maxit,ainc_step):
  
   #----------------------------------------------
   # Run forecast model for this analysis cycle:
