@@ -2,6 +2,8 @@ import numpy as np
 from scipy.integrate import odeint
 import plotly.offline as py
 import plotly.graph_objs as go
+from plotly import tools
+#from copy import deepcopy
 
 #------------------------------------------------------------------
 # Define functions
@@ -56,8 +58,8 @@ def Jfd(state0,state1,params):
                  [ df2dx, df2dy, df2dz ],
                  [ df3dx, df3dy, df3dz ]])
 
-  print('J = ')
-  print(J)
+  return J
+
 
 def Jfda(state0,state1,params):
   x0,y0,z0=state0
@@ -103,13 +105,6 @@ def Jfda(state0,state1,params):
                  [ df2dx, df2dy, df2dz ],
                  [ df3dx, df3dy, df3dz ]])
 
-  print('state0 = ')
-  print(state0)
-  print('state1 = ')
-  print(state1)
-  print('J = ')
-  print(J)
-
   return J 
 
 class lorenz63:
@@ -138,10 +133,15 @@ class lorenz63:
     print('states = ')
     print(states)
 
-    # Compute TLM for each timestep
+    print('times = ')
+    print(t)
+
+    # Compute Jacobian / linear propagator for each timestep
     Jhist=[]
     for i in range(len(t)-1):
       J = Jfd(states[i,:],states[i+1,:],self.params)
+      print('J = ')
+      print(J)
       Jhist.append(J)
 
     return Jhist
@@ -161,10 +161,11 @@ class lorenz63:
       Jhist.append(J)
 
     return Jhist
+
   #------------------------------------------------------------------
   # Plot model output
   #------------------------------------------------------------------
-  def plot(self, states,cvec,outfile='l63-3d'):
+  def plot(self, states,cvec,outfile='l63-3d',plot_title='Lorenz 63 attractor'):
 
     nr,nc = np.shape(states)
     x = states[:,0]
@@ -190,7 +191,7 @@ class lorenz63:
       width=800,
       height=700,
       autosize=False,
-      title='Lorenz 63 attractor',
+      title=self.title,
       scene=dict(
           xaxis=dict(
               gridcolor='rgb(255, 255, 255)',
@@ -233,7 +234,7 @@ class lorenz63:
   #------------------------------------------------------------------
   # Plot model output lines and points
   #------------------------------------------------------------------
-  def plot_lines_and_points(self,states,points,cvec,outfile='l63-3d'):
+  def plot_lines_and_points(self,states,points,cvec,outfile='l63-3d',plot_title='Lorenz 63 attractor'):
 
     nr,nc = np.shape(states)
     x = states[:,0]
@@ -281,7 +282,7 @@ class lorenz63:
       width=800,
       height=700,
       autosize=False,
-      title='Lorenz 63 attractor',
+      title=plot_title,
       scene=dict(
           xaxis=dict(
               gridcolor='rgb(255, 255, 255)',
@@ -320,4 +321,124 @@ class lorenz63:
 
     fig = dict(data=data, layout=layout)
     py.plot(fig, filename=outfile, validate=False)
+
+  #------------------------------------------------------------------
+  # Plot model output lines and lines
+  #------------------------------------------------------------------
+  def plot_lines_and_lines(self,states1,states2,cvec,outfile='l63-3d',plot_title='Lorenz 63 attractor',name1='trajectory 1', name2='trajectory 2'):
+
+    print('states1 = ')
+    print(states1)
+    print('states2 = ')
+    print(states2)
+    print('difference = ')
+    print(states2 - states1)
+
+    x1 = states1[:,0]
+    y1 = states1[:,1]
+    z1 = states1[:,2]
+
+    x2 = states2[:,0]
+    y2 = states2[:,1]
+    z2 = states2[:,2]
+
+    trace1 = go.Scatter3d(
+      x=x1, y=y1, z=z1,
+      scene='scene1',
+      mode='lines',
+      line=dict(
+          color='rgb(0,0,0)',
+          width=2
+      ),
+      name=name1
+    )
+
+    trace2 = go.Scatter3d(
+      x=x2, y=y2, z=z2,
+      scene='scene2',
+      mode='lines',
+      line=dict(
+          color='rgb(205,12,24)',
+          width=2,
+      ),
+      marker=dict(
+          size=4,
+          color='rgb(205,12,24)',
+      ),
+      name=name2
+    )
+
+    trace3 = go.Scatter3d(
+      x=x2-x1, y=y2-y1, z=z2-z1,
+      scene='scene3',
+      mode='lines',
+      line=dict(
+          colorscale='Viridis',
+          color=cvec,
+          width=2
+      ),
+      name='difference'
+    )
+
+    data = [trace1, trace2]
+
+    eye=np.array([-1.7428,1.0707,0.7100])*1.5
+    scene = dict(
+          xaxis=dict(
+              gridcolor='rgb(255, 255, 255)',
+              zerolinecolor='rgb(255, 255, 255)',
+              showbackground=True,
+              backgroundcolor='rgb(230, 230,230)'
+          ),
+          yaxis=dict(
+              gridcolor='rgb(255, 255, 255)',
+              zerolinecolor='rgb(255, 255, 255)',
+              showbackground=True,
+              backgroundcolor='rgb(230, 230,230)'
+          ),
+          zaxis=dict(
+              gridcolor='rgb(255, 255, 255)',
+              zerolinecolor='rgb(255, 255, 255)',
+              showbackground=True,
+              backgroundcolor='rgb(230, 230,230)'
+          ),
+          camera=dict(
+              up=dict(
+                  x=0,
+                  y=0,
+                  z=1
+              ),
+              eye=dict(
+                  x=eye[0],
+                  y=eye[1],
+                  z=eye[2]
+              )
+          ),
+          aspectratio = dict( x=1, y=1, z=1 ),
+          aspectmode = 'manual'
+    )
+
+    layout = dict(
+      width=1200,
+      height=800,
+      autosize=False,
+      title=plot_title,
+      scene=scene
+    )
+
+    fig = tools.make_subplots(rows=1,cols=3,specs=[[{'is_3d':True}, {'is_3d':True},  {'is_3d':True}]])
+
+    # Adding surfaces to subplots
+    fig.append_trace(trace1,1,1)
+    fig.append_trace(trace2,1,2)
+    fig.append_trace(trace3,1,3)
+
+    fig['layout'].update(layout)
+    fig['layout']['scene1'].update(scene)
+    fig['layout']['scene2'].update(scene)
+    fig['layout']['scene3'].update(scene)
+
+##  fig = dict(data=data, layout=layout)
+    py.plot(fig, filename=outfile, validate=False)
+
 

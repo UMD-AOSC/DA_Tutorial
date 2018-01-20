@@ -1,12 +1,7 @@
+# You're on your own.
 
-
-# Read nature run
-
-# Read KH for each method
+# Read nature run with pre-computed TLMs
 
 # Apply TLM over time to generate CLVs 
-
-
-
 
 

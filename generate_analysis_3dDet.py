@@ -8,73 +8,28 @@ from class_obs_data import obs_data
 from class_da_system import da_system
 
 #-----------------------------------------------------------------------
-# Exercises:
+# Read the da system object
 #-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-# Tutorial 2:
-#
-# Exercises:
-# (1) Generate an analysis using nudging
-# (2) Generate an analysis using Optimal Interpolation (OI)
-# (3) Generate an analysis using 3D-Var
-#
-# Additional exercises:
-# (1) Test different estimates of the background error covariance matrix
-# (2) Test different estimates of the observation error
-# (3) Adjust parameters to 'break' the methods:
-#  (a) Increase observational noise (by increasing sigma_r)
-#  (b) Observe fewer dimensions (e.g. only x and y, only y, only z) by modifying the H operator
-#  (c) Add a bias to the model
-#  (d) Use a fundamentally different model as 'truth' (i.e. introduce a systematic model error)
-#  (e) Draw observational errors from a skewed distribution
-#-----------------------------------------------------------------------
-
-# Step 1:
-#
-
-#-----------------------------------------------------------------------
-# Read the L63 nature run
-#-----------------------------------------------------------------------
-infile = 'x_nature.pkl'
-sv = state_vector()
-sv = sv.load(infile)
+name = 'x_analysis_init'
+infile = name+'.pkl'
+sv = das.getStateVector()
 x_nature = sv.getTrajectory()
 
 #-----------------------------------------------------------------------
 # Initialize the timesteps
 #-----------------------------------------------------------------------
 t_nature = sv.getTimes()
-ainc_step = 1  # (how frequently to perform an analysis)
-dtau = (t_nature[ainc_step] - t_nature[0])
-tsteps=10 * ainc_step
-dt = dtau/tsteps
-maxit,xdim = np.shape(x_nature)
+ainc_step = das.ainc  # (how frequently to perform an analysis)
+dtau = das.dtau
+tsteps= das.tsteps
+dt = das.dt
+maxit = das.maxit
+xdim = das.xdim
 
 #-----------------------------------------------------------------------
-# Read the L63 observations
+# Get the L63 observations via the obs_data object
 #-----------------------------------------------------------------------
-infile = 'y_obs.pkl'
-obs = obs_data()
-obs = obs.load(infile)
-
-#-----------------------------------------------------------------------
-# Try reducing the observed dimensions
-#-----------------------------------------------------------------------
-#obs.reduceDim([0])  # x only
-#obs.reduceDim([1])  # y only
-#obs.reduceDim([2])  # z only
-#obs.reduceDim([0,1])  # x and y only
-#obs.reduceDim([1,2])  # y and z only
-#obs.reduceDim([0,2])  # z and x only
-
-y_obs = obs.getVal()
-y_pts = obs.getPos()
-y_err = obs.getErr()
-print('y_obs = ')
-print(y_obs[0,:])
-print('y_pts = ')
-print(y_pts[0,:])
+obs = das.getObsData()
 
 #-----------------------------------------------------------------------
 # Initialize the model
@@ -82,26 +37,10 @@ print(y_pts[0,:])
 l63 = lorenz63()
 
 #-----------------------------------------------------------------------
-# Initialize the da system
-#-----------------------------------------------------------------------
-#das = da_system(state_vector=sv,obs_data=obs)
-das = da_system()
-I = np.identity(xdim)
-sigma_b = 0.9
-das.setB(sigma_b**2*I)
-print('B = ')
-print(das.B)
-sigma_r = 1.0
-das.setR(sigma_r**2*I)
-print('R = ')
-print(das.R)
-das.setH(I)
-print('H = ')
-print(das.H)
-
-#-----------------------------------------------------------------------
 # Choose DA method:
 #-----------------------------------------------------------------------
+
+method = das.getMethod()  # (use default)
 
 #-----------
 # Session 0:
@@ -123,7 +62,7 @@ method='OI'
 das.setMethod(method)
 
 #-----------------------------------------------------------------------
-# Test assimilation methods:
+# Conduct data assimilation process
 #-----------------------------------------------------------------------
 #
 xa = sv.x0
@@ -171,11 +110,11 @@ for i in range(0,maxit,ainc_step):
   KH_history.append(KH)
  
 #--------------------------------------------------------------------------------
-# Fill in unobserved dimensions
+# Fill in unobserved dimensions (for plotting)
 #--------------------------------------------------------------------------------
-fillValue=0.0
-obs.fillDim(fillValue)
-das.setObsData(obs)
+#fillValue=0.0
+#obs.fillDim(fillValue)
+#das.setObsData(obs)
 
 sv.setTrajectory(xa_history)
 das.setStateVector(sv)

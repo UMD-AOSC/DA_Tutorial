@@ -8,57 +8,28 @@ from class_obs_data import obs_data
 from class_da_system import da_system
 
 #-----------------------------------------------------------------------
-# Exercises:
-# (1) Test the particle filter
-#  (a) Run with many and few members
-#  (b) Change the definition of the observation error
-#  (c) Change the forecast length
-# (2) Test the EnKF
-#  (a) Run with many and few members
-#  (b) Change the definition of the observation error
-#  (c) Change the forecast length
-#
-# Additional Exercises:
-# (1) Adjust parameters to 'break' the methods:
-#  (a) Increase observational noise (by increasing sigma_r)
-#  (b) Observe fewer dimensions (e.g. only x and y, only y, only z) by modifying the H operator
-#  (c) Add a bias to the model
-#  (d) Use a fundamentally different model as 'truth' (i.e. introduce a systematic model error)
-#  (e) Draw observational errors from a skewed distribution
-# (2) Explore the use of 'inflation'
+# Read the da system object
 #-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-# Read the L63 nature run
-#-----------------------------------------------------------------------
-infile = 'x_nature.pkl'
-sv = state_vector()
-sv = sv.load(infile)
+name = 'x_analysis_init'
+infile = name+'.pkl'
+sv = das.getStateVector()
 x_nature = sv.getTrajectory()
 
 #-----------------------------------------------------------------------
 # Initialize the timesteps
 #-----------------------------------------------------------------------
 t_nature = sv.getTimes()
-ainc_step = 1  # (how frequently to perform an analysis)
-dtau = (t_nature[ainc_step] - t_nature[0])
-tsteps=10 * ainc_step
-dt = dtau/tsteps
-maxit,xdim = np.shape(x_nature)
+ainc_step = das.ainc  # (how frequently to perform an analysis)
+dtau = das.dtau
+tsteps= das.tsteps
+dt = das.dt
+maxit = das.maxit
+xdim = das.xdim
 
 #-----------------------------------------------------------------------
-# Read the L63 observations
+# Get the L63 observations via the obs_data object
 #-----------------------------------------------------------------------
-infile = 'y_obs.pkl'
-obs = obs_data()
-obs = obs.load(infile)
-y_obs = obs.getVal()
-y_pts = obs.getPos()
-y_err = obs.getErr()
-print('y_obs = ')
-print(y_obs[0,:])
-print('y_pts = ')
-print(y_pts[0,:])
+obs = das.getObsData()
 
 #-----------------------------------------------------------------------
 # Initialize the model
@@ -66,41 +37,21 @@ print(y_pts[0,:])
 l63 = lorenz63()
 
 #-----------------------------------------------------------------------
-# Initialize the da system
-#-----------------------------------------------------------------------
-das = da_system()
-I = np.identity(xdim)
-
-sigma_b = 0.9
-das.setB(sigma_b**2*I)
-print('B = ')
-print(das.B)
-
-sigma_r = 1.0
-das.setR(sigma_r**2*I)
-print('R = ')
-print(das.R)
-
-das.setH(I)
-print('H = ')
-print(das.H)
-
-#-----------------------------------------------------------------------
 # Choose DA method:
 #-----------------------------------------------------------------------
 
+method = das.getMethod()  # (use default)
+
 #-----------
-# Session 0:
 # Test basic functionality
 #-----------
 #method='skip'
 
 #-----------
-# Session 3:
 # Ensemble methods
 #-----------
 # Particle filter
-method='PF'
+#method='PF'
 # EnKF
 #method='ETKF'
 
@@ -116,14 +67,16 @@ edim = 3 #20
 Xa = das.initEns(xa,mu=bias_init,sigma=sigma_init,edim=edim)
 
 #-----------------------------------------------------------------------
-# Test assimilation methods:
+# Conduct data assimilation process
 #-----------------------------------------------------------------------
+#
+xa = sv.x0
 xa_history = np.zeros_like(x_nature)
 KH_history = []
 for i in range(0,maxit,ainc_step):
  
   #----------------------------------------------
-  # Run forecast model for this analysis cycle:
+  # Run forecast ensemble for this analysis cycle:
   #----------------------------------------------
   t = np.arange(t_nature[i],t_nature[i]+dtau+dt,dt)
 # print('t = ', t)
@@ -138,6 +91,7 @@ for i in range(0,maxit,ainc_step):
   # Get the observations for this analysis cycle
   #----------------------------------------------
   yo = y_obs[i,:]
+  yp = y_pts[i,:]
 
   #----------------------------------------------
   # Update the error covariances
@@ -145,6 +99,7 @@ for i in range(0,maxit,ainc_step):
 # das.setB(sigma_b**2*I)
 # das.setR(sigma_r**2*I)
 # das.setH(I)
+# das.reduceYdim(yp)
  
   #----------------------------------------------
   # Compute analysis
@@ -162,12 +117,20 @@ for i in range(0,maxit,ainc_step):
 # print(KH)
 
   # Archive the analysis
-  xa_history[i,:] = xa.T
+  xa_history[i,:] = xa
 
   # Archive the KH matrix
   KH_history.append(KH)
  
-sv.setTrajectory(xa_history)
-outfile='x_analysis_'+method+'.pkl'
-sv.save(outfile)
+#--------------------------------------------------------------------------------
+# Fill in unobserved dimensions (for plotting)
+#--------------------------------------------------------------------------------
+#fillValue=0.0
+#obs.fillDim(fillValue)
+#das.setObsData(obs)
 
+sv.setTrajectory(xa_history)
+das.setStateVector(sv)
+
+outfile='x_analysis_'+method+'.pkl'
+das.save(outfile)

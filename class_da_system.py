@@ -3,10 +3,11 @@ import scipy as sp
 from class_state_vector import state_vector
 from class_obs_data import obs_data
 import numpy.matlib
+import pickle
 
 class da_system:
 
-  def __init__(self,x0=[0],yo=[0],t0=0,dt=0,alpha=0.5):
+  def __init__(self,x0=[0],yo=[0],t0=0,dt=0,alpha=0.5,state_vector=[0],obs_data=[0]):
     self.xdim = np.size(x0)
     self.ydim = np.size(yo)
     self.edim = 1
@@ -15,12 +16,15 @@ class da_system:
     self.dt = dt
     self.X0 = x0
     self.t = t0
+    self.ainc = 1
     self.B = np.matrix(np.identity(self.xdim))
     self.R = np.matrix(np.identity(self.ydim))
     self.H = np.matrix(np.identity(self.xdim))
     self.Ht = (self.H).transpose()
     self.alpha = alpha
     self.SqrtB = sp.linalg.sqrtm(self.B)
+    self.obs_data = obs_data
+    self.state_vector = state_vector
 
   def __str__(self):
     print('xdim = ', self.xdim)
@@ -37,6 +41,21 @@ class da_system:
 
   def setMethod(self,method):
     self.method = method
+
+  def getMethod(self):
+    return self.method
+
+  def setStateVector(self,sv):
+    self.state_vector = sv
+
+  def setObsData(self,obs):
+    self.obs_data = obs
+
+  def getStateVector(self):
+    return self.state_vector
+
+  def getObsData(self):
+    return self.obs_data
 
   def update(self,B=[0],R=[0],H=[0],t=[0],x0=[0]):
     # Update the state of the DA system for a new cycle
@@ -68,8 +87,8 @@ class da_system:
 
   def setR(self,R):
     self.R = np.matrix(R)
-    nr,nc = np.shape(R)
-    self.ydim = nr
+#   nr,nc = np.shape(R)
+#   self.ydim = nr
     self.Rinv = np.linalg.inv(R)
 
   def getH(self):
@@ -78,13 +97,20 @@ class da_system:
   def setH(self,H):
     self.H = np.matrix(H)
     self.Ht = np.transpose(self.H)
-    nr,nc = np.shape(H)
+#   nr,nc = np.shape(H)
 
     # Verify that H is ydim x xdim
-    if (nr != self.ydim):
-      error('H must be ydim x xdim, but instead H is %d x %d'%(nr,nc))
-    if (nc != self.xdim):
-      error('H must be ydim x xdim, but instead H is %d x %d'%(nr,nc))
+#   if (nr != self.ydim):
+#     error('H must be ydim x xdim, but instead H is %d x %d'%(nr,nc))
+#   if (nc != self.xdim):
+#     error('H must be ydim x xdim, but instead H is %d x %d'%(nr,nc))
+
+  def reduceYdim(self,yp):
+#   print('reduceYdim:')
+#   print('yp = ', yp)
+    self.ydim = len(yp)
+    self.setH(self.H[yp,:])
+    self.setR(self.R[yp,yp])
 
   def compute_analysis(self,xb,yo,params=[0]):
     method = self.method
@@ -125,10 +151,10 @@ class da_system:
     X0 = np.matrix(rmat + xrand)
     return X0
 
-# def init_4D(self):
+# def init4D(self):
 #   xdim = size(self.x0)
 
-# def init_4DEns(self):
+# def init4DEns(self):
 #   xdim = size(self.x0)
 
 #---------------------------------------------------------------------------------------------------
@@ -157,19 +183,27 @@ class da_system:
     yo = np.matrix(yo).flatten().T
 
     # Use explicit expression to solve for the analysis
-    print(self)
+#   print(self)
     Hl = self.H
     Ht = self.Ht
     B = self.B
     R = self.R
 
-    KH = B*Ht*np.linalg.inv(H*B*Ht + R)*Hl
+#   print('H = ')
+#   print(Hl)
 
-    print('KH = ')
-    print(KH)
+#   print('R = ')
+#   print(R)
+
+    # Should be dimensioned: xdim * xdim
+    K = B*Ht*np.linalg.inv(Hl*B*Ht + R)
+    KH = K*Hl
+
+#   print('KH = ')
+#   print(KH)
 
     Hxb = Hl*xb
-    xa = xb + KH*(yo - Hxb)
+    xa = xb + K*(yo - Hxb)
 
     return xa.A1, KH
 
@@ -179,19 +213,17 @@ class da_system:
 #---------------------------------------------------------------------------------------------------
 # Use minimization algorithm to solve for the analysis
 
+    # make inputs column vectors
     xb = np.matrix(xb).flatten().T
     yo = np.matrix(yo).flatten().T
 
+    # Set parameters
     xdim = self.xdim
     Hl = self.H
     Ht = self.Ht
     B = self.B
     R = self.R
     Rinv = np.linalg.inv(R)
-
-    # make inputs column vectors
-    xb = np.matrix(xb).flatten().T
-    yo = np.matrix(yo).flatten().T
 
     # 'preconditioning with B'
     I = np.identity(xdim)
@@ -204,13 +236,12 @@ class da_system:
     xa,ierr = sp.sparse.linalg.cg(A,b1,x0=xb,tol=1e-05,maxiter=1000) 
 #   xa,ierr = sp.sparse.linalg.bicgstab(A,b1,x0=np.zeros_like(b1),tol=1e-05,maxiter=1000)
 #   try: gmres, 
-#   xa = sp.optimize.minimize(fun, x0, args=(), method=None, jac=None, hess=None, hessp=None, bounds=None, constraints=(), tol=None, callback=None, options=None)
 
     # Compute KH:
     HBHtPlusR_inv = np.linalg.inv(Hl*BHt + R)
     KH = BHt*HBHtPlusR_inv*Hl
 
-    return xa.A1, KH
+    return xa, KH
 
 
 #---------------------------------------------------------------------------------------------------
@@ -282,27 +313,27 @@ class da_system:
 #---------------------------------------------------------------------------------------------------
 # Use minimization over a time window to solve for the analysis
 #   
+#   xb_4d = np.matrix(np.atleast_2d(xb_4d))
+#   yo_4d = np.matrix(np.atleast_2d(yo_4d))
+#   nr,nc = np.shape(xb_4d)     ! columns are state vectors at consecutive timesteps
+#   xdim = nr
+#   tdim = nc
 #   B = self.B
-#   R = self.R
-#   xdim = self.xdim
-#   Xb = np.matrix(np.atleast_2d(Xb))
-#   Yo = np.matrix(np.atleast_2d(Yo))
-#   Yp = np.matrix(np.atleast_2d(Yp))
-
+#   R_4d = self.R               ! may need list of R matrices if observations are non-uniform over time
+#   H_4d = self.H               ! may need list of H matrices if observations are non-uniform over time
+#   M_4d = self.M               ! input list of TLMs for each timestep
 
 
 #---------------------------------------------------------------------------------------------------
 # def _4DEnVar(self,Xb_4d,yo_4d):
 #---------------------------------------------------------------------------------------------------
 # Use ensemble of states over a time window to estimate temporal correlations
-#   xdim = size(self.x0)
 
 
 #---------------------------------------------------------------------------------------------------
 # def _4DETKF(self,Xb_4d,yo_4d):
 #---------------------------------------------------------------------------------------------------
 # Use ensemble of states over a time window to estimate temporal correlations
-#   xdim = size(self.x0)
 
 
 #---------------------------------------------------------------------------------------------------
@@ -370,8 +401,8 @@ class da_system:
     if (Neff < edim/2):
       # Apply additive inflation (remove sample mean)
       const=1.0
-      rmat=np.rand.randn(xdim,edim) * np.matlib.repmat(np.std(Xa,axis=1),0,edim) * const;
-      Xa = Xa + rmat - np.matlib.repmat(np.mean(rmat,axis=1),0,edim);
+      rmat=np.rand.randn(xdim,edim) * np.matlib.repmat(np.std(Xa,axis=1),1,edim) * const;
+      Xa = Xa + rmat - np.matlib.repmat(np.mean(rmat,axis=1),1,edim);
 
     KH = [0] # dummy output
 
@@ -386,17 +417,53 @@ class da_system:
     Xb = np.matrix(Xb)
     yo = np.matrix(yo).flatten().T
 
+    # Get parameters
+    alpha = self.alpha
+    nr,nc = np.shape(Xb)
+    xdim = nr
+    edim = nc
+    ydim = len(yo)
+
     # Compute ETKF analysis
     Xa_ETKF, KH_ETKF = self.ETKF(Xb,yo)
+    print('Xa_ETKF = ')
+    print(Xa_ETKF)
 
     # Compute 3DVar analysis
     xa_ETKF = np.mean(Xa_ETKF,axis=1)
+    print('xa_ETKF = ')
+    print(xa_ETKF)
     xa_3DVar, KH_3DVar = self._3DVar(xa_ETKF,yo)
+    print('xa_3DVar = ')
+    print(xa_3DVar)
 
-    # Form hybrid combination
+    xa_ETKF = np.matrix(xa_ETKF).flatten().T
+    xa_3DVar = np.matrix(xa_3DVar).flatten().T
+
+    # Recover ensemble perturbations
+    Xa_ETKF = Xa_ETKF - np.matlib.repmat(xa_ETKF,1,edim)
+
+    # Form hybrid combination to update the mean state
     xa_hybrid = (1-alpha)*xa_ETKF + alpha*xa_3DVar
-    Xa = Xa_ETKF + xa_hybrid[:,np.newaxis]
+    Xa = Xa_ETKF + np.matlib.repmat(xa_hybrid,1,edim)
+
+    print('xa_hybrid = ')
+    print(xa_hybrid)
 
     KH = (1-alpha)*KH_ETKF + alpha*KH_3DVar
 
     return Xa, KH 
+
+
+#---------------------------------------------------------------------------------------------------
+  def save(self,outfile):
+#---------------------------------------------------------------------------------------------------
+    with open(outfile,'wb') as output:
+      pickle.dump(self,output,pickle.HIGHEST_PROTOCOL)
+
+#---------------------------------------------------------------------------------------------------
+  def load(self,infile):
+#---------------------------------------------------------------------------------------------------
+    with open(infile,'rb') as input:
+      das = pickle.load(input)
+    return das
