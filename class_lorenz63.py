@@ -3,7 +3,7 @@ from scipy.integrate import odeint
 import plotly.offline as py
 import plotly.graph_objs as go
 from plotly import tools
-#from copy import deepcopy
+from copy import deepcopy
 
 #------------------------------------------------------------------
 # Define functions
@@ -14,9 +14,10 @@ def f(state, t, sigma, rho, beta):
 
 def Ja(state, t, sigma, rho, beta):
   x, y, z = state  # unpack the state vector
-  J = [[-sigma, sigma,   0   ]
-       [ rho-z,    -1,  -x   ]
+  J = [[-sigma, sigma,   0   ],
+       [ rho-z,    -1,  -x   ],
        [     y,     x,  -beta]]  
+  J = np.matrix(J)
   return J
 
 def Jfd(state0,state1,params):
@@ -126,6 +127,44 @@ class lorenz63:
     return states
 
   #------------------------------------------------------------------
+  # Compute approximate TLM with I + Df(x0)*dt
+  #------------------------------------------------------------------
+  def compute_TLMa(self, states, t):
+
+    print('states = ')
+    print(states)
+
+    print('times = ')
+    print(t)
+
+    nr,nc = np.shape(states)
+    I = np.identity(nc)
+
+    # Compute Jacobian / linear propagator for each timestep
+    sigma,rho,beta = self.params
+    maxit = len(t)
+    Mhist=[]
+    for i in range(maxit):
+      if (i < maxit-1):
+        dt = t[i+1] - t[i]
+      else:
+        dt = t[-1] - t[-2]
+
+      # Evaluate Jacobian
+      Df = Ja(states[i,:], t[i], sigma, rho, beta)
+
+#     print('Df = ')
+#     print(Df)
+
+      # Compute approximate linear propagator
+      # (Note this is a poor approximation of the matrix integral, 
+      # we would prefer a geometric integrator, e.g. the Magnus expansion)
+      M = I + Df*dt  
+      Mhist.append(deepcopy(M))
+
+    return Mhist
+
+  #------------------------------------------------------------------
   # Compute approximate Jacobian with finite differences
   #------------------------------------------------------------------
   def compute_Jfd(self, states, t):
@@ -188,10 +227,10 @@ class lorenz63:
     data = [trace]
 
     layout = dict(
-      width=800,
+      width=1200,
       height=700,
       autosize=False,
-      title=self.title,
+      title=plot_title,
       scene=dict(
           xaxis=dict(
               gridcolor='rgb(255, 255, 255)',

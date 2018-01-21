@@ -76,14 +76,14 @@ from class_da_system import da_system
 # By hand, determine the Jacobian of the Lorenz-63 system.
 #
 # Run the python program:
-# python generate_nature_Jhist.py
+# python generate_nature_Mhist.py
 #
 # This will generate a file containing the same nature run state vector
-# with the addition of a history of Jacobian matrices estimated from
-# a finite differencing procedure. Different estimates of the Jacobian
+# with the addition of a history of linear propagator matrices estimated
+# by M = I + Df*dt. Different estimates of the linear propagator
 # may produce different results due to numerical errors.
 #
-# Examine the output of the computed J matrices and compare to your
+# Examine the output of the computed M matrices and compare to your
 # analytic derivation of the Jacobian matrix.
 #
 
@@ -92,12 +92,11 @@ from class_da_system import da_system
 # Step 3:
 #-----------------------------------------------------------------------
 # Run the python program:
-# python generate_nature_TLM.py
+# python generate_nature_QR.py
 #
-# This will compute a propagated Jacobian to estimate the
-# 'Tangent Linear Model' (TLM) for a specified time interval over the
-# span of the nature run trajectory (Mhist) as well as a history of
-# the QR decomposition of the TLM (Qhist, Rhist)
+# This will compute a QR decomposition of the linear propagators M = QR
+# for a specified time interval over the span of the nature run  trajectory
+# (Mhist), and store a history of the Q and R matrices (Qhist, Rhist).
 #
 
 #-----------------------------------------------------------------------

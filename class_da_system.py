@@ -7,7 +7,7 @@ import pickle
 
 class da_system:
 
-  def __init__(self,x0=[0],yo=[0],t0=0,dt=0,alpha=0.5,state_vector=[0],obs_data=[0]):
+  def __init__(self,x0=[],yo=[],t0=0,dt=0,alpha=0.5,state_vector=[],obs_data=[],acyc_step=10):
     self.xdim = np.size(x0)
     self.ydim = np.size(yo)
     self.edim = 1
@@ -16,15 +16,19 @@ class da_system:
     self.dt = dt
     self.X0 = x0
     self.t = t0
-    self.ainc = 1
+    self.acyc_step = acyc_step
+    self.dtau = dt*acyc_step
+    self.fcst_step = acyc_step
+    self.fcst_dt = dt
+    self.maxit = 0
     self.B = np.matrix(np.identity(self.xdim))
     self.R = np.matrix(np.identity(self.ydim))
     self.H = np.matrix(np.identity(self.xdim))
     self.Ht = (self.H).transpose()
     self.alpha = alpha
-    self.SqrtB = sp.linalg.sqrtm(self.B)
-    self.obs_data = obs_data
+    self.SqrtB = []
     self.state_vector = state_vector
+    self.obs_data = obs_data
 
   def __str__(self):
     print('xdim = ', self.xdim)
@@ -33,10 +37,20 @@ class da_system:
     print('t0 = ', self.t0)
     print('dt = ', self.dt)
     print('t  = ', self.t)
+    print('acyc_step = ', self.acyc_step)
+    print('dtau = ', self.dtau)
+    print('fcst_step = ', self.fcst_step)
+    print('fcst_dt  = ', self.fcst_dt)
     print('B = ')
     print(self.B)
     print('R = ')
     print(self.R)
+    print('H = ')
+    print(self.H)
+    print('state_vector = ')
+    print(self.state_vector)
+    print('obs_data = ')
+    print(obs_data)
     return 'type::da_system'
 
   def setMethod(self,method):
@@ -113,42 +127,56 @@ class da_system:
     self.setR(self.R[yp,yp])
 
   def compute_analysis(self,xb,yo,params=[0]):
+    # (params needed for 4D-Var)
     method = self.method
     if method == 'skip':
       xa = xb 
+      KH = np.identity(self.xdim)
     elif method == 'nudging':
-      xa = self.nudging(xb,yo)
+      xa,KH = self.nudging(xb,yo)
     elif method == 'OI':
-      xa = self.OI(xb,yo)
+      xa,KH = self.OI(xb,yo)
     elif method == '3DVar' or method == '3D-Var':
-      xa = self._3DVar(xb,yo) 
+      xa,KH = self._3DVar(xb,yo) 
     elif method == 'ETKF' or method == 'EnKF':
-      xa = self.ETKF(xb,yo)
+      xa,KH = self.ETKF(xb,yo)
     elif method == 'PF':
-      xa = self.PF(xb,yo)
+      xa,KH = self.PF(xb,yo)
     elif method == 'Hybrid':
-      xa = self.HybridGain(xb,yo) 
+      xa,KH = self.HybridGain(xb,yo) 
 #   elif method == '4DVar' or method == '4D-Var':
-#     xa = self._4DVar(xb,yo)
+#     xa,KH = self._4DVar(xb,yo)
 #   elif method == '4DEnVar':
-#     xa = self._4DEnVar(xb,yo)
+#     xa,KH = self._4DEnVar(xb,yo)
 #   elif method == '4DETKF':
-#     xa = self._4DETKF(xb,yo) 
+#     xa,KH = self._4DETKF(xb,yo) 
     else:
       print('compute_analysis:: Unrecognized DA method.')
       raise SystemExit
-    return xa
+    return xa,KH
 
   def initEns(self,x0,mu=0,sigma=0.1,edim=4):
     xdim = len(x0)
     x0 = np.matrix(x0).flatten().T
-    xrand = np.random.normal(mu,sigma,(xdim,edim))
+    mu = np.matrix(mu).flatten().T
+    Xrand = np.random.normal(0,sigma,(xdim,edim))
+    Xrand = np.matrix(Xrand)
+#   print('Xrand = ')
+#   print(Xrand)
+    # Remove mean to make sure it is properly centered at 0
+    # (add bias if included)
+    rand_mean = np.mean(Xrand,axis=1) + mu
+#   print('rand_mean = ')
+#   print(rand_mean)
+    rmat = np.matlib.repmat(rand_mean,1,edim)
+    Xrand = Xrand - rmat
 #   print('xrand = ')
 #   print(xrand)
+    # add perturbations to x0
     rmat = np.matlib.repmat(x0, 1, edim)
 #   print('rmat = ')
 #   print(rmat)
-    X0 = np.matrix(rmat + xrand)
+    X0 = np.matrix(rmat + Xrand)
     return X0
 
 # def init4D(self):

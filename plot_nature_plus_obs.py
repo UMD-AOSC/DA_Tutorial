@@ -1,4 +1,4 @@
-import l63
+from class_lorenz63 import lorenz63
 from class_state_vector import state_vector
 from class_obs_data import obs_data
 
@@ -23,5 +23,6 @@ print(obs)
 #------------------------------------------------------------------
 # Plot the result
 #------------------------------------------------------------------
-error = obs.getVal()-sv.getTrajectory()
+error = abs(obs.getVal()-sv.getTrajectory())
+l63 = lorenz63()
 l63.plot_lines_and_points(states=sv.getTrajectory(),points=obs.getVal(),cvec=error)

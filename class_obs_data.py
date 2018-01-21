@@ -23,8 +23,8 @@ class obs_data:
     print(self.err)
     print('Positions:')
     print(self.pos)
-    print('Time interval:')
-    print(self.t)
+#   print('Time interval:')
+#   print(self.t)
     print('Values:')
     print(self.val)
     return self.name

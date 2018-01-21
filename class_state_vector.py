@@ -16,6 +16,8 @@ class state_vector:
     self.Mhist = []
     self.Qhist = []
     self.Rhist = []
+    self.hist_ainc = 0
+    self.hist_dtau = 0
     self.hist_idx = []
     self.rescale_interval = 1
     self.TLM = []
@@ -35,6 +37,9 @@ class state_vector:
     print('Climatological Standard Deviation:')
     print(self.clim_std)
     return self.name
+
+  def setName(self,name):
+    self.name = name
 
   def getTrajectory(self):
     return self.trajectory
@@ -74,6 +79,12 @@ class state_vector:
 
   def setMhist(self,Mhist):
     self.Mhist = Mhist
+
+  def getM2hist(self):
+    return self.M2hist
+
+  def setM2hist(self,M2hist):
+    self.M2hist = M2hist
 
   def getQhist(self):
     return self.Qhist

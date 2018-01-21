@@ -6,30 +6,48 @@ from class_lorenz63 import lorenz63
 from class_state_vector import state_vector
 from class_obs_data import obs_data
 from class_da_system import da_system
+from copy import deepcopy
 
 #-----------------------------------------------------------------------
 # Read the da system object
 #-----------------------------------------------------------------------
-name = 'x_analysis_init'
-infile = name+'.pkl'
-sv = das.getStateVector()
-x_nature = sv.getTrajectory()
+name = 'x_analysis'
+infile = name+'_init.pkl'
+das = da_system()
+das = das.load(infile)
+
+print(das)
 
 #-----------------------------------------------------------------------
-# Initialize the timesteps
+# Get the nature run trajectory
 #-----------------------------------------------------------------------
-t_nature = sv.getTimes()
-ainc_step = das.ainc  # (how frequently to perform an analysis)
-dtau = das.dtau
-tsteps= das.tsteps
-dt = das.dt
-maxit = das.maxit
-xdim = das.xdim
+sv = das.getStateVector()
+x_nature = sv.getTrajectory()
 
 #-----------------------------------------------------------------------
 # Get the L63 observations via the obs_data object
 #-----------------------------------------------------------------------
 obs = das.getObsData()
+y_obs = obs.getVal()
+y_pts = obs.getPos()
+y_err = obs.getErr()
+print('y_obs = ')
+print(y_obs[0,:])
+print('y_pts = ')
+print(y_pts[0,:])
+
+#-----------------------------------------------------------------------
+# Initialize the timesteps
+#-----------------------------------------------------------------------
+t_nature = sv.getTimes()
+acyc_step = das.acyc_step  # (how frequently to perform an analysis)
+dtau = das.dtau
+dt = das.dt
+fcst_step= das.fcst_step
+fcst_dt = das.fcst_dt
+maxit = das.maxit
+xdim = das.xdim
+ydim = das.ydim
 
 #-----------------------------------------------------------------------
 # Initialize the model
@@ -43,23 +61,21 @@ l63 = lorenz63()
 method = das.getMethod()  # (use default)
 
 #-----------
-# Session 0:
 # Test basic functionality
 #-----------
 #method='skip'
 
 #-----------
-# Session 2:
 # 3D methods
 #-----------
 # Nudging
 #method='nudging'
 # OI
-method='OI'
+#method='OI'
 # 3D-Var
 #method='3DVar'
 
-das.setMethod(method)
+#das.setMethod(method)
 
 #-----------------------------------------------------------------------
 # Conduct data assimilation process
@@ -68,31 +84,28 @@ das.setMethod(method)
 xa = sv.x0
 xa_history = np.zeros_like(x_nature)
 KH_history = []
-for i in range(0,maxit,ainc_step):
+for i in range(0,maxit-acyc_step,acyc_step):
  
   #----------------------------------------------
   # Run forecast model for this analysis cycle:
   #----------------------------------------------
-  t = np.arange(t_nature[i],t_nature[i]+dtau+dt,dt)
+  t = np.arange(t_nature[i],t_nature[i+acyc_step]+dt,dt)
 # print('t = ', t)
+# print('t_nature[i+acyc_step] = ', t_nature[i+acyc_step])
+
   # Run the model
-  xf_4D =  l63.run(xa,t) 
+  xf_4d =  l63.run(xa,t) 
   # Get last timestep of the forecast
-  xf = xf_4D[-1,:] 
+  xf = xf_4d[-1,:] 
 
   #----------------------------------------------
   # Get the observations for this analysis cycle
   #----------------------------------------------
-  yo = y_obs[i,:]
-  yp = y_pts[i,:]
+  yo = y_obs[i+acyc_step,:]
+  yp = y_pts[i+acyc_step,:]
 
-  #----------------------------------------------
-  # Update the error covariances
-  #----------------------------------------------
-  das.setB(sigma_b**2*I)
-  das.setR(sigma_r**2*I)
-  das.setH(I)
-  das.reduceYdim(yp)
+# if (len(yp) < xdim): 
+#   das.reduceYdim(yp)
  
   #----------------------------------------------
   # Compute analysis
@@ -104,10 +117,14 @@ for i in range(0,maxit,ainc_step):
 # print(KH)
 
   # Archive the analysis
-  xa_history[i,:] = xa
+  xa_history[i+acyc_step,:] = xa
+  # Fill in the missing timesteps with the forecast from the previous analysis IC's
+  xa_history[i:i+acyc_step,:] = xf_4d[0:acyc_step,:]
+
+# print('xa_history[i:i+acyc_step+1,:] = ', xa_history[i:i+acyc_step+1,:])
 
   # Archive the KH matrix
-  KH_history.append(KH)
+  KH_history.append(deepcopy(KH))
  
 #--------------------------------------------------------------------------------
 # Fill in unobserved dimensions (for plotting)
@@ -117,7 +134,10 @@ for i in range(0,maxit,ainc_step):
 #das.setObsData(obs)
 
 sv.setTrajectory(xa_history)
+sv.setName(name)
 das.setStateVector(sv)
 
-outfile='x_analysis_'+method+'.pkl'
+outfile=name+'_'+method+'.pkl'
 das.save(outfile)
+
+print(das)

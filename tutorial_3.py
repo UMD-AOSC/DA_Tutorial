@@ -9,11 +9,11 @@ from class_da_system import da_system
 
 #-----------------------------------------------------------------------
 # Exercises:
-# (1) Test the particle filter
+# (1) Test the EnKF
 #  (a) Run with many and few members
 #  (b) Change the definition of the observation error
 #  (c) Change the forecast length
-# (2) Test the EnKF
+# (2) Test the particle filter
 #  (a) Run with many and few members
 #  (b) Change the definition of the observation error
 #  (c) Change the forecast length
@@ -28,146 +28,96 @@ from class_da_system import da_system
 # (2) Explore the use of 'inflation'
 #-----------------------------------------------------------------------
 
-#-----------------------------------------------------------------------
-# Read the L63 nature run
-#-----------------------------------------------------------------------
-infile = 'x_nature.pkl'
-sv = state_vector()
-sv = sv.load(infile)
-x_nature = sv.getTrajectory()
 
 #-----------------------------------------------------------------------
-# Initialize the timesteps
+# Step 1:
 #-----------------------------------------------------------------------
-t_nature = sv.getTimes()
-ainc_step = 1  # (how frequently to perform an analysis)
-dtau = (t_nature[ainc_step] - t_nature[0])
-tsteps=10 * ainc_step
-dt = dtau/tsteps
-maxit,xdim = np.shape(x_nature)
+# Run the python program:
+# python generate_analysis_init.py
+#
+# Set up the initial conditions as desired for the data assimilation
+# experiment. Background and observation error covariance matrices,
+# and observation operator can be modified here. Also, analysis increment
+# duration, and model foreast dt.
+#
 
-#-----------------------------------------------------------------------
-# Read the L63 observations
-#-----------------------------------------------------------------------
-infile = 'y_obs.pkl'
-obs = obs_data()
-obs = obs.load(infile)
-y_obs = obs.getVal()
-y_pts = obs.getPos()
-y_err = obs.getErr()
-print('y_obs = ')
-print(y_obs[0,:])
-print('y_pts = ')
-print(y_pts[0,:])
 
 #-----------------------------------------------------------------------
-# Initialize the model
+# Step 2:
 #-----------------------------------------------------------------------
-l63 = lorenz63()
+# Run the python program:
+# python generate_analysis_3dEns.py
+#
+# This program generates an analysis using a 3D Ensemble method.
+# The options for DA method include:
+#   'skip'    :: skips the DA procedure
+#   'PF'      :: applies a simple Sequential/Sampling Importance 
+#                Resampling (SIR) particle filter
+#   'ETKF'    :: applies Ensemble Transform Kalman Filter
+#   
+# Start with option method='skip', plot the results. Does it match the 
+# nature run? Should it?
+#
+# Experiment with different initial perturbations to generate the initial
+# ensemble. Try adding a bias to the initial ensemble.
+#
 
-#-----------------------------------------------------------------------
-# Initialize the da system
-#-----------------------------------------------------------------------
-das = da_system()
-I = np.identity(xdim)
-
-sigma_b = 0.9
-das.setB(sigma_b**2*I)
-print('B = ')
-print(das.B)
-
-sigma_r = 1.0
-das.setR(sigma_r**2*I)
-print('R = ')
-print(das.R)
-
-das.setH(I)
-print('H = ')
-print(das.H)
 
 #-----------------------------------------------------------------------
-# Choose DA method:
+# Step 3:
 #-----------------------------------------------------------------------
+# Run the python program:
+# python generate_analysis_3dEns.py
+#
+# Use method='ETKF', plot the results.
+#
+# As before, try different initial conditions for the ensemble.
+#
+# The ETKF is ideal when the distribution can be approximated as
+# Gaussian, usually when the timescale of the analysis cycle exhibits
+# roughly linear error dynamics.
+#
+# The ETKF automatically estimates the background error covariance as
+# a time varying estimate B = (1/n)*(Xb * Xb.T), where Xb is the set of 
+# perturbations from the ensemble mean and 'n' is the ensemble size. 
+# Under what conditions might this approximation fail? Why?
+#
+# Try using various ensemble sizes and analysis cycle lengths. Also, try
+# adding a bias to the forecast model. Can you find conditions that 
+# break the ETKF?
+#
+# Try increasing the observation error. Recall that the 'true' error
+# does not have to be identical to the estimate error (R). Is it better
+# to overestimate or underestimate the observation error?
+#
 
-#-----------
-# Session 0:
-# Test basic functionality
-#-----------
-#method='skip'
-
-#-----------
-# Session 3:
-# Ensemble methods
-#-----------
-# Particle filter
-method='PF'
-# EnKF
-#method='ETKF'
-
-das.setMethod(method)
 
 #-----------------------------------------------------------------------
-# Initialize the ensemble
+# Step 4:
 #-----------------------------------------------------------------------
-xa = sv.x0
-bias_init = 0
-sigma_init = 0.1
-edim = 3 #20
-Xa = das.initEns(xa,mu=bias_init,sigma=sigma_init,edim=edim)
+# Run the python program:
+# python generate_analysis_3dEns.py
+#
+# Use method='PF', plot the results.
+#
+# As before, try different initial conditions for the ensemble.
+#
+# The PF is generally considered ideal for highly nonlinear dynamics or
+# non-Guassian distributions. Try increasing the analysis cycle length
+# to push the limits of the PF as the DA becomes less constrained by obs.
+#
+# Try using various ensemble sizes.
+#
+# Try increasing the observation error. Unlike the nudging/OI/Var methods,
+# there is no mechanism in the basic SIR PF to push the state towards
+# observations (and thus away from the attractor with noisy obs). This
+# implementation does use an additive noise to prevent filter collapse.
+#
+# (Advanced) Try turning off the inflation in the PF implementation.
+# Plot the results. What happens?
+#
+# (Advanced) Try changing the distribution of the observation error. Can
+# you break the ETKF but maintain stability with the PF?
+#
 
-#-----------------------------------------------------------------------
-# Test assimilation methods:
-#-----------------------------------------------------------------------
-xa_history = np.zeros_like(x_nature)
-KH_history = []
-for i in range(0,maxit,ainc_step):
- 
-  #----------------------------------------------
-  # Run forecast model for this analysis cycle:
-  #----------------------------------------------
-  t = np.arange(t_nature[i],t_nature[i]+dtau+dt,dt)
-# print('t = ', t)
-  # Run the model ensemble forecast
-  Xf = np.zeros_like(Xa)
-  for k in range(edim):
-    xf_4D =  l63.run(Xa[:,k].A1,t) 
-    # Get last timestep of the forecast
-    Xf[:,k] = np.transpose(np.matrix(xf_4D[-1,:]))
-
-  #----------------------------------------------
-  # Get the observations for this analysis cycle
-  #----------------------------------------------
-  yo = y_obs[i,:]
-
-  #----------------------------------------------
-  # Update the error covariances
-  #----------------------------------------------
-# das.setB(sigma_b**2*I)
-# das.setR(sigma_r**2*I)
-# das.setH(I)
- 
-  #----------------------------------------------
-  # Compute analysis
-  #----------------------------------------------
-  Xa, KH = das.compute_analysis(Xf,yo)
-  xa = np.mean(Xa,axis=1)
-
-# print('Xa = ')
-# print(Xa)
-# print('xa = ')
-# print(xa)
-# print('xn = ')
-# print(x_nature[i,:].T)
-# print('KH = ')
-# print(KH)
-
-  # Archive the analysis
-  xa_history[i,:] = xa.T
-
-  # Archive the KH matrix
-  KH_history.append(KH)
- 
-sv.setTrajectory(xa_history)
-outfile='x_analysis_'+method+'.pkl'
-sv.save(outfile)
 
