@@ -21,3 +21,21 @@ from class_da_system import da_system
 #  (c) Change the forecast length
 #-----------------------------------------------------------------------
 
+#-----------------------------------------------------------------------
+# Step 1:
+#-----------------------------------------------------------------------
+# Run the python program:
+# python analysis_init.py Hybrid
+# python generate_analysis_3dEns.py
+#
+# Try method='Hybrid', plot the results.
+#
+# Vary the parameters of the hybrid and compare to previous methods.
+# Try changing the forecast length (acyc_step in analysis_init.py),
+# the ensemble size, the number of observations assimilated, the amount
+# of model bias or parameter error.
+#
+# python plot_analysis_vs_analysis.py Hybrid ETKF
+# python plot_analysis_vs_analysis.py Hybrid 3DVar
+# python plot_analysis_vs_analysis.py Hybrid PF
+#

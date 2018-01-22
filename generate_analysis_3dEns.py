@@ -19,6 +19,24 @@ das = das.load(infile)
 print(das)
 
 #-----------------------------------------------------------------------
+# Initialize the ensemble
+#-----------------------------------------------------------------------
+xa = das.x0
+#edim = 20 #3 #20
+#bias_init = 0
+#sigma_init = 0.1
+Xa = das.initEns(xa,mu=das.ens_bias_init,sigma=das.ens_sigma_init,edim=das.edim)
+
+print('ensemble dimension = ')
+print(das.edim)
+print('initial bias = ')
+print(das.ens_bias_init)
+print('initial standard deviation = ')
+print(das.ens_sigma_init)
+print('X0 = ')
+print(Xa)
+
+#-----------------------------------------------------------------------
 # Get the nature run trajectory
 #-----------------------------------------------------------------------
 sv = das.getStateVector()
@@ -60,46 +78,6 @@ l63 = lorenz63()
 
 method = das.getMethod()  # (use default)
 
-#-----------
-# Test basic functionality
-#-----------
-#method='skip'
-
-#-----------
-# Ensemble methods
-#-----------
-# Particle filter
-#method='PF'
-# EnKF
-#method='ETKF'
-
-#-----------
-# Hybrid methods
-#-----------
-#method='Hybrid'
-
-#das.setMethod(method)
-
-#-----------------------------------------------------------------------
-# Initialize the ensemble
-#-----------------------------------------------------------------------
-xa = sv.x0
-edim = 20 #3 #20
-bias_init = 0
-sigma_init = 0.1
-Xa = das.initEns(xa,mu=bias_init,sigma=sigma_init,edim=edim)
-
-print('ensemble dimension = ')
-print(edim)
-print('initial bias = ')
-print(bias_init)
-print('initial standard deviation = ')
-print(sigma_init)
-print('X0 = ')
-print(Xa)
-
-#exit()
-
 #-----------------------------------------------------------------------
 # Conduct data assimilation process
 #-----------------------------------------------------------------------
@@ -108,7 +86,7 @@ xa = sv.x0
 xa_history = np.zeros_like(x_nature)
 xa_history[:] = np.nan
 KH_history = []
-ii=0
+KH_idx = []
 for i in range(0,maxit-acyc_step,acyc_step):
  
   #----------------------------------------------
@@ -121,14 +99,14 @@ for i in range(0,maxit-acyc_step,acyc_step):
   # Run the model ensemble forecast
   Xf = np.zeros_like(Xa)
   xf_4d = 0
-  for k in range(edim):
+  for k in range(das.edim):
     # Run model run for ensemble member k
     xf_4d_k =  l63.run(Xa[:,k].A1,t) 
     # Get last timestep of the forecast
     Xf[:,k] = np.transpose(np.matrix(xf_4d_k[-1,:]))
     # Compute forecast ensemble mean
     xf_4d = xf_4d + xf_4d_k
-  xf_4d = xf_4d / edim 
+  xf_4d = xf_4d / das.edim 
 
   #----------------------------------------------
   # Get the observations for this analysis cycle
@@ -136,9 +114,6 @@ for i in range(0,maxit-acyc_step,acyc_step):
   yo = y_obs[i+acyc_step,:]
   yp = y_pts[i+acyc_step,:]
 
-# if (len(yp) < xdim):  
-#   das.reduceYdim(yp)
- 
   #----------------------------------------------
   # Compute analysis
   #----------------------------------------------
@@ -150,32 +125,24 @@ for i in range(0,maxit-acyc_step,acyc_step):
 # print('x_nature[i+acyc_step,:] = ')
 # print(x_nature[i+acyc_step,:,])
 
-  ii=ii+1
-# if (ii>4):
-#   exit()
-
-# print('KH = ')
-# print(KH)
-
-  # Archive the analysis
-  xa_history[i+acyc_step,:] = xa
   # Fill in the missing timesteps with the forecast from the previous analysis IC's
   xa_history[i:i+acyc_step,:] = xf_4d[0:acyc_step,:]
+  # Archive the analysis
+  xa_history[i+acyc_step,:] = xa
 
 # print('xa_history[i:i+acyc_step+1,:] = ', xa_history[i:i+acyc_step+1,:])
 
   # Archive the KH matrix
   KH_history.append(deepcopy(KH))
+  KH_idx.append(i)
  
-#--------------------------------------------------------------------------------
-# Fill in unobserved dimensions (for plotting)
-#--------------------------------------------------------------------------------
-#fillValue=0.0
-#obs.fillDim(fillValue)
-#das.setObsData(obs)
-
+das.setKH(KH_history,KH_idx)
+ 
 print('xa_history[-10:,:] = ')
 print(xa_history[-10:,:])
+
+print('Last background error covariance matrix Xa*Xa.T = ')
+print(np.dot(Xa,np.transpose(Xa)))
 
 sv.setTrajectory(xa_history)
 sv.setName(name)

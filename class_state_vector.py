@@ -51,8 +51,8 @@ class state_vector:
     x_avg = np.zeros(self.xdim)
     x_std = np.zeros(self.xdim)
     for i in range(self.xdim):
-      x_avg[i] = np.mean(states[:,i])
-      x_std[i] = np.std(states[:,i])
+      x_avg[i] = np.nanmean(states[:,i])
+      x_std[i] = np.nanstd(states[:,i])
     self.clim_mean = x_avg
     self.clim_std = x_std
 

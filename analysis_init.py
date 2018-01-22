@@ -3,6 +3,21 @@ from class_lorenz63 import lorenz63
 from class_state_vector import state_vector
 from class_obs_data import obs_data
 from class_da_system import da_system
+from sys import argv
+
+#-----------------------------------------------------------------------
+# Usage:
+# python analysis_init.py {method}
+#
+# where {method} is any one of:
+#  skip
+#  nudging
+#  OI
+#  3DVar
+#  ETKF
+#  PF
+#  Hybrid
+#-----------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
 # Read the L63 nature run
@@ -23,12 +38,15 @@ obs = obs.load(infile)
 #-----------------------------------------------------------------------
 # Try reducing the observed dimensions
 #-----------------------------------------------------------------------
-#obs.reduceDim([0])  # x only
-#obs.reduceDim([1])  # y only
-#obs.reduceDim([2])  # z only
-#obs.reduceDim([0,1])  # x and y only
-#obs.reduceDim([1,2])  # y and z only
-#obs.reduceDim([0,2])  # z and x only
+yp = [0,1,2]
+#yp = [0]    # x only
+#yp = [1]    # y only
+#yp = [2]    # z only
+#yp = [0,1]  # x and y only
+#yp = [1,2]  # y and z only
+#yp = [0,2]  # z and x only
+if len(yp) < xdim:
+  obs.reduceDim(yp)
 
 y_obs = obs.getVal()
 y_pts = obs.getPos()
@@ -53,6 +71,13 @@ das.t = sv.getTimes()
 das.t0 = das.t[0]
 
 #-----------------------------------------------------------------------
+# Initialize the ensemble
+#-----------------------------------------------------------------------
+das.edim = 20 #3 #20
+das.ens_bias_init = 0
+das.ens_sigma_init = 0.1
+
+#-----------------------------------------------------------------------
 # Initialize the error covariances B and R, and the linearized 
 # observation operator H
 #-----------------------------------------------------------------------
@@ -60,7 +85,7 @@ das.t0 = das.t[0]
 I = np.identity(xdim)
 
 # Set background error covariance
-sigma_b = 0.9
+sigma_b = 1.0
 B = I * sigma_b**2
 
 # Set observation error covariance
@@ -70,16 +95,26 @@ R = I * sigma_r**2
 # Set the linear observation operator matrix as the identity by default 
 H = I
 
-print('B = ')
-print(B)
-print('R = ')
-print(R)
-print('H = ')
-print(H)
+# Set constant matrix for nudging
+const = 0.5
+C = I * const
 
 das.setB(B)
 das.setR(R)
 das.setH(H)
+das.setC(C)
+
+# Update the matrices to fit the reduced observation dimension
+if len(yp) < xdim:
+  das.reduceYdim(yp)
+
+print('B = ')
+print(das.getB())
+print('R = ')
+print(das.getR())
+print('H = ')
+print(das.getH())
+
 
 #-----------------------------------------------------------------------
 # Initialize the timesteps
@@ -104,10 +139,12 @@ das.xdim = xdim
 # Choose DA method:
 #-----------------------------------------------------------------------
 
+method = argv[1]
+
 #-----------
 # Test basic functionality
 #-----------
-method='skip'
+#method='skip'
 
 #-----------
 # 3D methods

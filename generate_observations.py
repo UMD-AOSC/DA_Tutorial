@@ -6,7 +6,7 @@ infile = 'x_nature.pkl'
 outfile = 'y_obs.pkl'
 
 mu = 0
-sigma = 0.1
+sigma = 0.001
 
 #--------------------------------------------------------------------------------
 # Create observation object
