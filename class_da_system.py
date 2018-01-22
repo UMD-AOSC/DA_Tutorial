@@ -165,7 +165,7 @@ class da_system:
 #   print(Xrand)
     # Remove mean to make sure it is properly centered at 0
     # (add bias if included)
-    rand_mean = np.mean(Xrand,axis=1) + mu
+    rand_mean = np.mean(Xrand,axis=1) - mu
 #   print('rand_mean = ')
 #   print(rand_mean)
     rmat = np.matlib.repmat(rand_mean,1,edim)
@@ -176,7 +176,7 @@ class da_system:
     rmat = np.matlib.repmat(x0, 1, edim)
 #   print('rmat = ')
 #   print(rmat)
-    X0 = np.matrix(rmat + Xrand)
+    X0 = np.matrix(Xrand + rmat)
     return X0
 
 # def init4D(self):
@@ -276,6 +276,7 @@ class da_system:
   def ETKF(self,Xb,yo):
 #---------------------------------------------------------------------------------------------------
 # Use ensemble of states to estimate background error covariance
+    verbose=False
 
     # Make sure inputs are matrix and column vector types
     Xb = np.matrix(Xb)
@@ -291,12 +292,12 @@ class da_system:
     Hl = self.H
     Yb = np.matrix(np.zeros([ydim,edim]))
     for i in range(edim):
-      Yb[:,i] = Hl*Xb[:,i]
+      Yb[:,i] = np.dot(Hl,Xb[:,i])
     
     # Convert ensemble members to perturbations
     xm = np.mean(Xb,axis=1)
-    Xb = Xb - np.matlib.repmat(xm, 1, edim)
     ym = np.mean(Yb,axis=1)
+    Xb = Xb - np.matlib.repmat(xm, 1, edim)
     Yb = Yb - np.matlib.repmat(ym, 1, edim)
 
     # Compute R^{-1}
@@ -304,34 +305,127 @@ class da_system:
     Rinv = np.linalg.inv(R)
 
     # Compute the weights
-    Ybt = Yb.T
-    C = Ybt*Rinv
 
+    #----
+    # stage(4) Now do computations for lxk Yb matrix
+    # Compute Yb^T*R^(-1)
+    #----
+    Ybt = np.transpose(Yb)
+    C = np.dot(Ybt,Rinv)
+
+    if verbose:
+      print ('C = ')
+      print (C)
+
+    #----
+    # stage(5) Compute eigenvalue decomposition for Pa
+    # Pa = [(k-1)I/rho + C*Yb]^(-1)
+    #----
     I = np.identity(edim)
-    rho = 1.0
-    eigArg = (edim-1)*I/rho + C*Yb
+    rho = 1.05 #1.0
+    eigArg = (edim-1)*I/rho + np.dot(C,Yb)
+
     lamda,P = np.linalg.eigh(eigArg)
+
+    if verbose:
+      print ('lamda = ')
+      print (lamda)
+      print ('P = ')
+      print (P)
+
     Linv = np.diag(1.0/lamda)
-    PLinv = P*Linv
-    Pt = P.T
-    Pa = PLinv*Pt
 
+    if verbose:
+      print ('Linv = ')
+      print (Linv)
+
+    PLinv = np.dot(P,Linv)
+
+    if verbose:
+      print ('PLinv = ')
+      print (PLinv)
+
+    Pt = np.transpose(P)
+
+    if verbose:
+      print ('Pt = ')
+      print (Pt)
+
+    Pa = np.dot(PLinv, Pt)
+
+    if verbose:
+      print ('Pa = ')
+      print (Pa) 
+
+    #----
+    # stage(6) Compute matrix square root
+    # Wa = [(k-1)Pa]1/2
+    #----
     Linvsqrt = np.diag(1/np.sqrt(lamda))
-    PLinvsqrt = P*Linvsqrt
-    Wa = np.sqrt(edim-1) * PLinvsqrt*Pt
 
-    d = yo - ym
-    wm = Pa*(C*d)
-    Wa = Wa + np.matlib.repmat(wm, 1, edim)
+    if verbose:
+      print ('Linvsqrt = ')
+      print (Linvsqrt)
+
+    PLinvsqrt = np.dot(P,Linvsqrt)
+
+    if verbose:
+      print ('PLinvsqrt = ')
+      print (PLinvsqrt)
+
+    Wa = np.sqrt((edim-1)) * np.dot(PLinvsqrt,Pt)
+
+    if verbose:
+      print ('Wa = ')
+      print (Wa)
+
+    #----
+    # stage(7) Transform back
+    # Compute the mean update
+    # Compute wabar = Pa*C*(yo-ybbar) and add it to each column of Wa
+    #----
+    d = yo-ym
+    Cd = np.dot(C,d)
+
+    if verbose:
+      print ('Cd = ')
+      print (Cd)
+
+    wm = np.dot(Pa,Cd) #k x 1
+
+    if verbose:
+      print ('wm = ')
+      print (wm)
 
     # Add the same mean vector wm to each column
-    Xa = Xb*Wa + np.matlib.repmat(xm, 1, edim)
+#   Wa = Wa + wm[:,np.newaxis] #STEVE: make use of python broadcasting to add same vector to each column
+    Wa = Wa + np.matlib.repmat(wm, 1, edim)
+
+    if verbose:
+      print ('Wa = ')
+      print (Wa)
+
+    #----
+    # stage(8)
+    # Compute the perturbation update
+    # Multiply Xb (perturbations) by each wa(i) and add xbbar
+    #----
+
+    # Add the same mean vector wm to each column
+#   Xa = np.dot(Xb,Wa) + xm[:,np.newaxis]
+    Xa = np.dot(Xb,Wa) + np.matlib.repmat(xm, 1, edim)
+
+    if verbose:
+      print ('Xa = ')
+      print (Xa)
 
     # Compute KH:
-    IpYbtRinvYb = ((edim-1)/rho)*I + Ybt*Rinv*Yb
-    IpYbtRinvYb_inv = IpYbtRinvYb.I
-    K = Xb*IpYbtRinvYb_inv*Ybt*Rinv
-    KH = K*Hl
+    RinvYb = np.dot(Rinv,Yb)
+    IpYbtRinvYb = ((edim-1)/rho)*I + np.dot(Ybt,RinvYb)
+    IpYbtRinvYb_inv = np.linalg.inv(IpYbtRinvYb)
+    YbtRinv = np.dot(Ybt,Rinv)
+    K = np.dot( Xb, np.dot(IpYbtRinvYb_inv,YbtRinv) )
+    KH = np.dot(K,Hl)
     
     return Xa, KH
 
@@ -350,19 +444,23 @@ class da_system:
 #   R_4d = self.R               ! may need list of R matrices if observations are non-uniform over time
 #   H_4d = self.H               ! may need list of H matrices if observations are non-uniform over time
 #   M_4d = self.M               ! input list of TLMs for each timestep
+#
+# (work in progress)
 
 
 #---------------------------------------------------------------------------------------------------
 # def _4DEnVar(self,Xb_4d,yo_4d):
 #---------------------------------------------------------------------------------------------------
 # Use ensemble of states over a time window to estimate temporal correlations
-
+#
+# (work in progress)
 
 #---------------------------------------------------------------------------------------------------
 # def _4DETKF(self,Xb_4d,yo_4d):
 #---------------------------------------------------------------------------------------------------
 # Use ensemble of states over a time window to estimate temporal correlations
-
+#
+# (work in progress)
 
 #---------------------------------------------------------------------------------------------------
   def PF(self,Xb,yo):
@@ -429,7 +527,7 @@ class da_system:
     if (Neff < edim/2):
       # Apply additive inflation (remove sample mean)
       const=1.0
-      rmat=np.rand.randn(xdim,edim) * np.matlib.repmat(np.std(Xa,axis=1),1,edim) * const;
+      rmat=np.random.randn(xdim,edim) * np.matlib.repmat(np.std(Xa,axis=1),1,edim) * const;
       Xa = Xa + rmat - np.matlib.repmat(np.mean(rmat,axis=1),1,edim);
 
     KH = [0] # dummy output

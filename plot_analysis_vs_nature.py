@@ -8,7 +8,7 @@ import numpy as np
 # Read state vector objects
 #------------------------------------------------------------------
 name = 'x_analysis'
-method = 'Hybrid'
+method = 'ETKF'
 infile1 = name+'_'+method+'.pkl'
 das = da_system()
 das = das.load(infile1)

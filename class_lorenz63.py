@@ -290,12 +290,11 @@ class lorenz63:
       mode='lines-and-markers',
       marker=dict(
           size=1,
-          color=cvec,
-          colorscale='Viridis',
+          color='rgb(0,0,0)',
           opacity=0.5,
       ),
       line=dict(
-          color=cvec,
+          color='rgb(0,0,0)',
           width=1
       )
     )
@@ -304,10 +303,11 @@ class lorenz63:
       x=xp, y=yp, z=zp,
       mode='markers',
       marker=dict(
-          size=3,
+          size=2,
           color=cvec,
           colorscale='Viridis',
-          symbol='circle-open',
+          opacity=0.5,
+#         symbol='circle-open',
       ),
 #     line=dict(
 #         color=cvec,
@@ -318,7 +318,7 @@ class lorenz63:
     data = [trace0, trace1]
 
     layout = dict(
-      width=800,
+      width=1200,
       height=700,
       autosize=False,
       title=plot_title,

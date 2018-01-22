@@ -73,16 +73,32 @@ method = das.getMethod()  # (use default)
 # EnKF
 #method='ETKF'
 
+#-----------
+# Hybrid methods
+#-----------
+#method='Hybrid'
+
 #das.setMethod(method)
 
 #-----------------------------------------------------------------------
 # Initialize the ensemble
 #-----------------------------------------------------------------------
 xa = sv.x0
+edim = 20 #3 #20
 bias_init = 0
 sigma_init = 0.1
-edim = 3 #20
 Xa = das.initEns(xa,mu=bias_init,sigma=sigma_init,edim=edim)
+
+print('ensemble dimension = ')
+print(edim)
+print('initial bias = ')
+print(bias_init)
+print('initial standard deviation = ')
+print(sigma_init)
+print('X0 = ')
+print(Xa)
+
+#exit()
 
 #-----------------------------------------------------------------------
 # Conduct data assimilation process
@@ -90,7 +106,9 @@ Xa = das.initEns(xa,mu=bias_init,sigma=sigma_init,edim=edim)
 #
 xa = sv.x0
 xa_history = np.zeros_like(x_nature)
+xa_history[:] = np.nan
 KH_history = []
+ii=0
 for i in range(0,maxit-acyc_step,acyc_step):
  
   #----------------------------------------------
@@ -128,6 +146,14 @@ for i in range(0,maxit-acyc_step,acyc_step):
   xa = np.mean(Xa,axis=1).T
 # print('xa = ')
 # print(xa)
+
+# print('x_nature[i+acyc_step,:] = ')
+# print(x_nature[i+acyc_step,:,])
+
+  ii=ii+1
+# if (ii>4):
+#   exit()
+
 # print('KH = ')
 # print(KH)
 

@@ -14,7 +14,7 @@ name = 'x_nature'
 
 t0=0.0
 tf=40.0
-dt=0.01
+dt=0.001
 state0 = [1.0, 1.0, 1.0]
 tvec = np.arange(t0, tf, dt)
 
