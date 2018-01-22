@@ -12,12 +12,12 @@ name = 'x_analysis'
 #----------------
 # Choose method:
 #----------------
-#method = 'skip'
+method = 'skip'
 #method = 'nudging'
 #method='OI'
 #method = '3DVar'
 #method = 'ETKF'
-method = 'PF'
+#method = 'PF'
 #method = 'Hybrid'
 infile=name+'_'+method+'.pkl'
 das = da_system()

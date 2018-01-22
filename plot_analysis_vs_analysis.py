@@ -9,14 +9,14 @@ import numpy as np
 #------------------------------------------------------------------
 name = 'x_analysis'
 
-method1 = '3DVar'
+method1 = 'OI'
 infile1 = name+'_'+method1+'.pkl'
 das = da_system()
 das = das.load(infile1)
 sv1 = das.getStateVector()
 print(sv1)
 
-method2 = 'Hybrid'
+method2 = '3DVar'
 infile2 = name+'_'+method2+'.pkl'
 das = da_system()
 das = das.load(infile2)

@@ -70,16 +70,16 @@ R = I * sigma_r**2
 # Set the linear observation operator matrix as the identity by default 
 H = I
 
-#print('B = ')
-#print(B)
-#print('R = ')
-#print(R)
-#print('H = ')
-#print(H)
+print('B = ')
+print(B)
+print('R = ')
+print(R)
+print('H = ')
+print(H)
 
-das.setB(sigma_b**2*I)
-das.setR(sigma_r**2*I)
-das.setH(I)
+das.setB(B)
+das.setR(R)
+das.setH(H)
 
 #-----------------------------------------------------------------------
 # Initialize the timesteps
@@ -123,7 +123,7 @@ method='skip'
 # Ensemble methods
 #-----------
 # EnKF
-method='ETKF'
+#method='ETKF'
 # Particle filter
 #method='PF'
 

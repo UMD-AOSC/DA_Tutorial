@@ -7,17 +7,17 @@ import numpy as np
 #------------------------------------------------------------------
 # Read state vector objects
 #------------------------------------------------------------------
-name = 'x_analysis'
-method = 'ETKF'
-infile1 = name+'_'+method+'.pkl'
-das = da_system()
-das = das.load(infile1)
-sv1 = das.getStateVector()
+infile1='x_nature.pkl'
+sv1 = state_vector()
+sv1 = sv1.load(infile1)
 print(sv1)
 
-infile2='x_nature.pkl'
-sv2 = state_vector()
-sv2 = sv2.load(infile2)
+name = 'x_analysis'
+method = 'skip'
+infile2 = name+'_'+method+'.pkl'
+das = da_system()
+das = das.load(infile2)
+sv2 = das.getStateVector()
 print(sv2)
 
 #------------------------------------------------------------------
