@@ -73,7 +73,7 @@ das.t0 = das.t[0]
 #-----------------------------------------------------------------------
 # Initialize the ensemble
 #-----------------------------------------------------------------------
-das.edim = 2 #np.int(1*xdim)
+das.edim = 3 #np.int(1*xdim)
 das.ens_bias_init = 0
 das.ens_sigma_init = 0.1
 
@@ -87,6 +87,9 @@ I = np.identity(xdim)
 # Set background error covariance
 sigma_b = 1.0
 B = I * sigma_b**2
+#B = [[ 0.03562653,  0.03319132, -0.02400967],
+#     [ 0.03319132,  0.05441897,  0.00074236],
+#     [-0.02400967,  0.00074236,  0.03891405]]
 
 # Set observation error covariance
 sigma_r = 1.0

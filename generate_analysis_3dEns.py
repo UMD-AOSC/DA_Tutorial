@@ -22,6 +22,7 @@ print(das)
 # Initialize the ensemble
 #-----------------------------------------------------------------------
 xa = das.x0
+edim = das.edim
 Xa = das.initEns(xa,mu=das.ens_bias_init,sigma=das.ens_sigma_init,edim=das.edim)
 
 print('ensemble dimension = ')
@@ -137,8 +138,10 @@ das.setKH(KH_history,KH_idx)
 print('xa_history[-10:,:] = ')
 print(xa_history[-10:,:])
 
+xm = np.mean(Xa,axis=1)
+Xa = Xa - np.matlib.repmat(xm, 1, das.edim)
 print('Last background error covariance matrix Xa*Xa.T = ')
-print(np.dot(Xa,np.transpose(Xa)))
+print((1/(das.edim-1))*np.dot(Xa,np.transpose(Xa)))
 
 sv.setTrajectory(xa_history)
 sv.setName(name)
