@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 
 class obs_data:
-  def __init__(self,t=[0],pos=[0],val=[0],err=[0],bias=[],xt=[0],name='uninitialized'):
+  def __init__(self,t=[0],pos=[0],val=[0],err=[0],bias=[0],xt=[0],name='uninitialized',mu_init=[],sigma_init=[]):
     tdim = 0
     xdim = 0
     odim = 0
@@ -16,9 +16,13 @@ class obs_data:
     self.xt = np.array(xt)
     self.dep = []
     self.climvar = []
+    self.mu_init = mu_init
+    self.sigma_init = sigma_init
 
   def __str__(self):
     print(self.name)
+    print('mu_init = ', self.mu_init)
+    print('sigma_init = ', self.sigma_init)
     print('Obs Error:')
     print(self.err)
     print('Positions:')

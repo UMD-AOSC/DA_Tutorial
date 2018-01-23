@@ -15,7 +15,7 @@ sigma = 0.001
 #--------------------------------------------------------------------------------
 # Create observation object
 #--------------------------------------------------------------------------------
-obs = obs_data(name='observe_full_state',err=[],bias=mu,val=[],pos=[])
+obs = obs_data(name='observe_full_state', mu_init=mu, sigma_init=sigma)
 
 #--------------------------------------------------------------------------------
 # Read the nature run
@@ -58,6 +58,8 @@ obs.setErr(eta)
 obs.setHx(hx)
 obs.setDep(yo-hx)
 obs.setPos(pos)
+
+print(obs)
 
 #--------------------------------------------------------------------------------
 # Store the true and noisy observations

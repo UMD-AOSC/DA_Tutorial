@@ -106,9 +106,12 @@ for i in range(0,maxit-acyc_step,acyc_step):
 
   # Archive the KH matrix
   KH_history.append(deepcopy(KH))
-  KH_idx.append(i)
+  KH_idx.append(i+acyc_step)
  
 das.setKH(KH_history,KH_idx)
+
+print('Last background error covariance matrix B = ')
+print(das.getB())
 
 sv.setTrajectory(xa_history)
 sv.setName(name)

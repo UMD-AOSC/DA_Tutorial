@@ -222,7 +222,7 @@ class da_system:
     Ht = np.matrix(self.Ht)
 
     C = self.C
-    xa = xb + C*(yo - Hl*xb) 
+    xa = xb + np.dot(C,Ht)*(yo - Hl*xb) 
 
     if verbose:
       print('xb = ')
@@ -238,7 +238,7 @@ class da_system:
       print('Ht = ')
       print(Ht)
 
-    KH = Ht*C*Hl
+    KH = np.dot(np.dot(Hl,C),Ht)
 
     return xa.A1,KH
         
@@ -577,6 +577,8 @@ class da_system:
 #---------------------------------------------------------------------------------------------------
 # Use a hybrid method to compute the analysis
 
+    verbose = False
+
     # Make sure inputs are matrix and column vector types
     Xb = np.matrix(Xb)
     yo = np.matrix(yo).flatten().T
@@ -590,16 +592,22 @@ class da_system:
 
     # Compute ETKF analysis
     Xa_ETKF, KH_ETKF = self.ETKF(Xb,yo)
-    print('Xa_ETKF = ')
-    print(Xa_ETKF)
+    if verbose:
+      print('Xa_ETKF = ')
+      print(Xa_ETKF)
 
     # Compute 3DVar analysis
     xa_ETKF = np.mean(Xa_ETKF,axis=1)
-    print('xa_ETKF = ')
-    print(xa_ETKF)
+
+    if verbose:
+      print('xa_ETKF = ')
+      print(xa_ETKF)
+
     xa_3DVar, KH_3DVar = self._3DVar(xa_ETKF,yo)
-    print('xa_3DVar = ')
-    print(xa_3DVar)
+
+    if verbose:
+      print('xa_3DVar = ')
+      print(xa_3DVar)
 
     xa_ETKF = np.matrix(xa_ETKF).flatten().T
     xa_3DVar = np.matrix(xa_3DVar).flatten().T
@@ -611,8 +619,9 @@ class da_system:
     xa_hybrid = (1-alpha)*xa_ETKF + alpha*xa_3DVar
     Xa = Xa_ETKF + np.matlib.repmat(xa_hybrid,1,edim)
 
-    print('xa_hybrid = ')
-    print(xa_hybrid)
+    if verbose:
+      print('xa_hybrid = ')
+      print(xa_hybrid)
 
     KH = (1-alpha)*KH_ETKF + alpha*KH_3DVar
 
