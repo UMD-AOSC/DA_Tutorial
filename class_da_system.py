@@ -29,6 +29,12 @@ class da_system:
     self.SqrtB = []
     self.state_vector = state_vector
     self.obs_data = obs_data
+    self.method = ''
+    self.KH = []
+    self.khidx = []
+    self.edim = 0
+    self.das_bias_init = 0
+    self.das_sigma_init = 1
 
   def __str__(self):
     print('xdim = ', self.xdim)
@@ -51,6 +57,8 @@ class da_system:
     print(self.state_vector)
     print('obs_data = ')
     print(obs_data)
+    print('method = ')
+    print(self.method)
     return 'type::da_system'
 
   def setMethod(self,method):
@@ -79,6 +87,12 @@ class da_system:
     self.Ht = H.Transpose()
     self.t = t
     self.x0 = x0
+
+  def getC(self):
+    return self.C
+
+  def setC(self,C):
+    self.C = np.matrix(C)
 
   def getB(self):
     return self.B
@@ -119,12 +133,22 @@ class da_system:
 #   if (nc != self.xdim):
 #     error('H must be ydim x xdim, but instead H is %d x %d'%(nr,nc))
 
+  def getKH(self):
+    return self.KH, self.khidx
+
+  def setKH(self,KH,khidx):
+    self.KH = KH
+    self.khidx = khidx
+
   def reduceYdim(self,yp):
 #   print('reduceYdim:')
 #   print('yp = ', yp)
     self.ydim = len(yp)
     self.setH(self.H[yp,:])
-    self.setR(self.R[yp,yp])
+    R = self.R
+    R = R[yp,:]
+    R = R[:,yp]
+    self.setR(R)
 
   def compute_analysis(self,xb,yo,params=[0]):
     # (params needed for 4D-Var)
@@ -190,16 +214,30 @@ class da_system:
 #---------------------------------------------------------------------------------------------------
 # Use observations at predefined points to drive the model system to the observed nature system
 
+    verbose = False
+
     xb = np.matrix(xb).flatten().T
     yo = np.matrix(yo).flatten().T
+    Hl = np.matrix(self.H)
+    Ht = np.matrix(self.Ht)
 
-    const = np.diagonal(self.B)
+    C = self.C
+    xa = xb + C*(yo - Hl*xb) 
 
-    xa = xb + const*(yo - xb) 
+    if verbose:
+      print('xb = ')
+      print(xb)
+      print('C = ')
+      print(C)
+      print('yo = ')
+      print(yo)
+      print('Hl = ')
+      print(Hl)
+      print('xa = ')
+      print(xa)
+      print('Ht = ')
+      print(Ht)
 
-    C = np.diag(const)
-    Hl = self.H
-    Ht = self.Ht
     KH = Ht*C*Hl
 
     return xa.A1,KH
@@ -255,10 +293,10 @@ class da_system:
 
     # 'preconditioning with B'
     I = np.identity(xdim)
-    BHt = B*Ht
-    BHtRinv = BHt*Rinv
-    A = I + BHtRinv*Hl
-    b1 = xb + BHtRinv*yo
+    BHt = np.dot(B,Ht)
+    BHtRinv = np.dot(BHt,Rinv)
+    A = I + np.dot(BHtRinv,Hl)
+    b1 = xb + np.dot(BHtRinv,yo)
 
     # Use minimization algorithm to minimize cost function:
     xa,ierr = sp.sparse.linalg.cg(A,b1,x0=xb,tol=1e-05,maxiter=1000) 

@@ -57,33 +57,17 @@ l63 = lorenz63()
 #-----------------------------------------------------------------------
 # Choose DA method:
 #-----------------------------------------------------------------------
-
-method = das.getMethod()  # (use default)
-
-#-----------
-# Test basic functionality
-#-----------
-#method='skip'
-
-#-----------
-# 3D methods
-#-----------
-# Nudging
-#method='nudging'
-# OI
-#method='OI'
-# 3D-Var
-#method='3DVar'
-
-#das.setMethod(method)
+method = das.getMethod()
 
 #-----------------------------------------------------------------------
 # Conduct data assimilation process
 #-----------------------------------------------------------------------
 #
-xa = sv.x0
+xa = das.x0
 xa_history = np.zeros_like(x_nature)
+xa_history[:] = np.nan
 KH_history = []
+KH_idx = []
 for i in range(0,maxit-acyc_step,acyc_step):
  
   #----------------------------------------------
@@ -104,9 +88,6 @@ for i in range(0,maxit-acyc_step,acyc_step):
   yo = y_obs[i+acyc_step,:]
   yp = y_pts[i+acyc_step,:]
 
-# if (len(yp) < xdim): 
-#   das.reduceYdim(yp)
- 
   #----------------------------------------------
   # Compute analysis
   #----------------------------------------------
@@ -116,22 +97,18 @@ for i in range(0,maxit-acyc_step,acyc_step):
 # print('KH = ')
 # print(KH)
 
-  # Archive the analysis
-  xa_history[i+acyc_step,:] = xa
   # Fill in the missing timesteps with the forecast from the previous analysis IC's
   xa_history[i:i+acyc_step,:] = xf_4d[0:acyc_step,:]
+  # Archive the analysis
+  xa_history[i+acyc_step,:] = xa
 
 # print('xa_history[i:i+acyc_step+1,:] = ', xa_history[i:i+acyc_step+1,:])
 
   # Archive the KH matrix
   KH_history.append(deepcopy(KH))
+  KH_idx.append(i)
  
-#--------------------------------------------------------------------------------
-# Fill in unobserved dimensions (for plotting)
-#--------------------------------------------------------------------------------
-#fillValue=0.0
-#obs.fillDim(fillValue)
-#das.setObsData(obs)
+das.setKH(KH_history,KH_idx)
 
 sv.setTrajectory(xa_history)
 sv.setName(name)

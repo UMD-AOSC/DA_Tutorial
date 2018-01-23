@@ -22,7 +22,7 @@ tvec = np.arange(t0, tf, dt)
 # (Optional) Update the initial starting point
 #------------------------------------------------------------------
 #state0 = [-1.6831903,  -2.78556131, 13.0107312]
-#state0 = [1,2,3]
+#state0 = [100,100,100]
 
 #------------------------------------------------------------------
 # (Optional) Add initial perturbation

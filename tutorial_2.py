@@ -35,7 +35,7 @@ from class_da_system import da_system
 # Step 1:
 #-----------------------------------------------------------------------
 # Run the python program:
-# python generate_analysis_init.py
+# python analysis_init.py skip
 #
 # Set up the initial conditions as desired for the data assimilation
 # experiment. Background and observation error covariance matrices,

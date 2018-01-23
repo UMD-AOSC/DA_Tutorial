@@ -2,7 +2,7 @@ from class_lorenz63 import lorenz63
 from class_state_vector import state_vector
 from class_obs_data import obs_data
 from class_da_system import da_system
-
+from sys import argv
 
 #------------------------------------------------------------------
 # Read state vector object
@@ -12,13 +12,7 @@ name = 'x_analysis'
 #----------------
 # Choose method:
 #----------------
-method = 'skip'
-#method = 'nudging'
-#method='OI'
-#method = '3DVar'
-#method = 'ETKF'
-#method = 'PF'
-#method = 'Hybrid'
+method = argv[1]
 infile=name+'_'+method+'.pkl'
 das = da_system()
 das = das.load(infile)
