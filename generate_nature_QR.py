@@ -22,8 +22,8 @@ t_nature = sv.getTimes()
 # Initialize the timesteps
 #-----------------------------------------------------------------------
 t_nature = sv.getTimes()
-ainc_step = 10  # (how frequently to perform an analysis)
-dtau = (t_nature[ainc_step] - t_nature[0])
+inc_step = 10  # (how frequently to perform an analysis)
+dtau = (t_nature[inc_step] - t_nature[0])
 maxit,xdim = np.shape(x_nature)
 
 #------------------------------------------------------------------
@@ -34,7 +34,7 @@ I = np.identity(xdim)
 Mhist = sv.getMhist()
 #print('Mhist = ')
 #print(Mhist)
-rescale_interval = ainc_step
+rescale_interval = inc_step
 
 M2hist = []
 Qhist = []
@@ -77,7 +77,7 @@ print('Last R = ')
 print(R)
 
 sv.rescale_interval = rescale_interval
-sv.hist_ainc = ainc_step
+sv.hist_ainc = inc_step
 sv.hist_dtau = dtau
 sv.hist_idx = hist_idx
 sv.setM2hist(M2hist)

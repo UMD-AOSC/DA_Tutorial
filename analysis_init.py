@@ -73,7 +73,7 @@ das.t0 = das.t[0]
 #-----------------------------------------------------------------------
 # Initialize the ensemble
 #-----------------------------------------------------------------------
-das.edim = 3 #np.int(1*xdim)
+das.edim = 2 #np.int(1*xdim)
 das.ens_bias_init = 0
 das.ens_sigma_init = 0.1
 
@@ -85,18 +85,18 @@ das.ens_sigma_init = 0.1
 I = np.identity(xdim)
 
 # Set background error covariance
-sigma_b = 1.0
+sigma_b = 1.0 #1.0
 B = I * sigma_b**2
 
 # Set observation error covariance
-sigma_r = 1.0
+sigma_r = 0.1
 R = I * sigma_r**2
 
 # Set the linear observation operator matrix as the identity by default 
 H = I
 
 # Set constant matrix for nudging
-const = 0.5
+const = 1.0
 C = I * const
 
 das.setB(B)
