@@ -22,9 +22,6 @@ print(das)
 # Initialize the ensemble
 #-----------------------------------------------------------------------
 xa = das.x0
-#edim = 20 #3 #20
-#bias_init = 0
-#sigma_init = 0.1
 Xa = das.initEns(xa,mu=das.ens_bias_init,sigma=das.ens_sigma_init,edim=das.edim)
 
 print('ensemble dimension = ')
@@ -75,14 +72,13 @@ l63 = lorenz63()
 #-----------------------------------------------------------------------
 # Choose DA method:
 #-----------------------------------------------------------------------
-
-method = das.getMethod()  # (use default)
+method = das.getMethod()
 
 #-----------------------------------------------------------------------
 # Conduct data assimilation process
 #-----------------------------------------------------------------------
 #
-xa = sv.x0
+xa = das.x0
 xa_history = np.zeros_like(x_nature)
 xa_history[:] = np.nan
 KH_history = []

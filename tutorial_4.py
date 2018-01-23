@@ -20,6 +20,8 @@ from class_da_system import da_system
 #  (b) Change the definition of the observation error
 #  (c) Change the forecast length
 #-----------------------------------------------------------------------
+#
+
 
 #-----------------------------------------------------------------------
 # Step 1:
@@ -30,6 +32,11 @@ from class_da_system import da_system
 #
 # Try method='Hybrid', plot the results.
 #
+
+
+#-----------------------------------------------------------------------
+# Step 2:
+#-----------------------------------------------------------------------
 # Vary the parameters of the hybrid and compare to previous methods.
 # Try changing the forecast length (acyc_step in analysis_init.py),
 # the ensemble size, the number of observations assimilated, the amount

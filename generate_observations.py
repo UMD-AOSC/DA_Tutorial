@@ -5,6 +5,10 @@ from class_obs_data import obs_data
 infile = 'x_nature.pkl'
 outfile = 'y_obs.pkl'
 
+#--------------------------------------------------------------------------------
+# Define observation bias (mu) and error (sigma)
+# Note: sigma will be multiplied by nature run climatological standard deviation
+#--------------------------------------------------------------------------------
 mu = 0
 sigma = 0.001
 

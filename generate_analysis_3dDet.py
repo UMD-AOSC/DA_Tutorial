@@ -57,8 +57,7 @@ l63 = lorenz63()
 #-----------------------------------------------------------------------
 # Choose DA method:
 #-----------------------------------------------------------------------
-
-method = das.getMethod()  # (use default)
+method = das.getMethod()
 
 #-----------------------------------------------------------------------
 # Conduct data assimilation process
@@ -69,7 +68,6 @@ xa_history = np.zeros_like(x_nature)
 xa_history[:] = np.nan
 KH_history = []
 KH_idx = []
-ki = 0
 for i in range(0,maxit-acyc_step,acyc_step):
  
   #----------------------------------------------
