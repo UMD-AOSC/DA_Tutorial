@@ -38,6 +38,8 @@ l63 = lorenz63(sigma=sigma,rho=rho,beta=beta)
 print('Compute approximate Tangent Linear Model (TLM) at each timestep...')
 Mhist = l63.compute_TLMa(x_nature,t_nature)
 sv.setMhist(Mhist)
+print(x_nature[-1])
+print(Mhist[-1])
 
 #------------------------------------------------------------------
 # Store the nature run with corresponding history of the Jacobian

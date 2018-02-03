@@ -27,12 +27,12 @@ tvec = np.arange(t0, tf, dt)
 #------------------------------------------------------------------
 # (Optional) Add initial perturbation
 #------------------------------------------------------------------
-#name = 'x_freerun'
-#initial_perturbation = np.squeeze(0.01*(np.random.rand(1,3)*2-1))
-#print('initial_perturbation = ', initial_perturbation)
-#climate_std =  [7.44085386, 8.38759537, 7.84386348]
-#print('climate_std = ', climate_std)
-#state0 = state0 + initial_perturbation*climate_std
+name = 'x_freerun'
+initial_perturbation = np.squeeze(0.01*(np.random.rand(1,3)*2-1))
+print('initial_perturbation = ', initial_perturbation)
+climate_std =  [7.44085386, 8.38759537, 7.84386348]
+print('climate_std = ', climate_std)
+state0 = state0 + initial_perturbation*climate_std
 #print('initial state = ', state0)
 
 #------------------------------------------------------------------
