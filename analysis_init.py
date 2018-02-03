@@ -73,7 +73,7 @@ das.t0 = das.t[0]
 #-----------------------------------------------------------------------
 # Initialize the ensemble
 #-----------------------------------------------------------------------
-das.edim = 3 #np.int(1*xdim)
+das.edim = 4 #np.int(1*xdim)
 das.ens_bias_init = 0
 das.ens_sigma_init = 0.1
 
