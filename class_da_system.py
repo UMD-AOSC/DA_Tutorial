@@ -154,26 +154,26 @@ class da_system:
     # (params needed for 4D-Var)
     method = self.method
     if method == 'skip':
-      xa = xb 
+      xa = xb
       KH = np.identity(self.xdim)
     elif method == 'nudging':
       xa,KH = self.nudging(xb,yo)
     elif method == 'OI':
       xa,KH = self.OI(xb,yo)
     elif method == '3DVar' or method == '3D-Var':
-      xa,KH = self._3DVar(xb,yo) 
+      xa,KH = self._3DVar(xb,yo)
     elif method == 'ETKF' or method == 'EnKF':
       xa,KH = self.ETKF(xb,yo)
     elif method == 'PF':
       xa,KH = self.PF(xb,yo)
     elif method == 'Hybrid':
-      xa,KH = self.HybridGain(xb,yo) 
+      xa,KH = self.HybridGain(xb,yo)
 #   elif method == '4DVar' or method == '4D-Var':
 #     xa,KH = self._4DVar(xb,yo)
 #   elif method == '4DEnVar':
 #     xa,KH = self._4DEnVar(xb,yo)
 #   elif method == '4DETKF':
-#     xa,KH = self._4DETKF(xb,yo) 
+#     xa,KH = self._4DETKF(xb,yo)
     else:
       print('compute_analysis:: Unrecognized DA method.')
       raise SystemExit
@@ -222,7 +222,7 @@ class da_system:
     Ht = np.matrix(self.Ht)
 
     C = self.C
-    xa = xb + np.dot(C,Ht)*(yo - Hl*xb) 
+    xa = xb + np.dot(C,Ht)*(yo - Hl*xb)
 
     if verbose:
       print('xb = ')
@@ -241,7 +241,7 @@ class da_system:
     KH = np.dot(np.dot(Hl,C),Ht)
 
     return xa.A1,KH
-        
+
 #---------------------------------------------------------------------------------------------------
   def OI(self,xb,yo):
 #---------------------------------------------------------------------------------------------------
@@ -299,9 +299,9 @@ class da_system:
     b1 = xb + np.dot(BHtRinv,yo)
 
     # Use minimization algorithm to minimize cost function:
-    xa,ierr = sp.sparse.linalg.cg(A,b1,x0=xb,tol=1e-05,maxiter=1000) 
+    xa,ierr = sp.sparse.linalg.cg(A,b1,x0=xb,tol=1e-05,maxiter=1000)
 #   xa,ierr = sp.sparse.linalg.bicgstab(A,b1,x0=np.zeros_like(b1),tol=1e-05,maxiter=1000)
-#   try: gmres, 
+#   try: gmres,
 
     # Compute KH:
     HBHtPlusR_inv = np.linalg.inv(Hl*BHt + R)
@@ -331,7 +331,7 @@ class da_system:
     Yb = np.matrix(np.zeros([ydim,edim]))
     for i in range(edim):
       Yb[:,i] = np.dot(Hl,Xb[:,i])
-    
+
     # Convert ensemble members to perturbations
     xm = np.mean(Xb,axis=1)
     ym = np.mean(Yb,axis=1)
@@ -393,7 +393,7 @@ class da_system:
 
     if verbose:
       print ('Pa = ')
-      print (Pa) 
+      print (Pa)
 
     #----
     # stage(6) Compute matrix square root
@@ -464,7 +464,7 @@ class da_system:
     YbtRinv = np.dot(Ybt,Rinv)
     K = np.dot( Xb, np.dot(IpYbtRinvYb_inv,YbtRinv) )
     KH = np.dot(K,Hl)
-    
+
     return Xa, KH
 
 
@@ -472,7 +472,7 @@ class da_system:
 # def _4DVar(self,xb_4d,yo_4d):
 #---------------------------------------------------------------------------------------------------
 # Use minimization over a time window to solve for the analysis
-#   
+#
 #   xb_4d = np.matrix(np.atleast_2d(xb_4d))
 #   yo_4d = np.matrix(np.atleast_2d(yo_4d))
 #   nr,nc = np.shape(xb_4d)     ! columns are state vectors at consecutive timesteps
@@ -519,7 +519,7 @@ class da_system:
 
     # Mintail as machine epsilon
     mintail = np.finfo(float).eps
-  
+
     # Convert background to observation space
     Yb = np.matrix(np.zeros([ydim,edim]))
     for k in range(edim):
@@ -539,7 +539,7 @@ class da_system:
     weight = np.cumsum(weights)
 
     # Calculate effective sample size
-    Neff = 1/np.sum(np.square(weights))
+    Neff = 1/np.sum(np.square(weights))  # ttk: Neff == edim if all members degenerated
 
     # Resample the particles with replacement
     addit=1.0/edim
@@ -554,7 +554,7 @@ class da_system:
     #(set up comb)
     Xa = np.matrix(np.zeros_like(Xb))
     resampling_index = np.zeros(edim)
-    j=1; 
+    j=0
     for i in range(edim):
       while selection_points[i] >= weight[j]:
         j=j+1
@@ -562,11 +562,14 @@ class da_system:
       Xa[:,i] = Xb[:,j]
 
     # Apply inflation
-    if (Neff < edim/2):
+    if True: # (Neff < edim/2):
       # Apply additive inflation (remove sample mean)
-      const=1.0
-      rmat=np.random.randn(xdim,edim) * np.matlib.repmat(np.std(Xa,axis=1),1,edim) * const;
-      Xa = Xa + rmat - np.matlib.repmat(np.mean(rmat,axis=1),1,edim);
+      const = 1.0
+      stdv = np.std(Xa, axis=1).A
+      stdv = np.maximum(stdv, 0.1)
+      stdv = np.repeat(stdv, edim, axis=1)
+      rmat = np.asmatrix(np.random.randn(xdim,edim) * stdv * const)
+      Xa = Xa + rmat - np.repeat(np.mean(rmat, axis=1), edim, axis=1)
 
     KH = [0] # dummy output
 
@@ -625,7 +628,7 @@ class da_system:
 
     KH = (1-alpha)*KH_ETKF + alpha*KH_3DVar
 
-    return Xa, KH 
+    return Xa, KH
 
 
 #---------------------------------------------------------------------------------------------------

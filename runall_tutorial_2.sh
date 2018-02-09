@@ -1,3 +1,4 @@
+set -e
 # Run with input: nudging, OI, or 3DVar
 if [ $# -lt 1 ]; then
   echo "len(arg) = $#"

@@ -1,3 +1,4 @@
+set -e
 # Run with input: ETKF, PF, or Hybrid
 if [ $# -lt 1 ]; then
   echo "Usage:"

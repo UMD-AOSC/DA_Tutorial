@@ -1,3 +1,4 @@
+set -e
 # Run with input: ETKF, PF, or Hybrid
 echo "Usage:"
 echo "sh runall_tutorial_4.sh"

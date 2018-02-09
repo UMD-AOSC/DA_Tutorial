@@ -1,3 +1,4 @@
+set -e
 python generate_nature_run.py
 python generate_nature_Mhist.py
 python generate_nature_QR.py
