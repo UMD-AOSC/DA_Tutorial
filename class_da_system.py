@@ -566,7 +566,7 @@ class da_system:
       # Apply additive inflation (remove sample mean)
       const = 1.0
       stdv = np.std(Xa, axis=1).A
-      stdv = np.maximum(stdv, 0.1)
+      stdv = np.maximum(stdv, 1.0)
       stdv = np.repeat(stdv, edim, axis=1)
       rmat = np.asmatrix(np.random.randn(xdim,edim) * stdv * const)
       Xa = Xa + rmat - np.repeat(np.mean(rmat, axis=1), edim, axis=1)
