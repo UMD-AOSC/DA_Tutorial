@@ -1,0 +1,32 @@
+!    -*- f90 -*-
+
+!  sparse_mult.pyf
+!
+!  F2py sparse_mult interface definition.
+!
+!  Copyright:
+!  (c) 2017 Maxime Tondeur & Jonathan Demaeyer.
+!  See LICENSE.txt for license information.
+!
+!  Note: 
+!  The context of this file is case sensitive.
+!
+!--------------------------------------------------------------------------------------------------------------!
+
+python module sparse_mult ! in 
+    interface  ! in :sparse_mult
+        module sparse_mult ! in :sparse_mult:sparse_mult.f90
+            subroutine sparse_mul3(li,lj,lk,lv,ndim,nens,x,res) ! in :sparse_mult:sparse_mult.f90:sparse_mult
+                integer dimension(:),intent(in) :: li
+                integer dimension(:),intent(in) :: lj
+                integer dimension(:),intent(in) :: lk
+                real(kind=8) dimension(:),intent(in) :: lv
+                integer, intent(hide),depend(x) :: ndim=(shape(x,1)-1)
+                integer, intent(hide),depend(x) :: nens=shape(x,0)
+                real(kind=8) dimension(nens,ndim + 1),intent(in) :: x
+                real(kind=8) dimension(nens,ndim + 1),intent(out),depend(nens,ndim) :: res
+            end subroutine sparse_mul3
+        end module sparse_mult
+    end interface 
+end python module sparse_mult
+

@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>maooam &mdash; MAOOAM  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MAOOAM  documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MAOOAM  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for maooam</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Principal module</span>
+<span class="sd">    ======================</span>
+
+<span class="sd">    Python implementation of the Modular Arbitrary-Order Ocean-Atmosphere Model MAOOAM</span>
+
+<span class="sd">    .. note :: The python code is available here : \</span>
+<span class="sd">    `maooam.py &lt;../_modules/maooam.html&gt;`_ .</span>
+
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; from maooam import *</span>
+
+<span class="sd">    Global variable</span>
+<span class="sd">    -------------------</span>
+
+<span class="sd">    * **ic.X0** : initial conditions</span>
+<span class="sd">    * **X** : live step vector</span>
+<span class="sd">    * **t** : time</span>
+<span class="sd">    * **t_trans**, **t_run** : respectively transient and running time</span>
+<span class="sd">    * **dt** : step time</span>
+<span class="sd">    * **tw** : step time for writing on evol_field.dat</span>
+
+<span class="sd">    Dependencies</span>
+<span class="sd">    -------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import params_maooam</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import ndim,tw,t_run,t_trans,dt</span>
+<span class="sd">    &gt;&gt;&gt; import aotensor</span>
+<span class="sd">    &gt;&gt;&gt; import time</span>
+<span class="sd">    &gt;&gt;&gt; import ic_def</span>
+<span class="sd">    &gt;&gt;&gt; import ic</span>
+<span class="sd">    &gt;&gt;&gt; import sys</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">params_maooam</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">ndim</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">t_run</span><span class="p">,</span> <span class="n">t_trans</span><span class="p">,</span> <span class="n">dt</span>
+<span class="kn">import</span> <span class="nn">integrator</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">ic_def</span>
+<span class="kn">import</span> <span class="nn">ic</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">print_progress</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Progress {:.2%} </span><span class="se">\r</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+<div class="viewcode-block" id="bcolors"><a class="viewcode-back" href="../rstfiles/maooam.html#maooam.bcolors">[docs]</a><span class="k">class</span> <span class="nc">bcolors</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;to color the instructions in the console&quot;&quot;&quot;</span>
+    <span class="n">HEADER</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[95m&#39;</span>
+    <span class="n">OKBLUE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[94m&#39;</span>
+    <span class="n">OKGREEN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span>
+    <span class="n">WARNING</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[93m&#39;</span>
+    <span class="n">FAIL</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span>
+    <span class="n">ENDC</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+    <span class="n">BOLD</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1m&#39;</span>
+    <span class="n">UNDERLINE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[4m&#39;</span></div>
+
+
+<span class="k">print</span> <span class="p">(</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKBLUE</span> <span class="o">+</span> <span class="s2">&quot;Model MAOOAM v1.3&quot;</span> <span class="o">+</span> <span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="p">)</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKBLUE</span> <span class="o">+</span> <span class="s2">&quot;Initialization ...&quot;</span> <span class="o">+</span> <span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="p">)</span>
+
+<span class="n">ic_def</span><span class="o">.</span><span class="n">load_IC</span><span class="p">()</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">ic</span><span class="o">.</span><span class="n">X0</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKBLUE</span> <span class="o">+</span> <span class="s2">&quot;Starting the transient time evolution ...&quot;</span> <span class="o">+</span> <span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+<span class="n">t_up</span> <span class="o">=</span> <span class="n">dt</span><span class="o">/</span><span class="n">t_trans</span><span class="o">*</span><span class="mi">100</span>
+<span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_trans</span><span class="p">:</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">integrator</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>
+    <span class="k">if</span> <span class="n">t</span><span class="o">/</span><span class="n">t_trans</span><span class="o">*</span><span class="mi">100</span> <span class="o">%</span> <span class="mf">0.1</span> <span class="o">&lt;</span> <span class="n">t_up</span><span class="p">:</span>
+        <span class="n">print_progress</span><span class="p">(</span><span class="n">t</span><span class="o">/</span><span class="n">t_trans</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="p">(</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKBLUE</span> <span class="o">+</span> <span class="s2">&quot;Starting the time evolution ...&quot;</span> <span class="o">+</span> <span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="p">)</span>
+<span class="n">fichier</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;evol_field.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">t_up</span> <span class="o">=</span> <span class="n">dt</span><span class="o">/</span><span class="n">t_run</span><span class="o">*</span><span class="mi">100</span>
+
+<span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_run</span><span class="p">:</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">integrator</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="p">(</span><span class="n">tw</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">dt</span><span class="p">:</span>
+        <span class="n">fichier</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ndim</span><span class="p">):</span>
+            <span class="n">fichier</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">fichier</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">t</span><span class="o">/</span><span class="n">t_run</span><span class="o">*</span><span class="mi">100</span> <span class="o">%</span> <span class="mf">0.1</span> <span class="o">&lt;</span> <span class="n">t_up</span><span class="p">:</span>
+        <span class="n">print_progress</span><span class="p">(</span><span class="n">t</span><span class="o">/</span><span class="n">t_run</span><span class="p">)</span>
+<span class="n">fichier</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKBLUE</span> <span class="o">+</span> <span class="s2">&quot;Evolution finished &quot;</span> <span class="o">+</span> <span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="p">(</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKBLUE</span> <span class="o">+</span> <span class="s2">&quot;Time clock :&quot;</span> <span class="o">+</span> <span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="p">)</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span><span class="o">-</span><span class="n">T</span><span class="p">)</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/MAOOAM_small.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MAOOAM  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2017, Maxime Tondeur, Jonathan Demaeyer.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
