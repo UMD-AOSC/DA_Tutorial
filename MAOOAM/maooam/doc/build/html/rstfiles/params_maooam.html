@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Parameters module &mdash; MAOOAM  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MAOOAM  documentation" href="../index.html" />
+    <link rel="next" title="2. Initial conditions generator module" href="ic_def.html" />
+    <link rel="prev" title="Modular arbitrary-order ocean-atmosphere model: MAOOAM – Python implementation" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ic_def.html" title="2. Initial conditions generator module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Modular arbitrary-order ocean-atmosphere model: MAOOAM – Python implementation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MAOOAM  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-params_maooam"></span><div class="section" id="parameters-module">
+<h1>1. Parameters module<a class="headerlink" href="#parameters-module" title="Permalink to this headline">¶</a></h1>
+<p>This module defines the parameters for the model.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The python code is available here :     <a class="reference external" href="../_modules/params_maooam.html">params_maooam.py</a> .</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">ndim</span><span class="p">,</span><span class="n">natm</span><span class="p">,</span><span class="n">noc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">oms</span><span class="p">,</span><span class="n">nboc</span><span class="p">,</span><span class="n">ams</span><span class="p">,</span><span class="n">nbatm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>There are three types of parameters :</p>
+<ul class="simple">
+<li>integration parameters : simulation time (transient and effective),     time step, writeout and write step time</li>
+<li>dimensional parameters : dimensions of the truncation of fourier     for the atmosphere and the ocean</li>
+<li>physical parameters : they are used in the tensor for the integration</li>
+</ul>
+<div class="section" id="integration-parameters">
+<h2>1.1. Integration parameters<a class="headerlink" href="#integration-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Time is adimensional. If t_real is in seconds,
+then t_model = t_real * f_0 where f_0 is the Coriolis
+parameter at 45 degrees latitude ( 1.032e-4 )</p>
+</div>
+<ul class="simple">
+<li><strong>t_trans</strong> : the transient simulation time of the model to be on the attractor. The states vectors are not written on evol_field.dat.</li>
+<li><strong>t_run</strong> : the running simulation time of the model. The states vectors are written on evol_field.dat every tw.</li>
+<li><strong>dt</strong> : the step time.</li>
+<li><strong>writeout</strong> : boolean value to decide if the module produces evol_field.dat.</li>
+<li><strong>tw</strong> : the step time to write on evol_field.</li>
+<li><strong>f2py</strong> : boolean to activate the f2py optimization.</li>
+</ul>
+</div>
+<div class="section" id="dimensional-parameters">
+<h2>1.2. Dimensional parameters<a class="headerlink" href="#dimensional-parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>oms</strong> and <strong>ams</strong> : the matrices that gives the possible values of the modes Nx and Ny.</li>
+<li><strong>nboc</strong> and <strong>natm</strong> : the numbers of oceanic and atmospheric blocs.</li>
+<li><strong>natm</strong> and <strong>noc</strong> : the numbers of functions available.</li>
+<li><strong>ndim</strong> : the total dimension.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">oms</span> <span class="o">=</span><span class="n">get_modes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="c1"># ocean mode selection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ams</span> <span class="o">=</span><span class="n">get_modes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="c1"># atmosphere mode selection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nboc</span><span class="p">,</span><span class="n">nbatm</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="mi">2</span>      <span class="c1"># number of blocks</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">natm</span><span class="p">,</span><span class="n">noc</span><span class="p">,</span><span class="n">ndim</span><span class="p">)</span><span class="o">=</span><span class="n">init_params</span><span class="p">(</span><span class="n">nboc</span><span class="p">,</span><span class="n">nbatm</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Oceanic blocs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#( x block number accounts for half-integer wavenumber e.g 1    =&gt; 1/2 , 2 =&gt; 1, etc...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">2</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">3</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">4</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">5</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">6</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OMS</span><span class="p">[</span><span class="mi">7</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Atmospheric blocs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">AMS</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">AMS</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">AMS</span><span class="p">[</span><span class="mi">2</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">AMS</span><span class="p">[</span><span class="mi">3</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="mi">2</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Typical dimensional parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>atmosphere 2x,2y ; ocean 2x,4y ; ndim = 36</li>
+<li>atmosphere 2x,2y ; ocean 4x,4y ; ndim = 52</li>
+<li>atmosphere 2x,4y ; ocean 2x,4y ; ndim = 56</li>
+</ul>
+</div>
+<div class="section" id="physical-parameters">
+<h2>1.3. Physical parameters<a class="headerlink" href="#physical-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Some defaut parameters are presented below.
+Some parameters files related to already published article are available in the params folder.</p>
+<div class="section" id="scale-parameters">
+<h3>1.3.1. Scale parameters<a class="headerlink" href="#scale-parameters" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>scale = 5.e6</strong>  : characteristic space scale, L*pi</li>
+<li><strong>f0 = 1.032e-4</strong>  : Coriolis parameter at 45 degrees latitude</li>
+<li><strong>n = 1.5e0</strong>  : aspect ratio (n = 2Ly/Lx ; Lx = 2*pi*L/n; Ly = pi*L)</li>
+<li><strong>rra = 6370.e3</strong>  : earth radius</li>
+<li><strong>phi0_npi = 0.25e0</strong>  : latitude exprimed in fraction of pi</li>
+</ul>
+</div>
+<div class="section" id="parameters-for-the-ocean">
+<h3>1.3.2. Parameters for the ocean<a class="headerlink" href="#parameters-for-the-ocean" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>gp = 3.1e-2</strong>  : reduced gravity</li>
+<li><strong>r = 1.e-8</strong>  : frictional coefficient at the bottom of the ocean</li>
+<li><strong>h = 5.e2</strong>  : depth of the water layer of the ocean</li>
+<li><strong>d = 1.e-8</strong>  : the coupling parameter (should be divided by f0 to be adim)</li>
+</ul>
+</div>
+<div class="section" id="parameters-for-the-atmosphere">
+<h3>1.3.3. Parameters for the atmosphere<a class="headerlink" href="#parameters-for-the-atmosphere" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>k = 0.02</strong>  : atmosphere bottom friction coefficient</li>
+<li><strong>kp = 0.04</strong>  : atmosphere internal friction coefficient</li>
+<li><strong>sig0 = 0.1e0</strong>  : static stability of the atmosphere</li>
+</ul>
+</div>
+<div class="section" id="temperature-related-parameters-for-the-ocean">
+<h3>1.3.4. Temperature-related parameters for the ocean<a class="headerlink" href="#temperature-related-parameters-for-the-ocean" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Go = 2.e8</strong>  : Specific heat capacity of the ocean (50m layer)</li>
+<li><strong>Co = 350</strong>  : Constant short-wave radiation of the ocean</li>
+<li><strong>To0 = 285.0</strong>  : Stationary solution for the 0-th order ocean temperature</li>
+</ul>
+</div>
+<div class="section" id="temperature-related-parameters-for-the-atmosphere">
+<h3>1.3.5. Temperature-related parameters for the atmosphere<a class="headerlink" href="#temperature-related-parameters-for-the-atmosphere" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Ga = 1.e7</strong>  : Specific heat capacity of the atmosphere</li>
+<li><strong>Ca = 100.e0</strong>  ; Constant short-wave radiation of the atmosphere</li>
+<li><strong>epsa = 0.76e0</strong>  : Emissivity coefficient for the grey-body atmosphere</li>
+<li><strong>Ta0 = 270.0</strong>  : Stationary solution for the 0-th order atmospheric temperature</li>
+</ul>
+</div>
+<div class="section" id="other-temperature-related-parameters-constants">
+<h3>1.3.6. Other temperature-related parameters/constants<a class="headerlink" href="#other-temperature-related-parameters-constants" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>sc = 1.</strong>  : Ratio of surface to atmosphere temperature</li>
+<li><strong>lambda = 20.00</strong>  : Sensible+turbulent heat exchange between oc and atm</li>
+<li><strong>rr = 287.e0</strong>  : Gas constant of dry air</li>
+<li><strong>sb = 5.6e-8</strong>  : Stefan-Boltzmann constant</li>
+</ul>
+</div>
+<div class="section" id="key-values">
+<h3>1.3.7. Key values<a class="headerlink" href="#key-values" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>k</strong> is the friction coefficient at the bottom of the atmosphere. Typical values are 0.01 or 0.0145 for chaotic regimes.</li>
+<li><strong>kp</strong> is the internal friction between the atmosphere layers. kp=2*k</li>
+<li><strong>d</strong> is the friction coefficient between the ocean and the atmosphere. Typical values are 6*10^{-8} s^{-1} or 9*10^{-8} s^{-1}.</li>
+<li><strong>lambda</strong> is the heat exchange between the ocean and the atmosphere. Typical values are 10 W m^{-2} K^{-1} or 15.06 W m ^{-2} K^{-1}.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="dependencies">
+<h2>1.4. Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fonctions">
+<h2>1.5. Fonctions<a class="headerlink" href="#fonctions" title="Permalink to this headline">¶</a></h2>
+<p>Here are the functions to generate the parameters.</p>
+<dl class="function">
+<dt id="params_maooam.get_modes">
+<code class="descclassname">params_maooam.</code><code class="descname">get_modes</code><span class="sig-paren">(</span><em>nxmax</em>, <em>nymax</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/params_maooam.html#get_modes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#params_maooam.get_modes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the matrix oms and ams with nxmax and nymax</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="params_maooam.init_params">
+<code class="descclassname">params_maooam.</code><code class="descname">init_params</code><span class="sig-paren">(</span><em>nboc</em>, <em>nbatm</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/params_maooam.html#init_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#params_maooam.init_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the dimensions of the system</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/MAOOAM_small.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Parameters module</a><ul>
+<li><a class="reference internal" href="#integration-parameters">1.1. Integration parameters</a></li>
+<li><a class="reference internal" href="#dimensional-parameters">1.2. Dimensional parameters</a></li>
+<li><a class="reference internal" href="#physical-parameters">1.3. Physical parameters</a><ul>
+<li><a class="reference internal" href="#scale-parameters">1.3.1. Scale parameters</a></li>
+<li><a class="reference internal" href="#parameters-for-the-ocean">1.3.2. Parameters for the ocean</a></li>
+<li><a class="reference internal" href="#parameters-for-the-atmosphere">1.3.3. Parameters for the atmosphere</a></li>
+<li><a class="reference internal" href="#temperature-related-parameters-for-the-ocean">1.3.4. Temperature-related parameters for the ocean</a></li>
+<li><a class="reference internal" href="#temperature-related-parameters-for-the-atmosphere">1.3.5. Temperature-related parameters for the atmosphere</a></li>
+<li><a class="reference internal" href="#other-temperature-related-parameters-constants">1.3.6. Other temperature-related parameters/constants</a></li>
+<li><a class="reference internal" href="#key-values">1.3.7. Key values</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dependencies">1.4. Dependencies</a></li>
+<li><a class="reference internal" href="#fonctions">1.5. Fonctions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Modular arbitrary-order ocean-atmosphere model: MAOOAM &#8211; Python implementation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ic_def.html"
+                        title="next chapter">2. Initial conditions generator module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rstfiles/params_maooam.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ic_def.html" title="2. Initial conditions generator module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Modular arbitrary-order ocean-atmosphere model: MAOOAM – Python implementation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MAOOAM  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2017, Maxime Tondeur, Jonathan Demaeyer.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Modular arbitrary-order ocean-atmosphere model: MAOOAM – Python implementation &mdash; MAOOAM  documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MAOOAM  documentation" href="#" />
+    <link rel="next" title="1. Parameters module" href="rstfiles/params_maooam.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rstfiles/params_maooam.html" title="1. Parameters module"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">MAOOAM  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="modular-arbitrary-order-ocean-atmosphere-model-maooam-python-implementation">
+<h1>Modular arbitrary-order ocean-atmosphere model: MAOOAM &#8211; Python implementation<a class="headerlink" href="#modular-arbitrary-order-ocean-atmosphere-model-maooam-python-implementation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<p>This repository provides the code of the model MAOOAM in python. It is a low-order ocean-atmosphere model with an arbitrary expansion of the Fourier modes of temperatures and streamfunctions.
+The code in Python is a translation of the Fortran code available in the main Git repository : <a class="reference external" href="https://github.com/Climdyn/MAOOAM">https://github.com/Climdyn/MAOOAM</a>.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>The code has been translated in Python to be used with the Data Assimilation module DAPPER : <a class="reference external" href="https://github.com/nansencenter/DAPPER">https://github.com/nansencenter/DAPPER</a> .</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The program can be run with python 2.7 or 3.5. Please note that python 3.5 is needed by the Data Assimilation module DAPPER.
+Optionally, F2py is also needed to compile the optimized fortran part.</p>
+<dl class="docutils">
+<dt>To install, unpack the archive in a folder or clone with git:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Climdyn</span><span class="o">/</span><span class="n">MAOOAM</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</dd>
+<dt>and run f2py (optional):</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f2py</span> <span class="o">-</span><span class="n">c</span> <span class="n">sparse_mult</span><span class="o">.</span><span class="n">pyf</span> <span class="n">sparse_mult</span><span class="o">.</span><span class="n">f90</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>The user first has to fill the <a class="reference external" href="../html/_modules/params_maooam.html">params_maooam.py</a> according to their needs. See <a class="reference external" href="../html/rstfiles/params_maooam.html">its documentation</a> for more information about this file.
+Some examples related to already published articles are available in the params folder.</p>
+<p>Finally, the ic.py file specifying the initial condition should be defined. To
+obtain an example of this configuration file corresponding to the model you
+have previously defined, simply delete the current ic.py file (if it exists)
+and run the program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ipython</span> <span class="n">maooam</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>It will generate a new one and start with the 0 initial condition. If you want another
+initial condition, stop the program, fill the newly generated file and restart:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ipython</span> <span class="n">maooam</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>The code will generate a file evol_field.dat containing the recorded time evolution of the variables.</p>
+</div>
+<div class="section" id="description-of-the-files">
+<h2>Description of the files<a class="headerlink" href="#description-of-the-files" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="../html/_modules/maooam.html">maooam.py</a> : main program.</li>
+<li><a class="reference external" href="../html/_modules/params_maooam.html">params_maooam.py</a> : a module for the parameters of the model (dimensional, integral and physical).</li>
+<li>ic.py : initial conditions file.</li>
+<li><a class="reference external" href="../html/_modules/ic_def.html">ic_def.py</a> a module that generate the initial conditions if it does not exist.</li>
+<li><a class="reference external" href="../html/_modules/inprod_analytic.html">inprod_analytic.py</a> : a module that compute the inner product needed for the tensor computation.</li>
+<li><a class="reference external" href="../html/_modules/aotensor.html">aotensor.py</a> : a module that compute the tensor.</li>
+<li><a class="reference external" href="../html/_modules/integrator.html">integrator.py</a>: a module that compute one step of the model and RK2 integration.</li>
+<li>sparse_mult.f90 and sparse_mult.pyf : fortran and f2py files to call fortran module in python.</li>
+</ul>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rstfiles/params_maooam.html">1. Parameters module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/params_maooam.html#integration-parameters">1.1. Integration parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/params_maooam.html#dimensional-parameters">1.2. Dimensional parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/params_maooam.html#physical-parameters">1.3. Physical parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/params_maooam.html#dependencies">1.4. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/params_maooam.html#fonctions">1.5. Fonctions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rstfiles/ic_def.html">2. Initial conditions generator module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/ic_def.html#global-file">2.1. Global file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/ic_def.html#dependencies">2.2. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/ic_def.html#functions">2.3. Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rstfiles/ic.html">3. Initial conditions file</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/ic.html#global-variables-state-vectors">3.1. Global variables (state vectors)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/ic.html#dependencies">3.2. Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rstfiles/inprod_analytic.html">4. Inner products module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/inprod_analytic.html#global-variables">4.1. Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/inprod_analytic.html#dependencies">4.2. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/inprod_analytic.html#classes">4.3. Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rstfiles/aotensor.html">5. Tensor computation module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/aotensor.html#help-functions">5.1. Help Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/aotensor.html#global-variables">5.2. Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/aotensor.html#dependencies">5.3. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/aotensor.html#functions">5.4. Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rstfiles/integrator.html">6. Integration module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/integrator.html#global-variables">6.1. Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/integrator.html#dependencies">6.2. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/integrator.html#functions">6.3. Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rstfiles/maooam.html">7. Principal module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/maooam.html#global-variable">7.1. Global variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstfiles/maooam.html#dependencies">7.2. Dependencies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="contributors">
+<h2>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h2>
+<p>Maxime Tondeur, Jonathan Demaeyer</p>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>© 2017 Maxime Tondeur and Jonathan Demaeyer</p>
+<p>See <a class="reference external" href="../../../LICENSE.txt">LICENSE.txt</a>  for license information.</p>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/MAOOAM_small.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Modular arbitrary-order ocean-atmosphere model: MAOOAM &#8211; Python implementation</a><ul>
+<li><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li><a class="reference internal" href="#description-of-the-files">Description of the files</a></li>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+<li><a class="reference internal" href="#contributors">Contributors</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rstfiles/params_maooam.html"
+                        title="next chapter">1. Parameters module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rstfiles/params_maooam.html" title="1. Parameters module"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">MAOOAM  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2017, Maxime Tondeur, Jonathan Demaeyer.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>inprod_analytic &mdash; MAOOAM  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MAOOAM  documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MAOOAM  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for inprod_analytic</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inner products module</span>
+<span class="sd">    ======================</span>
+
+<span class="sd">    Inner products between the truncated set of basis functions for the \</span>
+
+<span class="sd">    ocean and atmosphere streamfunction fields.</span>
+
+
+<span class="sd">    .. note :: These are calculated using the analytical expressions from \</span>
+<span class="sd">	De Cruz, L., Demaeyer, J. and Vannitsem, S.: A modular \</span>
+<span class="sd">        arbitrary-order ocean-atmosphere model: MAOOAM v1.0, Geosci. \ </span>
+<span class="sd">        Model Dev. Discuss. \</span>
+<span class="sd">	and from \</span>
+<span class="sd">	Cehelsky, P., &amp; Tung, K. K. : Theories of multiple equilibria and \</span>
+<span class="sd">	weather regimes-A critical reexamination. Part II: Baroclinic two-layer \</span>
+<span class="sd">	models. Journal of the atmospheric sciences, 44(21), 3282-3303, 1987.</span>
+
+<span class="sd">    .. note :: The python code is available here :  \</span>
+<span class="sd">        `inprod_analytic.py &lt;../_modules/inprod_analytic.html&gt;`_ .</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; from inprod_analytic import init_inprod</span>
+<span class="sd">    &gt;&gt;&gt; init_inprod()</span>
+
+<span class="sd">    Global variables</span>
+<span class="sd">    -------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; awavenum = np.empty(natm, dtype=object)</span>
+<span class="sd">    &gt;&gt;&gt; owavenum = np.empty(noc, dtype=object)</span>
+<span class="sd">    &gt;&gt;&gt; atmos = atm_tensors(natm)</span>
+<span class="sd">    &gt;&gt;&gt; ocean = ocean_tensors(noc)</span>
+
+<span class="sd">    Dependencies</span>
+<span class="sd">    ------------------------</span>
+
+<span class="sd">    it uses the modules :</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from scipy.sparse import csr_matrix</span>
+
+<span class="sd">    &gt;&gt;&gt; from params_maooam import nbatm</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import nboc</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import natm</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import noc</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import n</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import oms</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import ams</span>
+<span class="sd">    &gt;&gt;&gt; from params_maooam import pi</span>
+
+<span class="sd">    Classes</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    * atm_wavenum(typ,P,N,H,Nx,Ny)</span>
+<span class="sd">    * ocean_wavenum(P,H,Nx,Ny)</span>
+<span class="sd">    * atm_tensors(natm)</span>
+<span class="sd">    * ocean_tensors(noc)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">nbatm</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">nboc</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">natm</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">noc</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">n</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">oms</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">ams</span>
+<span class="kn">from</span> <span class="nn">params_maooam</span> <span class="kn">import</span> <span class="n">pi</span>
+
+<span class="n">sqrtof2</span> <span class="o">=</span> <span class="mf">1.4142135381698608398437500000</span>
+
+
+<div class="viewcode-block" id="atm_wavenum"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_wavenum">[docs]</a><span class="k">class</span> <span class="nc">atm_wavenum</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to define atmosphere wavenumbers.</span>
+
+<span class="sd">    Attributes :</span>
+
+<span class="sd">    * typ (char) = &#39;A&#39;,&#39;K&#39; or &#39;L&#39;.</span>
+<span class="sd">    * M (int)</span>
+<span class="sd">    * P (int)</span>
+<span class="sd">    * H (int)</span>
+<span class="sd">    * Nx (int)</span>
+<span class="sd">    * Ny (int)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;creates the wavenumbers&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">typ</span> <span class="o">=</span> <span class="n">typ</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">P</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">M</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">H</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nx</span> <span class="o">=</span> <span class="n">Nx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ny</span> <span class="o">=</span> <span class="n">Ny</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;P = {}, M= {},H={}, Nx= {}, Ny={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ocean_wavenum"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_wavenum">[docs]</a><span class="k">class</span> <span class="nc">ocean_wavenum</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to define ocean wavenumbers</span>
+
+<span class="sd">    Attributes :</span>
+
+<span class="sd">    * P (int)</span>
+<span class="sd">    * H (int)</span>
+<span class="sd">    * Nx (int)</span>
+<span class="sd">    * Ny (int)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;creates the wavenumbers&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">P</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">H</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nx</span> <span class="o">=</span> <span class="n">Nx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ny</span> <span class="o">=</span> <span class="n">Ny</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;P = {}, H= {}, Nx= {}, Ny={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="atm_tensors"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_tensors">[docs]</a><span class="k">class</span> <span class="nc">atm_tensors</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class which contains all the coefficients</span>
+<span class="sd">    a,c,d,s,b,g needed for the tensor computation :</span>
+
+<span class="sd">    Attributes :</span>
+
+<span class="sd">    * :math:`a_{i, j}`</span>
+<span class="sd">    * :math:`c_{i, j}`</span>
+<span class="sd">    * :math:`d_{i, j}`</span>
+<span class="sd">    * :math:`s_{i, j}`</span>
+<span class="sd">    * :math:`b_{i, j, k}`</span>
+<span class="sd">    * :math:`g_{i, j, k}`</span>
+
+<span class="sd">    Return :</span>
+
+<span class="sd">    * The object will be name `atmos`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">natm</span><span class="p">,</span> <span class="n">natm</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">natm</span><span class="p">,</span> <span class="n">natm</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">natm</span><span class="p">,</span> <span class="n">noc</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">natm</span><span class="p">,</span> <span class="n">noc</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">natm</span><span class="p">,</span> <span class="n">natm</span><span class="p">,</span> <span class="n">natm</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">natm</span><span class="p">,</span> <span class="n">natm</span><span class="p">,</span> <span class="n">natm</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;matrice d : </span><span class="se">\n</span><span class="s2">{} </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="c1"># !--------------------------------------------------------!</span>
+    <span class="c1"># ! 1. Inner products in the equations for the atmosphere  !</span>
+    <span class="c1"># !--------------------------------------------------------!</span>
+
+<div class="viewcode-block" id="atm_tensors.calculate_a"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_tensors.calculate_a">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        .. math::</span>
+<span class="sd">	    a_{i, j} = (F_i, {\nabla}^2 F_j)</span>
+
+<span class="sd">	.. note:: Eigenvalues of the Laplacian (atmospheric)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">natm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_a : natm==0!***&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+            <span class="n">ti</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">ti</span><span class="o">.</span><span class="n">Nx</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">ti</span><span class="o">.</span><span class="n">Ny</span><span class="o">**</span><span class="mi">2</span></div>
+
+<div class="viewcode-block" id="atm_tensors.calculate_b"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_tensors.calculate_b">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_b</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        .. math::</span>
+<span class="sd">            b_{i, j, k} = (F_i, J(F_j, \nabla^2 F_k))</span>
+
+<span class="sd">        .. note:: Atmospheric g and a tensors must be computed before \</span>
+<span class="sd">            calling this routine.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">natm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_b : natm==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="atm_tensors.calculate_c_atm"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_tensors.calculate_c_atm">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_c_atm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. math::</span>
+<span class="sd">            c_{i,j} = (F_i, \partial_x F_j)</span>
+<span class="sd">        .. note:: Beta term for the atmosphere</span>
+<span class="sd">            Strict function !! Only accepts KL type.</span>
+<span class="sd">            For any other combination, it will not calculate anything.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">natm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_c_atm : natm==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="n">Ti</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">Tj</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="p">((</span><span class="n">Ti</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">typ</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">)):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">Ti</span><span class="o">.</span><span class="n">M</span> <span class="o">*</span> <span class="n">val</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span></div>
+
+<div class="viewcode-block" id="atm_tensors.calculate_d"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_tensors.calculate_d">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ocean</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        .. math::</span>
+<span class="sd">            d_{i,j} = (F_i, \nabla^2 \eta_j)</span>
+<span class="sd">        .. note:: Forcing of the ocean on the atmosphere.</span>
+<span class="sd">            Atmospheric s tensor and oceanic M tensor must be computed</span>
+<span class="sd">            before calling this routine !</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">natm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_d : natm==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">ocean</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="atm_tensors.calculate_g"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_tensors.calculate_g">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_g</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. math::</span>
+<span class="sd">            g_{i,j,k} = (F_i, J(F_j, F_k))</span>
+<span class="sd">        .. note:: This is a strict function: it only accepts AKL, KKL</span>
+<span class="sd">            and LLL types.</span>
+<span class="sd">            For any other combination, it will not calculate anything.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">natm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_h : natm==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                    <span class="n">Ti</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">Tj</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">Tk</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">typ</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">):</span>
+                        <span class="n">vb1</span> <span class="o">=</span> <span class="n">B1</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
+                        <span class="n">vb2</span> <span class="o">=</span> <span class="n">B2</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqrtof2</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span> <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tj</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                            <span class="o">*</span> <span class="n">flambda</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">*</span> <span class="p">(((</span><span class="n">vb1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">vb1</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="p">((</span><span class="n">vb2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                            <span class="o">/</span> <span class="p">(</span><span class="n">vb2</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+
+                    <span class="k">if</span> <span class="p">((</span><span class="n">Ti</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">typ</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">)):</span>
+                        <span class="n">vs1</span> <span class="o">=</span> <span class="n">S1</span><span class="p">(</span><span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+                        <span class="n">vs2</span> <span class="o">=</span> <span class="n">S2</span><span class="p">(</span><span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">vs1</span> <span class="o">*</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span><span class="p">)</span> \
+                            <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                            <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span><span class="p">)</span> \
+                            <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                            <span class="o">+</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span> <span class="o">+</span> <span class="n">Ti</span><span class="o">.</span><span class="n">M</span><span class="p">)</span> \
+                            <span class="o">+</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">M</span><span class="p">))</span> \
+                            <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">))</span> \
+                            <span class="o">+</span> <span class="n">vs2</span> <span class="o">*</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span><span class="p">)</span> \
+                            <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                            <span class="o">+</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">M</span><span class="p">)</span> \
+                            <span class="o">+</span> <span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">M</span> <span class="o">+</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">M</span><span class="p">))</span> \
+                            <span class="o">*</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                            <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)))</span>
+
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">*</span><span class="n">n</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+
+                    <span class="n">Ti</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">Ti</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">Tj</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">Tk</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+                    <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span>
+
+                    <span class="k">if</span> <span class="p">((</span><span class="n">Ti</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">typ</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">)):</span>
+                        <span class="n">vs3</span> <span class="o">=</span> <span class="n">S3</span><span class="p">(</span><span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+                        <span class="n">vs4</span> <span class="o">=</span> <span class="n">S4</span><span class="p">(</span><span class="n">Tj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">Tk</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">vs3</span> <span class="o">*</span> <span class="p">((</span><span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                        <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Ti</span><span class="o">.</span><span class="n">H</span><span class="p">))</span> \
+                        <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                        <span class="o">+</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                        <span class="o">*</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                        <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)))</span> <span class="o">+</span> <span class="n">vs4</span> \
+                        <span class="o">*</span> <span class="p">((</span><span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                        <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">))</span> \
+                        <span class="o">+</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Ti</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>\
+                        <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">H</span><span class="p">))</span> \
+                        <span class="o">*</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                        <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Tk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Tj</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)))</span>
+
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">*</span><span class="n">n</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                        <span class="n">atmos</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="n">atmos</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="n">atmos</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="n">atmos</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span>
+                        <span class="n">atmos</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span>
+                        <span class="n">atmos</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span></div>
+
+<div class="viewcode-block" id="atm_tensors.calculate_s"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.atm_tensors.calculate_s">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_s</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. math::</span>
+<span class="sd">            s_{i,j} = (F_i, \eta_j)</span>
+<span class="sd">        .. note:: Forcing (thermal) of the ocean on the atmosphere.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">natm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_s : natm==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">noc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_s : noc==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+
+                <span class="n">Ti</span> <span class="o">=</span> <span class="n">awavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">Dj</span> <span class="o">=</span> <span class="n">owavenum</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+                <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">typ</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">flambda</span><span class="p">(</span><span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> <span class="o">*</span> <span class="n">flambda</span><span class="p">(</span><span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">sqrtof2</span> <span class="o">*</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">/</span> \
+                        <span class="p">(</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">Dj</span><span class="o">.</span><span class="n">P</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">typ</span> <span class="o">==</span> <span class="s1">&#39;K&#39;</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">flambda</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Ti</span><span class="o">.</span><span class="n">M</span> <span class="o">+</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">*</span><span class="mi">4</span><span class="o">*</span><span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="o">/</span><span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span> <span class="o">*</span> <span class="n">Ti</span><span class="o">.</span><span class="n">M</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">Ti</span><span class="o">.</span><span class="n">typ</span> <span class="o">==</span> <span class="s1">&#39;L&#39;</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Ti</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Ti</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span></div></div>
+
+
+<div class="viewcode-block" id="ocean_tensors"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_tensors">[docs]</a><span class="k">class</span> <span class="nc">ocean_tensors</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class which contains all the coefficients k,m,n,w,o,c \</span>
+<span class="sd">    needed for the tensor computation :</span>
+
+<span class="sd">    Attributes :</span>
+
+<span class="sd">    * :math:`K_{i,j}`</span>
+<span class="sd">    * :math:`M_{i,j}`</span>
+<span class="sd">    * :math:`N_{i,j}`</span>
+<span class="sd">    * :math:`W_{i,j}`</span>
+<span class="sd">    * :math:`O_{i,j,k}`</span>
+<span class="sd">    * :math:`C_{i,j,k}`</span>
+
+<span class="sd">    Return :</span>
+
+<span class="sd">    * The object will be name ocean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noc</span><span class="p">,</span> <span class="n">natm</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noc</span><span class="p">,</span> <span class="n">noc</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noc</span><span class="p">,</span> <span class="n">noc</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noc</span><span class="p">,</span> <span class="n">natm</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">O</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noc</span><span class="p">,</span> <span class="n">noc</span><span class="p">,</span> <span class="n">noc</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noc</span><span class="p">,</span> <span class="n">noc</span><span class="p">,</span> <span class="n">noc</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;matrice C : </span><span class="se">\n</span><span class="s2">{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">)</span>
+
+    <span class="c1"># !--------------------------------------------------------!</span>
+    <span class="c1"># ! 2. Inner products in the equations for the ocean       !</span>
+    <span class="c1"># !--------------------------------------------------------!</span>
+
+<div class="viewcode-block" id="ocean_tensors.calculate_K"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_tensors.calculate_K">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_K</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atmos</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Forcing of the atmosphere on the ocean.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            K_{i,j} = (\eta_i, \nabla^2 F_j)</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            atmospheric a and s tensors must be computed before calling</span>
+<span class="sd">            this function !</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">noc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_K : noc==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">atmos</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ocean_tensors.calculate_M"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_tensors.calculate_M">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_M</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Forcing of the ocean fields on the ocean.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            M_{i,j} = (\eta_i, \nabla^2 \eta_j)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">noc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_M : noc==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+            <span class="n">Di</span> <span class="o">=</span> <span class="n">owavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Di</span><span class="o">.</span><span class="n">Nx</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">Ny</span><span class="o">**</span><span class="mi">2</span></div>
+
+<div class="viewcode-block" id="ocean_tensors.calculate_N"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_tensors.calculate_N">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_N</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Beta term for the ocean</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            N_{i,j} = (\eta_i, \partial_x \eta_j)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">noc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_N : noc==0!***&quot;</span><span class="p">)</span>
+
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+                <span class="n">Di</span> <span class="o">=</span> <span class="n">owavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">Dj</span> <span class="o">=</span> <span class="n">owavenum</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">delta</span><span class="p">(</span><span class="n">Di</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> <span class="o">*</span> <span class="n">flambda</span><span class="p">(</span><span class="n">Di</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span> <span class="o">*</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span> <span class="o">*</span> <span class="n">n</span> <span class="o">/</span> \
+                    <span class="p">((</span><span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">pi</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ocean_tensors.calculate_O"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_tensors.calculate_O">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_O</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Temperature advection term (passive scalar)</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            O_{i,j,k} = (\eta_i, J(\eta_j, \eta_k))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">noc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_O : noc==0!***&quot;</span><span class="p">)</span>
+
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+
+                    <span class="n">Di</span> <span class="o">=</span> <span class="n">owavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">Dj</span> <span class="o">=</span> <span class="n">owavenum</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">Dk</span> <span class="o">=</span> <span class="n">owavenum</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+                    <span class="n">vs3</span> <span class="o">=</span> <span class="n">S3</span><span class="p">(</span><span class="n">Dj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Dk</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">Dk</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+
+                    <span class="n">vs4</span> <span class="o">=</span> <span class="n">S4</span><span class="p">(</span><span class="n">Dj</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Dk</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">Dk</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">vs3</span><span class="o">*</span><span class="p">((</span><span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                    <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span><span class="p">))</span> \
+                    <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                    <span class="o">+</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                    <span class="o">*</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Di</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                    <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">P</span><span class="p">)))</span> \
+                    <span class="o">+</span> <span class="n">vs4</span> <span class="o">*</span> <span class="p">((</span><span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                    <span class="o">*</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">P</span><span class="p">))</span> \
+                    <span class="o">+</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span> <span class="o">+</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span><span class="p">)</span> \
+                    <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">H</span><span class="p">))</span> \
+                    <span class="o">*</span> <span class="p">(</span><span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Di</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> \
+                    <span class="o">-</span> <span class="n">delta</span><span class="p">(</span><span class="n">Dk</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="n">Dj</span><span class="o">.</span><span class="n">P</span> <span class="o">+</span> <span class="n">Di</span><span class="o">.</span><span class="n">P</span><span class="p">)))</span> \
+
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">*</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">val</span></div>
+
+<div class="viewcode-block" id="ocean_tensors.calculate_C_oc"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_tensors.calculate_C_oc">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_C_oc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        .. math::</span>
+<span class="sd">            C_{i,j,k} = (\eta_i, J(\eta_j,\nabla^2 \eta_k))</span>
+
+<span class="sd">        .. note :: Requires :math:`O_{i,j,k}` \</span>
+
+<span class="sd">        and :math:`M_{i,j}` to be calculated beforehand.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">noc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_C : noc==0!***&quot;</span><span class="p">)</span>
+
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+
+                    <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="ocean_tensors.calculate_W"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.ocean_tensors.calculate_W">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_W</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atmos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Short-wave radiative forcing of the ocean.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            W_{i,j} = (\eta_i, F_j)</span>
+
+<span class="sd">        .. note ::</span>
+<span class="sd">            atmospheric s tensor must be computed before calling</span>
+<span class="sd">            this function !</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">noc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_W : noc==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">natm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="s2">&quot;*** Problem with calculate_W : natm==0!***&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noc</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">natm</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span></div></div>
+
+
+<span class="c1">#  !-----------------------------------------------------!</span>
+<span class="c1">#  !                                                     !</span>
+<span class="c1">#  ! Definition of the Helper functions from Cehelsky    !</span>
+<span class="c1">#  ! \ Tung                                              !</span>
+<span class="c1">#  !                                                     !</span>
+<span class="c1">#  !-----------------------------------------------------!</span>
+
+
+<span class="k">def</span> <span class="nf">B1</span><span class="p">(</span><span class="n">Pi</span><span class="p">,</span> <span class="n">Pj</span><span class="p">,</span> <span class="n">Pk</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Pk</span><span class="o">+</span><span class="n">Pj</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">Pi</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">B2</span><span class="p">(</span><span class="n">Pi</span><span class="p">,</span> <span class="n">Pj</span><span class="p">,</span> <span class="n">Pk</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Pk</span><span class="o">-</span><span class="n">Pj</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">Pi</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">1.</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.</span>
+
+
+<span class="k">def</span> <span class="nf">flambda</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.</span>
+
+
+<span class="k">def</span> <span class="nf">S1</span><span class="p">(</span><span class="n">Pj</span><span class="p">,</span> <span class="n">Pk</span><span class="p">,</span> <span class="n">Mj</span><span class="p">,</span> <span class="n">Hk</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="p">((</span><span class="n">Pk</span> <span class="o">*</span> <span class="n">Mj</span> <span class="o">+</span> <span class="n">Pj</span> <span class="o">*</span> <span class="n">Hk</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.</span>
+
+
+<span class="k">def</span> <span class="nf">S2</span><span class="p">(</span><span class="n">Pj</span><span class="p">,</span> <span class="n">Pk</span><span class="p">,</span> <span class="n">Mj</span><span class="p">,</span> <span class="n">Hk</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Pk</span> <span class="o">*</span> <span class="n">Mj</span> <span class="o">-</span> <span class="n">Pj</span> <span class="o">*</span> <span class="n">Hk</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+
+
+<span class="k">def</span> <span class="nf">S3</span><span class="p">(</span><span class="n">Pj</span><span class="p">,</span> <span class="n">Pk</span><span class="p">,</span> <span class="n">Hj</span><span class="p">,</span> <span class="n">Hk</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Pk</span> <span class="o">*</span> <span class="n">Hj</span> <span class="o">+</span> <span class="n">Pj</span> <span class="o">*</span> <span class="n">Hk</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+
+
+<span class="k">def</span> <span class="nf">S4</span><span class="p">(</span><span class="n">Pj</span><span class="p">,</span> <span class="n">Pk</span><span class="p">,</span> <span class="n">Hj</span><span class="p">,</span> <span class="n">Hk</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Pk</span> <span class="o">*</span> <span class="n">Hj</span> <span class="o">-</span> <span class="n">Pj</span> <span class="o">*</span> <span class="n">Hk</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+
+
+<span class="c1"># initialization of the variables</span>
+<span class="n">awavenum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">natm</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+<span class="n">owavenum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">noc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+<span class="n">atmos</span> <span class="o">=</span> <span class="n">atm_tensors</span><span class="p">(</span><span class="n">natm</span><span class="p">)</span>
+<span class="n">ocean</span> <span class="o">=</span> <span class="n">ocean_tensors</span><span class="p">(</span><span class="n">noc</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="init_inprod"><a class="viewcode-back" href="../rstfiles/inprod_analytic.html#inprod_analytic.init_inprod">[docs]</a><span class="k">def</span> <span class="nf">init_inprod</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;creates and computes the inner products.&quot;&quot;&quot;</span>
+
+    <span class="n">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="c1"># awavenum definition</span>
+    <span class="c1"># here is the constructor : def __init__(self,typ,P,M,H,Nx,Ny):</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nbatm</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+            <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">atm_wavenum</span><span class="p">(</span>
+                <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">atm_wavenum</span><span class="p">(</span>
+                <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">atm_wavenum</span><span class="p">(</span>
+                <span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">3</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">atm_wavenum</span><span class="p">(</span>
+                <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">awavenum</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">atm_wavenum</span><span class="p">(</span>
+                <span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ams</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">2</span>
+
+    <span class="c1"># owavenum definition</span>
+    <span class="c1"># here is the constructor : def __init__(self,P,H,Nx,Ny):</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nboc</span><span class="p">):</span>
+            <span class="n">owavenum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_wavenum</span><span class="p">(</span>
+                <span class="n">oms</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">oms</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">oms</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">oms</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Computation of the atmospheric inner products tensors</span>
+
+    <span class="n">atmos</span><span class="o">.</span><span class="n">calculate_a</span><span class="p">()</span>
+    <span class="n">atmos</span><span class="o">.</span><span class="n">calculate_g</span><span class="p">()</span>
+    <span class="n">atmos</span><span class="o">.</span><span class="n">calculate_s</span><span class="p">()</span>
+    <span class="n">atmos</span><span class="o">.</span><span class="n">calculate_b</span><span class="p">()</span>
+    <span class="n">atmos</span><span class="o">.</span><span class="n">calculate_c_atm</span><span class="p">()</span>
+
+    <span class="c1"># Computation of the oceanic inner products tensors</span>
+
+    <span class="n">ocean</span><span class="o">.</span><span class="n">calculate_M</span><span class="p">()</span>
+    <span class="n">ocean</span><span class="o">.</span><span class="n">calculate_N</span><span class="p">()</span>
+    <span class="n">ocean</span><span class="o">.</span><span class="n">calculate_O</span><span class="p">()</span>
+    <span class="n">ocean</span><span class="o">.</span><span class="n">calculate_C_oc</span><span class="p">()</span>
+    <span class="n">ocean</span><span class="o">.</span><span class="n">calculate_W</span><span class="p">(</span><span class="n">atmos</span><span class="p">)</span>
+    <span class="n">ocean</span><span class="o">.</span><span class="n">calculate_K</span><span class="p">(</span><span class="n">atmos</span><span class="p">)</span>
+
+    <span class="c1"># A last atmospheric one that needs ocean.M</span>
+
+    <span class="n">atmos</span><span class="o">.</span><span class="n">calculate_d</span><span class="p">(</span><span class="n">ocean</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/MAOOAM_small.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MAOOAM  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2017, Maxime Tondeur, Jonathan Demaeyer.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
