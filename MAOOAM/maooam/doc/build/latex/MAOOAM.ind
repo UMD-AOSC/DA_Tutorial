@@ -1,0 +1,67 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter A
+  \item atm\_tensors (class in inprod\_analytic), \hyperpage{16}
+  \item atm\_wavenum (class in inprod\_analytic), \hyperpage{17}
+
+  \indexspace
+  \bigletter B
+  \item bcolors (class in maooam), \hyperpage{23}
+
+  \indexspace
+  \bigletter C
+  \item calculate\_a() (inprod\_analytic.atm\_tensors method), \hyperpage{16}
+  \item calculate\_b() (inprod\_analytic.atm\_tensors method), \hyperpage{16}
+  \item calculate\_c\_atm() (inprod\_analytic.atm\_tensors method), \hyperpage{16}
+  \item calculate\_C\_oc() (inprod\_analytic.ocean\_tensors method), \hyperpage{18}
+  \item calculate\_d() (inprod\_analytic.atm\_tensors method), \hyperpage{17}
+  \item calculate\_g() (inprod\_analytic.atm\_tensors method), \hyperpage{17}
+  \item calculate\_K() (inprod\_analytic.ocean\_tensors method), \hyperpage{18}
+  \item calculate\_M() (inprod\_analytic.ocean\_tensors method), \hyperpage{18}
+  \item calculate\_N() (inprod\_analytic.ocean\_tensors method), \hyperpage{18}
+  \item calculate\_O() (inprod\_analytic.ocean\_tensors method), \hyperpage{18}
+  \item calculate\_s() (inprod\_analytic.atm\_tensors method), \hyperpage{17}
+  \item calculate\_W() (inprod\_analytic.ocean\_tensors method), \hyperpage{18}
+
+  \indexspace
+  \bigletter G
+  \item get\_modes() (in module params\_maooam), \hyperpage{14}
+
+  \indexspace
+  \bigletter I
+  \item ic (module), \hyperpage{14}
+  \item ic\_def (module), \hyperpage{14}
+  \item init\_inprod() (in module inprod\_analytic), \hyperpage{17}
+  \item init\_params() (in module params\_maooam), \hyperpage{14}
+  \item inprod\_analytic (module), \hyperpage{15}
+  \item integrator (module), \hyperpage{21}
+
+  \indexspace
+  \bigletter L
+  \item load\_IC() (in module ic\_def), \hyperpage{14}
+
+  \indexspace
+  \bigletter M
+  \item maooam (module), \hyperpage{22}
+
+  \indexspace
+  \bigletter O
+  \item ocean\_tensors (class in inprod\_analytic), \hyperpage{17}
+  \item ocean\_wavenum (class in inprod\_analytic), \hyperpage{18}
+
+  \indexspace
+  \bigletter P
+  \item params\_maooam (module), \hyperpage{11}
+
+  \indexspace
+  \bigletter S
+  \item sparse\_mul3() (in module integrator), \hyperpage{22}
+  \item sparse\_mul3\_py() (in module integrator), \hyperpage{22}
+  \item step() (in module integrator), \hyperpage{22}
+
+  \indexspace
+  \bigletter T
+  \item tendencies() (in module integrator), \hyperpage{22}
+
+\end{theindex}

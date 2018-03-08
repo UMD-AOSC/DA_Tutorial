@@ -1,0 +1,2 @@
+.. automodule:: ic
+    :members:

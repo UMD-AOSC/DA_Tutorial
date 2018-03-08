@@ -1,0 +1,48 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Synopsis}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}Motivation}{3}{chapter.2}
+\contentsline {chapter}{\numberline {3}Installation}{5}{chapter.3}
+\contentsline {chapter}{\numberline {4}Getting started}{7}{chapter.4}
+\contentsline {chapter}{\numberline {5}Description of the files}{9}{chapter.5}
+\contentsline {chapter}{\numberline {6}Contents}{11}{chapter.6}
+\contentsline {section}{\numberline {6.1}Parameters module}{11}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Integration parameters}{11}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Dimensional parameters}{11}{subsection.6.1.2}
+\contentsline {subsection}{\numberline {6.1.3}Physical parameters}{12}{subsection.6.1.3}
+\contentsline {subsubsection}{Scale parameters}{12}{subsubsection*.4}
+\contentsline {subsubsection}{Parameters for the ocean}{12}{subsubsection*.5}
+\contentsline {subsubsection}{Parameters for the atmosphere}{13}{subsubsection*.6}
+\contentsline {subsubsection}{Temperature-related parameters for the ocean}{13}{subsubsection*.7}
+\contentsline {subsubsection}{Temperature-related parameters for the atmosphere}{13}{subsubsection*.8}
+\contentsline {subsubsection}{Other temperature-related parameters/constants}{13}{subsubsection*.9}
+\contentsline {subsubsection}{Key values}{13}{subsubsection*.10}
+\contentsline {subsection}{\numberline {6.1.4}Dependencies}{14}{subsection.6.1.4}
+\contentsline {subsection}{\numberline {6.1.5}Fonctions}{14}{subsection.6.1.5}
+\contentsline {section}{\numberline {6.2}Initial conditions generator module}{14}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Global file}{14}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}Dependencies}{14}{subsection.6.2.2}
+\contentsline {subsection}{\numberline {6.2.3}Functions}{14}{subsection.6.2.3}
+\contentsline {section}{\numberline {6.3}Initial conditions file}{15}{section.6.3}
+\contentsline {subsection}{\numberline {6.3.1}Global variables (state vectors)}{15}{subsection.6.3.1}
+\contentsline {subsection}{\numberline {6.3.2}Dependencies}{15}{subsection.6.3.2}
+\contentsline {section}{\numberline {6.4}Inner products module}{15}{section.6.4}
+\contentsline {subsection}{\numberline {6.4.1}Global variables}{15}{subsection.6.4.1}
+\contentsline {subsection}{\numberline {6.4.2}Dependencies}{15}{subsection.6.4.2}
+\contentsline {subsection}{\numberline {6.4.3}Classes}{16}{subsection.6.4.3}
+\contentsline {section}{\numberline {6.5}Tensor computation module}{19}{section.6.5}
+\contentsline {subsection}{\numberline {6.5.1}Help Functions}{19}{subsection.6.5.1}
+\contentsline {subsection}{\numberline {6.5.2}Global variables}{19}{subsection.6.5.2}
+\contentsline {subsection}{\numberline {6.5.3}Dependencies}{20}{subsection.6.5.3}
+\contentsline {subsection}{\numberline {6.5.4}Functions}{20}{subsection.6.5.4}
+\contentsline {section}{\numberline {6.6}Integration module}{21}{section.6.6}
+\contentsline {subsection}{\numberline {6.6.1}Global variables}{21}{subsection.6.6.1}
+\contentsline {subsection}{\numberline {6.6.2}Dependencies}{21}{subsection.6.6.2}
+\contentsline {subsection}{\numberline {6.6.3}Functions}{22}{subsection.6.6.3}
+\contentsline {section}{\numberline {6.7}Principal module}{22}{section.6.7}
+\contentsline {subsection}{\numberline {6.7.1}Global variable}{22}{subsection.6.7.1}
+\contentsline {subsection}{\numberline {6.7.2}Dependencies}{23}{subsection.6.7.2}
+\contentsline {chapter}{\numberline {7}Contributors}{25}{chapter.7}
+\contentsline {chapter}{\numberline {8}License}{27}{chapter.8}
+\contentsline {chapter}{\numberline {9}Indices and tables}{29}{chapter.9}
+\contentsline {chapter}{Python Module Index}{31}{section*.41}
+\contentsline {chapter}{Index}{33}{section*.42}
