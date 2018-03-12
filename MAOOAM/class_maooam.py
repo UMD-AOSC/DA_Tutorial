@@ -94,8 +94,10 @@ class maooam:
     tdim = len(t)
     xdim = len(state0) 
     states = np.zeros((tdim,xdim))
+    state = state0
     for i in range(tdim):
-      states[i,:] = integrator.step(state0, t[i], dt)
+      states[i,:] = state
+      state = integrator.step(state, t[i], dt)
 
     return states
 
@@ -130,9 +132,9 @@ class maooam:
 #     print(Df)
 
       # Compute approximate linear propagator
-      # (Note this is a poor approximation of the matrix integral, 
+      # (Note this is a poor approximation of the matrix integral,
       # we would prefer a geometric integrator, e.g. the Magnus expansion)
-      M = I + Df*dt  
+      M = I + Df*dt
       Mhist.append(deepcopy(M))
 
     return Mhist
@@ -154,9 +156,9 @@ class maooam:
       Df = Jfd(states[i,:],states[i+1,:],self.params)
 
       # Compute approximate linear propagator
-      # (Note this is a poor approximation of the matrix integral, 
+      # (Note this is a poor approximation of the matrix integral,
       # we would prefer a geometric integrator, e.g. the Magnus expansion)
-      M = I + Df*dt  
+      M = I + Df*dt
       Mhist.append(deepcopy(M))
 
     return Mhist
@@ -440,5 +442,3 @@ class maooam:
 
 ##  fig = dict(data=data, layout=layout)
     py.plot(fig, filename=outfile, validate=False)
-
-
