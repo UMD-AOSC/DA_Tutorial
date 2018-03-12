@@ -1,2 +1,3 @@
-rm *_*.pkl
-rm *.html
+set -e
+rm -f *_*.pkl
+rm -f *.html
