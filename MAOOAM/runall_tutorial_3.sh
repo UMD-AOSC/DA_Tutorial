@@ -13,7 +13,6 @@ method1=$1
 method2=$2
 python analysis_init.py $method1
 python generate_analysis_3dEns.py
-python plot_error $method1
 python plot_analysis_vs_nature.py $method1
 if [ $# -gt 1 ]; then
   python plot_analysis_vs_analysis.py $method1 $method2
