@@ -98,7 +98,7 @@ def __get_obs_grid_ocean():
     x2d, y2d = np.meshgrid(x1d, y1d)
     return x2d, y2d
 
-def __get_h_full_coverage():
+def get_h_full_coverage():
     nobs = NDIM
     h_mat = np.empty((nobs, NDIM))
     xgrid_atm, ygrid_atm = __get_obs_grid_atmos()
@@ -142,6 +142,6 @@ def plot_mat(mat):
     plt.show()
 
 if __name__ == "__main__":
-    mat = __get_h_full_coverage()
+    mat = get_h_full_coverage()
     plot_mat(mat)
 

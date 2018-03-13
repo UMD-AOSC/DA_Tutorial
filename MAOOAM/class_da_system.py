@@ -5,6 +5,7 @@ from class_obs_data import obs_data
 import numpy.matlib
 import pickle
 from copy import deepcopy
+from module_obs_network import get_h_full_coverage
 
 #===============================================================================
 class da_system:
@@ -28,7 +29,8 @@ class da_system:
     self.maxit = 0
     self.B = np.matrix(np.identity(self.xdim))
     self.R = np.matrix(np.identity(self.ydim))
-    self.H = np.matrix(np.identity(self.xdim))
+    self.H = np.matrix(get_h_full_coverage())
+    # self.H = np.matrix(np.identity(self.xdim))
     self.Ht = (self.H).transpose()
     self.alpha = alpha
     self.SqrtB = []
