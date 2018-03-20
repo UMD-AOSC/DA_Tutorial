@@ -27,22 +27,50 @@ def get_grid_val(waves, x, y, is_atm, elem):
         ps = [1, 1, 1, 2, 2, 2, 1, 1, 2, 2]
         for j in range(na):
             j_all = j + na if elem == "tmp" else j
-            if types[j] == "A":
-                gridval = gridval + waves[j_all] * np.sqrt(2.0) * np.cos(ps[j] * y)
-            elif types[j] == "K":
-                gridval = gridval + waves[j_all] * 2.0 * np.cos(hs[j] * n * x) * np.sin(ps[j] * y)
+            if elem == "u":
+                if types[j] == "A":
+                    gridval += waves[j_all] * np.sqrt(2.0) * ps[j] * np.sin(ps[j] * y)
+                elif types[j] == "K":
+                    gridval += waves[j_all] * 2.0 * np.cos(hs[j] * n * x) \
+                               * ps[j] * (-1) * np.cos(ps[j] * y)
+                else:
+                    gridval += waves[j_all] * 2.0 * np.sin(hs[j] * n * x) \
+                               * ps[j] * (-1) * np.cos(ps[j] * y)
+            elif elem == "v":
+                if types[j] == "A":
+                    gridval += 0.0
+                elif types[j] == "K":
+                    gridval += waves[j_all] * 2.0 * hs[j] * n * (-1) \
+                               * np.sin(hs[j] * n * x) * np.sin(ps[j] * y)
+                else:
+                    gridval += waves[j_all] * 2.0 * hs[j] * n \
+                               * np.cos(hs[j] * n * x) * np.sin(ps[j] * y)
             else:
-                gridval = gridval + waves[j_all] * 2.0 * np.sin(hs[j] * n * x) * np.sin(ps[j] * y)
+                if types[j] == "A":
+                    gridval += waves[j_all] * np.sqrt(2.0) * np.cos(ps[j] * y)
+                elif types[j] == "K":
+                    gridval += waves[j_all] * 2.0 * np.cos(hs[j] * n * x) * np.sin(ps[j] * y)
+                else:
+                    gridval += waves[j_all] * 2.0 * np.sin(hs[j] * n * x) * np.sin(ps[j] * y)
     else:
         hos = [1, 1, 1, 1, 2, 2, 2, 2]
         pos = [1, 2, 3, 4, 1, 2, 3, 4]
         for j in range(no):
             j_all = j + (na * 2 + no) if elem == "tmp" else j + na * 2
-            gridval = gridval + waves[j_all] * 2.0 * np.sin(0.5 * hos[j] * n * x) * np.sin(pos[j] * y)
+            if elem == "u":
+                gridval += waves[j_all] * 2.0 * np.sin(0.5 * hos[j] * n * x) \
+                           / (-1) * pos[j] * np.cos(pos[j] * y)
+            elif elem == "v":
+                gridval += waves[j_all] * 2.0 * 0.5 * hos[j] * n \
+                           * np.cos(0.5 * hos[j] * n * x) * np.sin(pos[j] * y)
+            else:
+                gridval += waves[j_all] * 2.0 * np.sin(0.5 * hos[j] * n * x) * np.sin(pos[j] * y)
     if elem == "tmp":
         gridval *= (f0 ** 2 * L ** 2) / R
     elif elem == "psi":
         gridval *= L ** 2 * f0
+    else:
+        gridval *= L * f0
     return gridval
 
 def __test_get_grid_val():
@@ -56,13 +84,18 @@ def __test_get_grid_val():
     # unit: [m^2/s] for streamfunction and [K] for temperature
     a_psi = get_grid_val(state, x, y, True, "psi")
     a_tmp = get_grid_val(state, x, y, True, "tmp")
+    a_u = get_grid_val(state, x, y, True, "u")
+    a_v = get_grid_val(state, x, y, True, "v")
     o_psi = get_grid_val(state, x, y, False, "psi")
     o_tmp = get_grid_val(state, x, y, False, "tmp")
+    o_u = get_grid_val(state, x, y, False, "u")
+    o_v = get_grid_val(state, x, y, False, "v")
+    print(a_psi, a_tmp, o_psi, o_tmp)
+    print(a_u, a_v, o_u, o_v)
     assert np.isclose(-28390877.979826435, a_psi)
     assert np.isclose(-6.915992899895785, a_tmp)
     assert np.isclose(-16019.881464394632, o_psi)
     assert np.isclose(-39.234272164275836, o_tmp)
-    print(a_psi, a_tmp, o_psi, o_tmp)
 
 def __get_obs_grid_atmos():
     n = 1.5
