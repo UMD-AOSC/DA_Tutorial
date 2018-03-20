@@ -228,8 +228,9 @@ def __test_h_matrix_conditional_number():
     plot_mat(h)
 
 def plot_mat(mat):
-    plt.imshow(mat, norm=matplotlib.colors.SymLogNorm(linthresh=0.1),
-               cmap="RdBu_r")
+    plt.imshow(mat, cmap="RdBu_r")
+    # plt.imshow(mat, norm=matplotlib.colors.SymLogNorm(linthresh=0.1),
+    #            cmap="RdBu_r")
     plt.colorbar()
     plt.show()
 
