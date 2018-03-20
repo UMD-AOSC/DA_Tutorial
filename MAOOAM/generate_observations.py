@@ -1,6 +1,7 @@
 import numpy as np
 from class_state_vector import state_vector
 from class_obs_data import obs_data
+from module_obs_network import get_h_full_coverage, NDIM
 
 infile = 'x_nature.pkl'
 outfile = 'y_obs.pkl'
@@ -41,13 +42,15 @@ for i in range(nc):
 yo = np.zeros_like(x_nature)
 eta = np.zeros_like(x_nature)
 hx = np.zeros_like(x_nature)
+H = get_h_full_coverage()
 for i in range(nc):
   # Compute error as a percentage of climatological variance
   eta[:,i] = np.random.normal(mu,sigma*x_std[i],nr)
+for j in range(nr):
   # (Could apply H(x_nature) here):
-  hx[:,i] = x_nature[:,i]  
+  hx[j, :] = H @ x_nature[j, :]
   # Observation is simulated as H(x_nature) + noise
-  yo[:,i] = hx[:,i] + eta[:,i]
+  yo[j, :] = hx[j, :] + eta[j, :]
 
 pos = np.zeros_like(yo)
 for i in range(nr):

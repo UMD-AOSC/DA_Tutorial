@@ -3,6 +3,7 @@ from class_maooam import maooam
 from class_state_vector import state_vector
 from class_obs_data import obs_data
 from class_da_system import da_system
+from module_obs_network import get_h_full_coverage
 from sys import argv
 
 #-----------------------------------------------------------------------
@@ -102,11 +103,13 @@ sigma_r = 1.0
 R = I * sigma_r**2
 
 # Set the linear observation operator matrix as the identity by default 
-H = I
+# H = I
+H = get_h_full_coverage()
 
 # Set constant matrix for nudging
 const = 1.0
 C = I * const
+C = np.linalg.inv(H)
 
 das.setB(B)
 das.setR(R)
