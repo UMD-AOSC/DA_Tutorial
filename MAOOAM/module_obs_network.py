@@ -136,7 +136,7 @@ def __get_obs_grid_ocean():
     nxobs = 2
     nyobs = 4
     x1d = np.linspace(0, xmax, nxobs, endpoint=False) + xmax / nxobs * 0.5
-    y1d = np.linspace(0, ymax, nyobs, endpoint=False) + ymax / nyobs * 0.5
+    y1d = np.linspace(0, ymax, nyobs, endpoint=False) + ymax / nyobs * 0.25
     x2d, y2d = np.meshgrid(x1d, y1d)
     return x2d, y2d
 
@@ -194,28 +194,38 @@ def get_h_full_coverage():
         for j in range(nobs):
             if j < nobs_atm:
                 k = j
-                elem = "a_psi"
+                is_atm = True
+                elem = "u"
                 xgrid = xgrid_atm
                 ygrid = ygrid_atm
             elif j < nobs_atm * 2:
                 k = j - nobs_atm
-                elem = "a_tmp"
+                is_atm = True
+                elem = "tmp"
                 xgrid = xgrid_atm
                 ygrid = ygrid_atm
             elif j < nobs_atm * 2 + nobs_ocn:
                 k = j - nobs_atm * 2
-                elem = "o_psi"
+                is_atm = False
+                elem = "u"
                 xgrid = xgrid_ocn
                 ygrid = ygrid_ocn
             elif j < nobs_atm * 2 + nobs_ocn * 2:
                 k = j - (nobs_atm * 2 + nobs_ocn)
-                elem = "o_tmp"
+                is_atm = False
+                elem = "tmp"
                 xgrid = xgrid_ocn
                 ygrid = ygrid_ocn
             else:
                 raise Exception("__get_h_full_coverage overflow")
-            h_mat[j, i] = get_grid_val(state_unit, xgrid.flatten()[k], ygrid.flatten()[k], elem)
+            h_mat[j, i] = get_grid_val(state_unit, xgrid.flatten()[k], ygrid.flatten()[k], is_atm, elem)
     return h_mat
+
+def __test_h_matrix_conditional_number():
+    h = get_h_full_coverage()
+    print(np.linalg.svd(h)[1])
+    print(np.linalg.cond(h))
+    plot_mat(h)
 
 def plot_mat(mat):
     plt.imshow(mat, norm=matplotlib.colors.SymLogNorm(linthresh=0.1),
@@ -224,5 +234,5 @@ def plot_mat(mat):
     plt.show()
 
 if __name__ == "__main__":
-    __test_get_grid_val()
+    __test_h_matrix_conditional_number()
 
