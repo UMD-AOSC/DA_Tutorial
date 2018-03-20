@@ -6,43 +6,12 @@ import matplotlib.pyplot as plt
 
 NDIM = 36
 
-def get_grid_val(waves, x, y, elem):
-    def get_atm(is_temp):
-        types = ["A", "K", "L", "A", "K", "L", "K", "L", "K", "L"]
-        hs = [0, 1, 1, 0, 1, 1, 2, 2, 2, 2]
-        ps = [1, 1, 1, 2, 2, 2, 1, 1, 2, 2]
-        gridval = 0.0
-        for j in range(na):
-            j_all = j + na if is_temp else j
-            if types[j] == "A":
-                gridval = gridval + waves[j_all] * np.sqrt(2.0) * np.cos(ps[j] * y)
-            elif types[j] == "K":
-                gridval = gridval + waves[j_all] * 2.0 * np.cos(hs[j] * n * x) * np.sin(ps[j] * y)
-            else:
-                gridval = gridval + waves[j_all] * 2.0 * np.sin(hs[j] * n * x) * np.sin(ps[j] * y)
-        if is_temp:
-            gridval *= (f0 ** 2 * L ** 2) / R
-        else:
-            gridval *= L ** 2 * f0
-        return gridval
-
-    def get_ocn(is_temp):
-        hos = [1, 1, 1, 1, 2, 2, 2, 2]
-        pos = [1, 2, 3, 4, 1, 2, 3, 4]
-        gridval = 0.0
-        for j in range(no):
-            j_all = j + (na * 2 + no) if is_temp else j + na * 2
-            gridval = gridval + waves[j_all] * 2.0 * np.sin(0.5 * hos[j] * n * x) * np.sin(pos[j] * y)
-        if is_temp:
-            gridval *= (f0 ** 2 * L ** 2) / R
-        else:
-            gridval *= L ** 2 * f0
-        return gridval
-
+def get_grid_val(waves, x, y, is_atm, elem):
     assert waves.__class__ == np.ndarray
     assert waves.shape == (NDIM,)
     assert y.__class__ in [float, np.float32, np.float64]
     assert x.__class__ in [float, np.float32, np.float64]
+    assert elem in ["psi", "tmp", "u", "v"]
 
     f0 = 1.032e-4
     n = 1.5
@@ -51,29 +20,48 @@ def get_grid_val(waves, x, y, elem):
     R = 287.0
     L = 5000000.0 / np.pi
 
-    if elem == "a_psi":
-        return get_atm(False)
-    elif elem == "a_tmp":
-        return get_atm(True)
-    elif elem == "o_psi":
-        return get_ocn(False)
-    elif elem == "o_tmp":
-        return get_ocn(True)
+    gridval = 0.0
+    if is_atm:
+        types = ["A", "K", "L", "A", "K", "L", "K", "L", "K", "L"]
+        hs = [0, 1, 1, 0, 1, 1, 2, 2, 2, 2]
+        ps = [1, 1, 1, 2, 2, 2, 1, 1, 2, 2]
+        for j in range(na):
+            j_all = j + na if elem == "tmp" else j
+            if types[j] == "A":
+                gridval = gridval + waves[j_all] * np.sqrt(2.0) * np.cos(ps[j] * y)
+            elif types[j] == "K":
+                gridval = gridval + waves[j_all] * 2.0 * np.cos(hs[j] * n * x) * np.sin(ps[j] * y)
+            else:
+                gridval = gridval + waves[j_all] * 2.0 * np.sin(hs[j] * n * x) * np.sin(ps[j] * y)
     else:
-        raise Exception("get_grid_val overflow. Element %s not found." % elem)
+        hos = [1, 1, 1, 1, 2, 2, 2, 2]
+        pos = [1, 2, 3, 4, 1, 2, 3, 4]
+        for j in range(no):
+            j_all = j + (na * 2 + no) if elem == "tmp" else j + na * 2
+            gridval = gridval + waves[j_all] * 2.0 * np.sin(0.5 * hos[j] * n * x) * np.sin(pos[j] * y)
+    if elem == "tmp":
+        gridval *= (f0 ** 2 * L ** 2) / R
+    elif elem == "psi":
+        gridval *= L ** 2 * f0
+    return gridval
 
 def __test_get_grid_val():
-    state = model_state_exsample()
+    state = __model_state_exsample()
+    n = 1.5
     x = 1.2 * np.pi / n  # 0.0 <= x <= 2.0 * pi / n
     y = 0.8 * np.pi      # 0.0 <= y <= pi
 
     # get_grid_val() returns one of four variables
     # {atmosphere|ocean} x {streamfunction|temperature} at point (x, y)
     # unit: [m^2/s] for streamfunction and [K] for temperature
-    a_psi = get_grid_val(state, x, y, "a_psi")
-    a_tmp = get_grid_val(state, x, y, "a_tmp")
-    o_psi = get_grid_val(state, x, y, "o_psi")
-    o_tmp = get_grid_val(state, x, y, "o_tmp")
+    a_psi = get_grid_val(state, x, y, True, "psi")
+    a_tmp = get_grid_val(state, x, y, True, "tmp")
+    o_psi = get_grid_val(state, x, y, False, "psi")
+    o_tmp = get_grid_val(state, x, y, False, "tmp")
+    assert np.isclose(-28390877.979826435, a_psi)
+    assert np.isclose(-6.915992899895785, a_tmp)
+    assert np.isclose(-16019.881464394632, o_psi)
+    assert np.isclose(-39.234272164275836, o_tmp)
     print(a_psi, a_tmp, o_psi, o_tmp)
 
 def __get_obs_grid_atmos():
@@ -97,6 +85,46 @@ def __get_obs_grid_ocean():
     y1d = np.linspace(0, ymax, nyobs, endpoint=False) + ymax / nyobs * 0.5
     x2d, y2d = np.meshgrid(x1d, y1d)
     return x2d, y2d
+
+def __model_state_exsample():
+    xini = np.array([
+        4.695340259215241E-002,
+        2.795833230987369E-002,
+        -2.471191763590483E-002,
+        -7.877635082773315E-003,
+        -4.448292568544942E-003,
+        -2.756238610924190E-002,
+        -4.224400051368891E-003,
+        5.914241112882518E-003,
+        -1.779437742222920E-004,
+        5.224450720394076E-003,
+        4.697982667229096E-002,
+        5.149282577209392E-003,
+        -1.949084549066326E-002,
+        4.224006062949761E-004,
+        -1.247786759371923E-002,
+        -9.825952138046594E-003,
+        -2.610941795170075E-005,
+        2.239286581216401E-003,
+        -7.891896725509534E-004,
+        7.470171905055880E-004,
+        -9.315932162526787E-007,
+        3.650179005106874E-005,
+        1.064122403269511E-006,
+        3.937836448211443E-008,
+        -2.208288760403859E-007,
+        -3.753762121228048E-006,
+        -7.105126469908465E-006,
+        1.518110190916469E-008,
+        -5.773178576933025E-004,
+        0.187369278208256,
+        1.369868543156558E-003,
+        7.023608700166264E-002,
+        -4.539810680860224E-004,
+        -1.882650440363933E-003,
+        -3.900412687995408E-005,
+        -1.753655087903711E-007])
+    return xini
 
 def get_h_full_coverage():
     nobs = NDIM
@@ -142,6 +170,5 @@ def plot_mat(mat):
     plt.show()
 
 if __name__ == "__main__":
-    mat = get_h_full_coverage()
-    plot_mat(mat)
+    __test_get_grid_val()
 
