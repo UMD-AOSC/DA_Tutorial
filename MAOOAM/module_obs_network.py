@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import pickle
 import matplotlib
@@ -96,6 +97,27 @@ def __test_get_grid_val():
     assert np.isclose(-6.915992899895785, a_tmp)
     assert np.isclose(-16019.881464394632, o_psi)
     assert np.isclose(-39.234272164275836, o_tmp)
+    __test_difference_u_v(n, state)
+
+def __test_difference_u_v(n, state):
+    eps = 1.0e-8
+    for is_atm in [True, False]:
+        for i in range(1000):
+            L = 5000000.0 / np.pi
+            pivot_x = np.random.uniform(0, 2.0 * np.pi / n)
+            pivot_y = np.random.uniform(0, np.pi)
+            ptb_x = pivot_x + eps
+            ptb_y = pivot_y + eps
+            if ptb_x < 0.0 or ptb_x > 2.0 * np.pi / n or ptb_y < 0.0 or ptb_y > np.pi:
+                print("out of range. skip")
+                continue
+            a_psi_pivot = get_grid_val(state, pivot_x, pivot_y, is_atm, "psi")
+            a_psi_ptb_x = get_grid_val(state, ptb_x, pivot_y, is_atm, "psi")
+            a_psi_ptb_y = get_grid_val(state, pivot_x, ptb_y, is_atm, "psi")
+            a_u = get_grid_val(state, pivot_x, pivot_y, is_atm, "u")
+            a_v = get_grid_val(state, pivot_x, pivot_y, is_atm, "v")
+            assert np.isclose((a_psi_ptb_x - a_psi_pivot) / eps / L, a_v, atol=1e-6)
+            assert np.isclose(- (a_psi_ptb_y - a_psi_pivot) / eps / L, a_u, atol=1e-6)
 
 def __get_obs_grid_atmos():
     n = 1.5
