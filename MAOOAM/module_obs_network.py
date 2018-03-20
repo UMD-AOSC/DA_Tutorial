@@ -106,13 +106,17 @@ def __test_difference_u_v(n, state):
             if ptb_x < 0.0 or ptb_x > 2.0 * np.pi / n or ptb_y < 0.0 or ptb_y > np.pi:
                 print("out of range. skip")
                 continue
-            a_psi_pivot = get_grid_val(state, pivot_x, pivot_y, is_atm, "psi")
-            a_psi_ptb_x = get_grid_val(state, ptb_x, pivot_y, is_atm, "psi")
-            a_psi_ptb_y = get_grid_val(state, pivot_x, ptb_y, is_atm, "psi")
-            a_u = get_grid_val(state, pivot_x, pivot_y, is_atm, "u")
-            a_v = get_grid_val(state, pivot_x, pivot_y, is_atm, "v")
-            assert np.isclose((a_psi_ptb_x - a_psi_pivot) / eps / L, a_v, atol=1e-6)
-            assert np.isclose(- (a_psi_ptb_y - a_psi_pivot) / eps / L, a_u, atol=1e-6)
+            psi_pivot = get_grid_val(state, pivot_x, pivot_y, is_atm, "psi")
+            psi_ptb_x = get_grid_val(state, ptb_x, pivot_y, is_atm, "psi")
+            psi_ptb_y = get_grid_val(state, pivot_x, ptb_y, is_atm, "psi")
+            u = get_grid_val(state, pivot_x, pivot_y, is_atm, "u")
+            v = get_grid_val(state, pivot_x, pivot_y, is_atm, "v")
+            try:
+                assert np.isclose((psi_ptb_x - psi_pivot) / eps / L, v, atol=1e-6)
+                assert np.isclose(- (psi_ptb_y - psi_pivot) / eps / L, u, atol=1e-6)
+            except:
+                cmp = "atm" if is_atm else "ocn"
+                print("assertion error at %s, i = %d" % (cmp, i))
 
 def __get_obs_grid_atmos():
     n = 1.5
