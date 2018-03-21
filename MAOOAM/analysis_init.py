@@ -107,9 +107,9 @@ R = I * sigma_r**2
 H = get_h_full_coverage()
 
 # Set constant matrix for nudging
-const = 1.0
-C = I * const
-C = np.linalg.inv(H)
+const = 0.00003
+# C = I * const
+C = np.linalg.inv(H) * const
 
 das.setB(B)
 das.setR(R)

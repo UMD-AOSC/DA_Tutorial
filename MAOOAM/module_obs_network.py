@@ -75,7 +75,7 @@ def get_grid_val(waves, x, y, is_atm, elem):
     return gridval
 
 def __test_get_grid_val():
-    state = __model_state_exsample()
+    state = __model_state_example()
     n = 1.5
     x = 1.2 * np.pi / n  # 0.0 <= x <= 2.0 * pi / n
     y = 0.8 * np.pi      # 0.0 <= y <= pi
@@ -140,7 +140,7 @@ def __get_obs_grid_ocean():
     x2d, y2d = np.meshgrid(x1d, y1d)
     return x2d, y2d
 
-def __model_state_exsample():
+def __model_state_example():
     xini = np.array([
         4.695340259215241E-002,
         2.795833230987369E-002,
