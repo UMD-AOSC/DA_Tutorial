@@ -62,9 +62,9 @@ sv = state_vector(params=params,x0=state0,t=tvec,name=name)
 model = maooam()
 
 #------------------------------------------------------------------
-# Run MOAAOM to generate a nature run with the specified parameters
+# Run MAOOAM to generate a nature run with the specified parameters
 #------------------------------------------------------------------
-print('Run MOAAOM...')
+print('Run MAOOAM...')
 if t_trans > 0:
   trans_trajectory = model.run(sv.x0,sv.t)
   sv.x0 = trans_trajectory[-1,:]

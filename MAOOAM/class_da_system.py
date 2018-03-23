@@ -29,8 +29,8 @@ class da_system:
     self.maxit = 0
     self.B = np.matrix(np.identity(self.xdim))
     self.R = np.matrix(np.identity(self.ydim))
-    self.H = np.matrix(get_h_full_coverage())
-    # self.H = np.matrix(np.identity(self.xdim))
+    # self.H = np.matrix(get_h_full_coverage())
+    self.H = np.matrix(np.identity(self.xdim))
     self.Ht = (self.H).transpose()
     self.alpha = alpha
     self.SqrtB = []
@@ -420,6 +420,7 @@ class da_system:
     I = np.identity(edim)
     rho = 1.05 #1.0
     eigArg = (edim-1)*I/rho + np.dot(C,Yb)
+    print(np.linalg.eig(Rinv)[0]); import sys; sys.exit(1)
 
     lamda,P = np.linalg.eigh(eigArg)
 

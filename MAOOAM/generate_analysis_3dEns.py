@@ -118,6 +118,14 @@ for i in range(0,maxit-acyc_step,acyc_step):
   #----------------------------------------------
   Xa, KH = das.compute_analysis(Xf,yo)
   xa = np.mean(Xa,axis=1).T
+  print("xf")
+  print(np.mean(Xf,axis=1).T)
+  print("xa")
+  print(xa)
+  print("yo")
+  print(yo)
+  import sys; sys.exit(1)
+
 # print('xa = ')
 # print(xa)
 

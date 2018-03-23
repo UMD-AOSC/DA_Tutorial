@@ -92,19 +92,6 @@ for i in range(0,maxit-acyc_step,acyc_step):
   # Compute analysis
   #----------------------------------------------
   xa, KH = das.compute_analysis(xf,yo)
-  import module_obs_network
-  H = module_obs_network.get_h_full_coverage()
-  print('H.I @ yo = ')
-  print(np.linalg.inv(H) @ yo)
-  print('xa = ')
-  print(xa)
-  print('xf = ')
-  print(xf)
-  b_err = np.linalg.norm(H @ xf - yo)
-  a_err = np.linalg.norm(H @ xa - yo)
-  print(a_err, b_err)
-  assert a_err <= b_err
-  import sys; sys.exit(1)
 
   # Fill in the missing timesteps with the forecast from the previous analysis IC's
   xa_history[i:i+acyc_step,:] = xf_4d[0:acyc_step,:]

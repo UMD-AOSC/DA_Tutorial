@@ -4,6 +4,7 @@ from class_state_vector import state_vector
 from class_obs_data import obs_data
 from class_da_system import da_system
 from module_obs_network import get_h_full_coverage
+from module_ad_hoc import get_x_std
 from sys import argv
 
 #-----------------------------------------------------------------------
@@ -99,12 +100,12 @@ B = I * sigma_b**2
 #     [-0.02400967,  0.00074236,  0.03891405]]
 
 # Set observation error covariance
-sigma_r = 1.0
-R = I * sigma_r**2
+sigma_r = 1.0  # this should match with generate_observations.py
+R = np.diag((sigma_r * get_x_std()) ** 2)
 
 # Set the linear observation operator matrix as the identity by default 
-# H = I
-H = get_h_full_coverage()
+H = I
+# H = get_h_full_coverage()
 
 # Set constant matrix for nudging
 const = 0.00003
