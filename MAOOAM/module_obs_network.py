@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import pickle
 import matplotlib
-matplotlib.use("TKAgg")
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 NDIM = 36
@@ -232,7 +232,8 @@ def plot_mat(mat):
     # plt.imshow(mat, norm=matplotlib.colors.SymLogNorm(linthresh=0.1),
     #            cmap="RdBu_r")
     plt.colorbar()
-    plt.show()
+    plt.savefig("tmp.png")
+    plt.close()
 
 if __name__ == "__main__":
     __test_h_matrix_conditional_number()

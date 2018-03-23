@@ -2,9 +2,6 @@
 
 import sys
 import numpy as np
-import matplotlib
-matplotlib.use("TKAgg")
-import matplotlib.pyplot as plt
 
 NDIM = 36
 
