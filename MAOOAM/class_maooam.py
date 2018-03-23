@@ -441,4 +441,4 @@ class maooam:
     fig['layout']['scene3'].update(scene)
 
 ##  fig = dict(data=data, layout=layout)
-    py.plot(fig, filename=outfile, validate=False)
+    py.plot(fig, filename=outfile, validate=False, auto_open=False)

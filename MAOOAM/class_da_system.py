@@ -420,7 +420,6 @@ class da_system:
     I = np.identity(edim)
     rho = 1.05 #1.0
     eigArg = (edim-1)*I/rho + np.dot(C,Yb)
-    print(np.linalg.eig(Rinv)[0]); import sys; sys.exit(1)
 
     lamda,P = np.linalg.eigh(eigArg)
 
