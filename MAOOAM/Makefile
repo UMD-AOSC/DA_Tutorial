@@ -28,7 +28,7 @@ out_ETKF = x_analysis_init.pkl
 cmd_ETKF = sh runall_tutorial_3.sh ETKF
 
 src_plot = module_plot.py
-dep_plot =
+dep_plot = nudging ETKF
 out_plot = img/*
 cmd_plot = python module_plot.py
 

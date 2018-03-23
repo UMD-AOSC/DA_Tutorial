@@ -104,8 +104,8 @@ sigma_r = 0.001  # this should match with generate_observations.py
 R = I * (sigma_r ** 2)
 
 # Set the linear observation operator matrix as the identity by default 
-H = I
-# H = get_h_full_coverage()
+# H = I
+H = get_h_full_coverage()
 
 # Set constant matrix for nudging
 const = 0.00003

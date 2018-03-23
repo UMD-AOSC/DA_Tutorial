@@ -29,7 +29,6 @@ class da_system:
     self.maxit = 0
     self.B = np.matrix(np.identity(self.xdim))
     self.R = np.matrix(np.identity(self.ydim))
-    # self.H = np.matrix(get_h_full_coverage())
     self.H = np.matrix(np.identity(self.xdim))
     self.Ht = (self.H).transpose()
     self.alpha = alpha
