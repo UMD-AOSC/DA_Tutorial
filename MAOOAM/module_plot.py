@@ -15,7 +15,7 @@ def plot_time_colormap(dat, img_name, vmin=None, vmax=None, title="", cmap="RdBu
     assert dat.__class__ == np.ndarray
     assert len(dat.shape) == 2
     assert dat.shape[1] == NDIM
-    cm = plt.imshow(dat, aspect="auto", cmap=cmap)
+    cm = plt.imshow(dat, aspect="auto", cmap=cmap, origin="bottom")
     if (vmin is not None) and (vmax is not None):
         cm.set_clim(vmin, vmax)
     plt.colorbar(cm)
@@ -32,29 +32,32 @@ def __test_plot_time_colormap():
     plot_time_colormap(dat, "img/tmp.png", None, None, "test")
 
 def __sample_read_files():
-    for method in ["nudging", "ETKF"]:
-        nature_file ='x_nature.pkl'
-        nature = state_vector()
-        nature = nature.load(nature_file)
-        freerun_file = 'x_freerun.pkl'
-        freerun = state_vector()
-        freerun = freerun.load(freerun_file)
+    vlim_raw = [-0.05, 0.1]
+    vlim_diff = [None, None]
+    nature_file ='x_nature.pkl'
+    nature = state_vector()
+    nature = nature.load(nature_file)
+    freerun_file = 'x_freerun.pkl'
+    freerun = state_vector()
+    freerun = freerun.load(freerun_file)
+    sp.run("mkdir -p img", shell=True, check=True)
+    plot_time_colormap(freerun.getTrajectory() - nature.getTrajectory(),
+                       "img/error_free_run.png", *vlim_diff, "error free run")
+    plot_time_colormap(freerun.getTrajectory(),
+                       "img/freerun.png", *vlim_raw, "freerun", "viridis")
+    plot_time_colormap(nature.getTrajectory(),
+                       "img/nature.png", *vlim_raw, "nature", "viridis")
+    for method in ["ETKF", "nudging"]:
         analysis_file = 'x_analysis_{method}.pkl'.format(method=method)
         das = da_system()
         das = das.load(analysis_file)
         analysis = das.getStateVector()
-        plt.plot(nature.getTimes(),
-                 np.linalg.norm(freerun.getTrajectory() - nature.getTrajectory(),
-                                axis=1), label='Free run')
-        plt.plot(nature.getTimes(),
-                 np.linalg.norm(analysis.getTrajectory() - nature.getTrajectory(),
-                                axis=1), label='Analysis ({method})'.format(method=method))
-        plt.legend()
-        plt.xlabel('Time')
-        plt.ylabel('Error', rotation='horizontal', labelpad=20)
-        plt.tight_layout()
-        plt.savefig("img/tmp.png")
-        plt.close()
+        plot_time_colormap(analysis.getTrajectory() - nature.getTrajectory(),
+                           "img/error_analysis_%s.png" % method, *vlim_diff,
+                           "error analysis %s" % method)
+        plot_time_colormap(analysis.getTrajectory(),
+                           "img/analysis_%s.png" % method, *vlim_raw,
+                           "analysis %s" % method, "viridis")
 
 if __name__ == "__main__":
     __sample_read_files()
