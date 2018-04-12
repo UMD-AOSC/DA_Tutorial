@@ -32,17 +32,17 @@ python plot_error.py ETKF
 ## Todo and Wishlist (feel free to edit me)
 ### Todo
 * Limit B to projection of some modes
-    * BV-like mode separation of slower modes
-    * CLV-based mode separation
-    * Static and dynamic B
+    * [ ] BV-like mode separation of slower modes
+    * [ ] CLV-based mode separation
+    * [ ] Static and dynamic B
 
 ### Wishlist
 * More plots
-    * L2 norm error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
-    * CLVs and B (raw matrix and its eigenvectors)
-* Parallelization of ensemble integration by multiprocessing.pool
-* Rough estimation of necessary experiment length
-* Ens members should start from initial conditions independent from truth
+    * [ ] L2 norm error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
+    * [ ] CLVs and B (raw matrix and its eigenvectors)
+* [ ] Parallelization of ensemble integration by multiprocessing.pool
+* [ ] Rough estimation of necessary experiment length
+* [ ] Ens members should start from initial conditions independent from truth
     * **analysis_init.py** line 72
     * **generate_analysis_3dEns.py** lines 24-26
 
