@@ -4,7 +4,7 @@ from class_state_vector import state_vector
 from class_obs_data import obs_data
 from class_da_system import da_system
 from module_obs_network import get_h_full_coverage
-from module_ad_hoc import get_x_std
+from module_constants import get_x_std
 from sys import argv
 
 #-----------------------------------------------------------------------
