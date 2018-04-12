@@ -34,6 +34,7 @@ python plot_error.py ETKF
 * Limit B to projection of some modes
     * [ ] BV-like mode separation of slower modes
     * [ ] CLV-based mode separation
+        * CLVs are, in practice, difficult to obtain in real applications because it uses future dynamics. But it worth examined from theoretical perspective.
     * [ ] Static and dynamic B
 
 ### Wishlist
