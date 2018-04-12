@@ -11,7 +11,7 @@ python module_plot.py
 python plot_error.py ETKF
 ```
 
-## Key points
+## Key points to be edited often
 * Change exp length
 params_maooam.py -> t_run
 
