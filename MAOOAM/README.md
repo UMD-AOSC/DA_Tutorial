@@ -38,11 +38,13 @@ params_maooam.py -> t_run
 
 ### Wishlist
 * More plots
-    * L2 norm error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta)
+    * L2 norm error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
     * CLVs and B (raw matrix and its eigenvectors)
 * Parallelization of ensemble integration by multiprocessing.pool
 * Rough estimation of necessary experiment length
-* Ens members should start from initial conditions independent from truth (analysis_init.py ?)
+* Ens members should start from initial conditions independent from truth
+    * analysis_init.py line 72
+    * generate_analysis_3dEns.py lines 24-26
 
 ## Tested environment
 * Anaconda3-5.1.0
