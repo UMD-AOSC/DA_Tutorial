@@ -29,7 +29,8 @@ params_maooam.py -> t_run
     * generate_analysis_3dEns.py
     * class_da_system.py
 
-## Todo
+## Todo and Wishlist (feel free to edit me)
+### Todo
 * Limit B to projection of some modes
     * BV-like mode separation of slower modes
     * CLV-based mode separation
