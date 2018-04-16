@@ -11,7 +11,7 @@ outfile = 'y_obs.pkl'
 # Note: sigma will be multiplied by nature run climatological standard deviation
 #--------------------------------------------------------------------------------
 mu = 0
-sigma = 0.001
+sigma = 1.0
 
 #--------------------------------------------------------------------------------
 # Create observation object

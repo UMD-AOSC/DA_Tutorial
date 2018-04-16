@@ -25,7 +25,7 @@ sv = sv.load(infile)
 x_nature = sv.getTrajectory()
 t_nature = sv.getTimes()
 maxit,xdim = np.shape(x_nature)
-sigma,rho,beta = sv.params
+# sigma,rho,beta = sv.params
 
 #------------------------------------------------------------------
 # Initialize the MAOOAM object

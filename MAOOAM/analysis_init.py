@@ -100,7 +100,7 @@ B = I * sigma_b**2
 #     [-0.02400967,  0.00074236,  0.03891405]]
 
 # Set observation error covariance
-sigma_r = 0.001  # this should match with generate_observations.py
+sigma_r = 1.0  # this should match with generate_observations.py
 R = I * (sigma_r ** 2)
 
 # Set the linear observation operator matrix as the identity by default 
@@ -133,7 +133,7 @@ print(das.getH())
 # Initialize the timesteps
 #-----------------------------------------------------------------------
 t_nature = sv.getTimes()
-acyc_step = 10                            # (how frequently to perform an analysis)
+acyc_step = 3                           # (how frequently to perform an analysis)
 dtau = (t_nature[acyc_step] - t_nature[0])
 fcst_step = acyc_step                      # (may need to change for 4D DA methods)
 fcst_dt = dtau / fcst_step

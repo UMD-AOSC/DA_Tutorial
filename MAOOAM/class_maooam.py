@@ -10,6 +10,7 @@ import params_maooam
 from params_maooam import ndim, tw, t_run, t_trans, dt
 #from maooam import params_maooam
 #from maooam.params_maooam import ndim, tw, t_run, t_trans, dt
+import tl_ad
 from maooam import integrator
 import time
 from maooam import ic_def
@@ -39,7 +40,7 @@ def Ja(state, t):
 #-------------------------------------------------------------------------------
   # Compute the analytic Jacobian of the MAOOAM system
   # at a point represented by 'state'. The time 't' is unused.
-  J = tl_ad_tensor.compute_tltensor(state)
+  J = tl_ad.jacobi_mat(state)
   return J
 
 #-------------------------------------------------------------------------------
@@ -116,7 +117,7 @@ class maooam:
     I = np.identity(nc)
 
     # Compute Jacobian / linear propagator for each timestep
-    sigma,rho,beta = self.params
+    # sigma,rho,beta = self.params
     maxit = len(t)
     Mhist=[]
     for i in range(maxit):
@@ -126,7 +127,7 @@ class maooam:
         dt = t[-1] - t[-2]
 
       # Evaluate Jacobian
-      Df = Ja(states[i,:], t[i], sigma, rho, beta)
+      Df = Ja(states[i,:], t[i])
 
 #     print('Df = ')
 #     print(Df)

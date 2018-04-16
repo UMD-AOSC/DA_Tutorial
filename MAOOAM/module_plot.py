@@ -11,11 +11,15 @@ from class_da_system import da_system
 
 NDIM = 36
 
-def plot_time_colormap(dat, img_name, vmin=None, vmax=None, title="", cmap="RdBu_r"):
+def plot_time_colormap(dat, img_name, vmin=None, vmax=None, title="", cmap="RdBu_r", log=False):
     assert dat.__class__ == np.ndarray
     assert len(dat.shape) == 2
     assert dat.shape[1] == NDIM
-    cm = plt.imshow(dat, aspect="auto", cmap=cmap, origin="bottom")
+    if log:
+        cm = plt.imshow(dat, aspect="auto", cmap=cmap, origin="bottom",
+            norm=matplotlib.colors.SymLogNorm(linthresh=0.001 * vmax))
+    else:
+        cm = plt.imshow(dat, aspect="auto", cmap=cmap, origin="bottom")
     if (vmin is not None) and (vmax is not None):
         cm.set_clim(vmin, vmax)
     plt.colorbar(cm)
@@ -25,6 +29,55 @@ def plot_time_colormap(dat, img_name, vmin=None, vmax=None, title="", cmap="RdBu
     plt.savefig(img_name)
     plt.close()
 
+def plot_mean_bcov(bcov, img_name, title, log=False):
+    vmax = np.max(bcov)
+    if log:
+        cm = plt.imshow(bcov, cmap="RdBu_r", norm=matplotlib.colors.SymLogNorm(linthresh=0.001 * vmax))
+    else:
+        cm = plt.imshow(bcov, cmap="RdBu_r")
+    cm.set_clim(-vmax, vmax)
+    plt.colorbar(cm)
+    plt.xlabel("model variable")
+    plt.ylabel("model variable")
+    plt.title(title)
+    plt.savefig(img_name)
+    plt.close()
+
+def plot_eig_bcov(bcov, img_name_eigval, img_name_eigvec):
+    eigval, eigvec = np.linalg.eig(bcov)
+    idx = eigval.argsort()[::-1]   
+    eigval = eigval[idx]
+    eigvec = eigvec[:,idx]
+
+    plt.plot(eigval)
+    plt.yscale("log")
+    plt.title("eigenvalues of B")
+    plt.savefig(img_name_eigval)
+    plt.close()
+
+    eigvec[:, -1] = 0.0
+    cm = plt.imshow(eigvec, cmap="RdBu_r")
+    cm.set_clim(-1, 1)
+    plt.colorbar(cm)
+    plt.xlabel("eigenvector index")
+    plt.ylabel("model variable")
+    plt.savefig(img_name_eigvec)
+    plt.close()
+
+def cov_to_corr(cov):
+    corr = np.copy(cov)
+    n = cov.shape[0]
+    for i in range(n):
+        for j in range(n):
+            corr[i, j] /= np.sqrt(cov[i, i] * cov[j, j])
+    return corr
+
+def get_bv_dim(cov):
+    eigvals = np.maximum(0, np.real(np.linalg.eigvals(cov)))
+    singvals = eigvals ** 0.5
+    bv_dim = np.sum(singvals) ** 2 / np.sum(singvals ** 2)
+    return bv_dim
+
 def __test_plot_time_colormap():
     nt = 100
     dat = np.random.randn(nt, NDIM)
@@ -33,7 +86,7 @@ def __test_plot_time_colormap():
 
 def __sample_read_files():
     vlim_raw = [-0.05, 0.1]
-    vlim_diff = [None, None]
+    vlim_diff = [-0.15, 0.15]
     nature_file ='x_nature.pkl'
     nature = state_vector()
     nature = nature.load(nature_file)
@@ -42,7 +95,7 @@ def __sample_read_files():
     freerun = freerun.load(freerun_file)
     sp.run("mkdir -p img", shell=True, check=True)
     plot_time_colormap(freerun.getTrajectory() - nature.getTrajectory(),
-                       "img/error_free_run.png", *vlim_diff, "error free run")
+                       "img/error_free_run.png", *vlim_diff, "error free run", "RdBu_r", True)
     plot_time_colormap(freerun.getTrajectory(),
                        "img/freerun.png", *vlim_raw, "freerun", "viridis")
     plot_time_colormap(nature.getTrajectory(),
@@ -54,10 +107,28 @@ def __sample_read_files():
         analysis = das.getStateVector()
         plot_time_colormap(analysis.getTrajectory() - nature.getTrajectory(),
                            "img/error_analysis_%s.png" % method, *vlim_diff,
-                           "error analysis %s" % method)
+                           "error analysis %s" % method, "RdBu_r", True)
         plot_time_colormap(analysis.getTrajectory(),
                            "img/analysis_%s.png" % method, *vlim_raw,
                            "analysis %s" % method, "viridis")
 
+def read_and_plot_bcov():
+    Pb_hist = np.load("Pb_hist.npy")
+    assert len(Pb_hist.shape) == 3
+    assert Pb_hist.shape[1] == Pb_hist.shape[2]
+    mean_cov = np.mean(Pb_hist, axis=0)
+    counter = Pb_hist.shape[0]
+    title = "mean B cov (sample = %d, BV dim = %f)" % (counter, get_bv_dim(mean_cov))
+    plot_mean_bcov(mean_cov, "img/bcov.pdf", title, True)
+    plot_eig_bcov(mean_cov, "img/bcov_eigval.pdf", "img/bcov_eigvec.pdf")
+
+    n = Pb_hist.shape[1]
+    mean_corr = np.zeros((n, n))
+    for t in range(counter):
+        mean_corr += cov_to_corr(Pb_hist[t, :, :])
+    title = "mean B corr (sample = %d, BV dim = %f)" % (counter, get_bv_dim(mean_corr))
+    plot_mean_bcov(mean_corr, "img/bcorr.pdf", title)
+
 if __name__ == "__main__":
     __sample_read_files()
+    read_and_plot_bcov()

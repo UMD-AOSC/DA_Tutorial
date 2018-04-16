@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 *.pkl
+*.npy
 *.html
 tags
 .make/
