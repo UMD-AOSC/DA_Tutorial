@@ -36,12 +36,15 @@ python plot_error.py ETKF
     * [X] BV-like mode separation of slower modes
     * [ ] CLV-based mode separation
         * CLVs are, in practice, difficult to obtain in real applications because it uses future dynamics. But it worth examined from theoretical perspective.
-    * [ ] Static and dynamic B
+    * [X] Calculation of static B
+* [ ] Use of multiple covariances/gains
+* [ ] Test, test, test...
 
 ### Wishlist
 * More plots
-    * [ ] L2 norm error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
-    * [ ] CLVs and B (raw matrix and its eigenvectors)
+    * [ ] RMS error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
+    * [ ] CLVs
+    * [X] B (raw matrix and its eigenvectors)
 * [x] Parallelization of ensemble integration by multiprocessing.pool (**generate_analysis_3dEns.py** line 100)
     * Tested with branch "parallel". Not substantial speedup.
 * [X] Speedup by using fortran integration
