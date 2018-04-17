@@ -49,7 +49,7 @@ python plot_error.py ETKF
     * Tested with branch "parallel". Not substantial speedup.
 * [X] Speedup by using fortran integration
     * About 100x faster (7a7b78d)
-    * Note that {int_params.nml, modeselection.nml, params.nml} are needed.
+    * Note that {int_params.nml, modeselection.nml, params.nml} are needed. Take care those doesn't diverge from parameters for python-MAOOAM.
 * [ ] Rough estimation of necessary experiment length
 * [ ] Ens members should start from initial conditions independent from truth
     * **analysis_init.py** line 72
