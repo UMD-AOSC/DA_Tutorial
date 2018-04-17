@@ -24,7 +24,7 @@ python plot_error.py ETKF
     * **module_obs_network.py** provides static H operator with gridpoint obs of U and T. It can be changed.
 
 * To calculate CLVs:
-    * I haven't tried with this python version. Should be asked to other students.
+    * Included in runall_tutorial_1.sh (this uses pure python and is slow)
 
 * Analysis core programs for ETKF:
     * **generate_analysis_3dEns.py**
