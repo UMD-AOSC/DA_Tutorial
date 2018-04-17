@@ -44,6 +44,8 @@ python plot_error.py ETKF
     * [ ] CLVs and B (raw matrix and its eigenvectors)
 * [x] Parallelization of ensemble integration by multiprocessing.pool (**generate_analysis_3dEns.py** line 100)
     * Tested with branch "parallel". Not substantial speedup.
+* [X] Speedup by using fortran integration
+    * About 100x faster (7a7b78d)
 * [ ] Rough estimation of necessary experiment length
 * [ ] Ens members should start from initial conditions independent from truth
     * **analysis_init.py** line 72
