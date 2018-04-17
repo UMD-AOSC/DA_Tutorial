@@ -4,6 +4,7 @@ import plotly.offline as py
 import plotly.graph_objs as go
 from plotly import tools
 from copy import deepcopy
+from ctypes import *
 
 import numpy as np
 import params_maooam
@@ -16,6 +17,21 @@ import time
 from maooam import ic_def
 from maooam import ic
 import sys
+
+class MaooamFortran:
+    module_maooam = np.ctypeslib.load_library("step_maooam.so", ".")
+    module_maooam.step_maooam_.argtypes = [
+        np.ctypeslib.ndpointer(dtype=np.float64),
+        np.ctypeslib.ndpointer(dtype=np.float64)]
+    module_maooam.step_maooam_.restype = c_void_p
+
+    def __init__(self, dt):
+        assert dt.__class__ in [float, np.float32, np.float64]
+        self.dt = np.array([dt])
+
+    def step(self, x0):
+        self.module_maooam.step_maooam_(x0, self.dt)
+        return x0
 
 #===============================================================================
 # Define functions used by the class
@@ -96,9 +112,10 @@ class maooam:
     xdim = len(state0) 
     states = np.zeros((tdim,xdim))
     state = state0
+    mf = MaooamFortran(dt)
     for i in range(tdim):
       states[i,:] = state
-      state = integrator.step(state, t[i], dt)
+      state = mf.step(state)
 
     return states
 

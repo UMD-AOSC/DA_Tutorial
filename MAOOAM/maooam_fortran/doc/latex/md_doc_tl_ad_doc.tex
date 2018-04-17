@@ -1,0 +1,23 @@
+\subsection*{Description \+:}
+
+The Tangent Linear and Adjoint model model are implemented in the same way as the nonlinear model, with a tensor storing the different terms. The Tangent Linear (TL) tensor $\mathcal{T}_{i,j,k}^{TD}$ is defined as\+:
+
+\[ \mathcal{T}_{i,j,k}^{TL} = \mathcal{T}_{i,k,j} + \mathcal{T}_{i,j,k} \]
+
+while the Adjoint (AD) tensor $\mathcal{T}_{i,j,k}^{AD}$ is defined as\+:
+
+\[ \mathcal{T}_{i,j,k}^{AD} = \mathcal{T}_{j,k,i} + \mathcal{T}_{j,i,k} . \]
+
+where $ \mathcal{T}_{i,j,k}$ is the tensor of the nonlinear model.
+
+These two tensors are used to compute the trajectories of the models, with the equations
+
+\[ \frac{d\delta y_i}{dt} = \sum_{j=1}^{ndim}\sum_{k=0}^{ndim} \, \mathcal{T}_{i,j,k}^{TL} \, y^{\ast}_k \; \delta y_j . \]
+
+\[ -\frac{d\delta y_i}{dt} = \sum_{j=1}^{ndim} \sum_{k=0}^{ndim} \, \mathcal{T}_{i,j,k}^{AD} \, y^{\ast}_k \; \delta y_j . \]
+
+where $\boldsymbol{y}^{\ast}$ is the point where the Tangent model is defined (with $y_0^{\ast}=1$).
+
+\subsection*{Implementation \+:}
+
+The two tensors are implemented in the module \hyperlink{namespacetl__ad__tensor}{tl\+\_\+ad\+\_\+tensor} and must be initialized (after calling \hyperlink{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{params\+::init\+\_\+params} and \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor\+\_\+def\+::aotensor}) by calling \hyperlink{namespacetl__ad__tensor_a8a94fe84e907fc8835f798eddcff38e8}{tl\+\_\+ad\+\_\+tensor\+::init\+\_\+tltensor()} and \hyperlink{namespacetl__ad__tensor_a199cc07a7172f6cf662f9a5bd6f3d45c}{tl\+\_\+ad\+\_\+tensor\+::init\+\_\+adtensor()}. The tendencies are then given by the routine tl(t,ystar,deltay,buf) and ad(t,ystar,deltay,buf). An integrator with the Heun method is available in the module rk2\+\_\+tl\+\_\+ad\+\_\+integrator and a fourth-\/order Runge-\/\+Kutta integrator in rk4\+\_\+tl\+\_\+ad\+\_\+integrator. An example on how to use it can be found in the test file \hyperlink{test__tl__ad_8f90}{test\+\_\+tl\+\_\+ad.\+f90} 

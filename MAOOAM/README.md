@@ -1,6 +1,7 @@
 # DA Tutorial with MAOOAM
 ## Usage
 ```bash
+cd maooam_fortran; make; cd ../; cp maooam_fortran/step_maooam.so .
 # prepare truth, freerun, and obs
 sh clean.sh
 sh runall_tutorial_1.sh

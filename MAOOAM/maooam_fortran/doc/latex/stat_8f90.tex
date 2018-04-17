@@ -1,0 +1,35 @@
+\hypertarget{stat_8f90}{}\section{stat.\+f90 File Reference}
+\label{stat_8f90}\index{stat.\+f90@{stat.\+f90}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacestat}{stat}
+\begin{DoxyCompactList}\small\item\em Statistics accumulators. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, public \hyperlink{namespacestat_a17919a94d519a3b63199ca52590f03c8}{stat\+::init\+\_\+stat}
+\begin{DoxyCompactList}\small\item\em Initialise the accumulators. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacestat_a2f642f26a42651e2c0e7275b690deabe}{stat\+::acc} (x)
+\begin{DoxyCompactList}\small\item\em Accumulate one state. \end{DoxyCompactList}\item 
+real(kind=8) function, dimension(0\+:ndim), public \hyperlink{namespacestat_ada9a5b64e944a67f5b840d7b91990100}{stat\+::mean} ()
+\begin{DoxyCompactList}\small\item\em Function returning the mean. \end{DoxyCompactList}\item 
+real(kind=8) function, dimension(0\+:ndim), public \hyperlink{namespacestat_a32f0c1c215da5a0f2b92672ddb53dd13}{stat\+::var} ()
+\begin{DoxyCompactList}\small\item\em Function returning the variance. \end{DoxyCompactList}\item 
+integer function, public \hyperlink{namespacestat_aca30ccb65a1fc6af92be1018ec40f6c6}{stat\+::iter} ()
+\begin{DoxyCompactList}\small\item\em Function returning the number of data accumulated. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacestat_aaf88c5c208ce1fac886a9e3c0ee5ae08}{stat\+::reset}
+\begin{DoxyCompactList}\small\item\em Routine resetting the accumulators. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer \hyperlink{namespacestat_aae82ae81e5eb5620583fec6c93aa6fa3}{stat\+::i} =0
+\begin{DoxyCompactList}\small\item\em Number of stats accumulated. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespacestat_a2416f75ad24ac05a0ba615f9c8d467db}{stat\+::m}
+\begin{DoxyCompactList}\small\item\em Vector storing the inline mean. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespacestat_adcf5178f8d91cdc53ff5f28cc3e04689}{stat\+::mprev}
+\begin{DoxyCompactList}\small\item\em Previous mean vector. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespacestat_ab2a3ce8c90189fdbd6bb313c75876473}{stat\+::v}
+\begin{DoxyCompactList}\small\item\em Vector storing the inline variance. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespacestat_a24c9afb1c1c6692185b509fd364508c8}{stat\+::mtmp}
+\end{DoxyCompactItemize}

@@ -1,0 +1,53 @@
+\hypertarget{tl__ad__tensor_8f90}{}\section{tl\+\_\+ad\+\_\+tensor.\+f90 File Reference}
+\label{tl__ad__tensor_8f90}\index{tl\+\_\+ad\+\_\+tensor.\+f90@{tl\+\_\+ad\+\_\+tensor.\+f90}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacetl__ad__tensor}{tl\+\_\+ad\+\_\+tensor}
+\begin{DoxyCompactList}\small\item\em Tangent Linear (TL) and Adjoint (AD) model versions of M\+A\+O\+O\+AM. Tensors definition module. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(coolist) function, dimension(ndim) \hyperlink{namespacetl__ad__tensor_af4dbec99377125d7df10d89524ba91b2}{tl\+\_\+ad\+\_\+tensor\+::jacobian} (ystar)
+\begin{DoxyCompactList}\small\item\em Compute the Jacobian of M\+A\+O\+O\+AM in point ystar. \end{DoxyCompactList}\item 
+real(kind=8) function, dimension(ndim, ndim), public \hyperlink{namespacetl__ad__tensor_a2782a5116e8bb677b2d5e9637b509cf3}{tl\+\_\+ad\+\_\+tensor\+::jacobian\+\_\+mat} (ystar)
+\begin{DoxyCompactList}\small\item\em Compute the Jacobian of M\+A\+O\+O\+AM in point ystar. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a8a94fe84e907fc8835f798eddcff38e8}{tl\+\_\+ad\+\_\+tensor\+::init\+\_\+tltensor}
+\begin{DoxyCompactList}\small\item\em Routine to initialize the TL tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a8b1027b49025fbeacd8fbd5d2127bebc}{tl\+\_\+ad\+\_\+tensor\+::compute\+\_\+tltensor} (func)
+\begin{DoxyCompactList}\small\item\em Routine to compute the TL tensor from the original M\+A\+O\+O\+AM one. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a3d69845cace6faef04342c297b0c2a09}{tl\+\_\+ad\+\_\+tensor\+::tl\+\_\+add\+\_\+count} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine used to count the number of TL tensor entries. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a0e37e78de771af0205bd80a30c911a68}{tl\+\_\+ad\+\_\+tensor\+::tl\+\_\+coeff} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine used to compute the TL tensor entries. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a199cc07a7172f6cf662f9a5bd6f3d45c}{tl\+\_\+ad\+\_\+tensor\+::init\+\_\+adtensor}
+\begin{DoxyCompactList}\small\item\em Routine to initialize the AD tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a9437eafe79ee3b0b89cd67af4956fba0}{tl\+\_\+ad\+\_\+tensor\+::compute\+\_\+adtensor} (func)
+\begin{DoxyCompactList}\small\item\em Subroutine to compute the AD tensor from the original M\+A\+O\+O\+AM one. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a0ba0f9d4f9182a49209483749b6d5e10}{tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+add\+\_\+count} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine used to count the number of AD tensor entries. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a177e8f1ebac5de029f565ef7624926f2}{tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+coeff} (i, j, k, v)
+\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a3b666898a684bf3f2e932f38616fc920}{tl\+\_\+ad\+\_\+tensor\+::init\+\_\+adtensor\+\_\+ref}
+\begin{DoxyCompactList}\small\item\em Alternate method to initialize the AD tensor from the TL tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a154e946ce2d6720a48a675ba92a7f350}{tl\+\_\+ad\+\_\+tensor\+::compute\+\_\+adtensor\+\_\+ref} (func)
+\begin{DoxyCompactList}\small\item\em Alternate subroutine to compute the AD tensor from the TL one. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a3c0b4e0e1f18a0f85b874542b76cfa8a}{tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+add\+\_\+count\+\_\+ref} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Alternate subroutine used to count the number of AD tensor entries from the TL tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_aef0157a16688323e3c855ef451d6948f}{tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+coeff\+\_\+ref} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Alternate subroutine used to compute the AD tensor entries from the TL tensor. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_af4683da4f4149b809eb66c3223266ffd}{tl\+\_\+ad\+\_\+tensor\+::ad} (t, ystar, deltay, buf)
+\begin{DoxyCompactList}\small\item\em Tendencies for the AD of M\+A\+O\+O\+AM in point ystar for perturbation deltay. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a2a6bcaa9d4e82c35f6bfb2fdb9016dd9}{tl\+\_\+ad\+\_\+tensor\+::tl} (t, ystar, deltay, buf)
+\begin{DoxyCompactList}\small\item\em Tendencies for the TL of M\+A\+O\+O\+AM in point ystar for perturbation deltay. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8), parameter \hyperlink{namespacetl__ad__tensor_a05a4b79ccb098a47a400e175e12c1c6c}{tl\+\_\+ad\+\_\+tensor\+::real\+\_\+eps} = 2.\+2204460492503131e-\/16
+\begin{DoxyCompactList}\small\item\em Epsilon to test equality with 0. \end{DoxyCompactList}\item 
+integer, dimension(\+:), allocatable \hyperlink{namespacetl__ad__tensor_a8836f34c3a96c44c487c7910ab8c7507}{tl\+\_\+ad\+\_\+tensor\+::count\+\_\+elems}
+\begin{DoxyCompactList}\small\item\em Vector used to count the tensor elements. \end{DoxyCompactList}\item 
+type(coolist), dimension(\+:), allocatable, public \hyperlink{namespacetl__ad__tensor_a6180cfcc4d4ad119ef93266ea955903c}{tl\+\_\+ad\+\_\+tensor\+::tltensor}
+\begin{DoxyCompactList}\small\item\em Tensor representation of the Tangent Linear tendencies. \end{DoxyCompactList}\item 
+type(coolist), dimension(\+:), allocatable, public \hyperlink{namespacetl__ad__tensor_af0a4e6cdc6d653fa808eedaa7ce331de}{tl\+\_\+ad\+\_\+tensor\+::adtensor}
+\begin{DoxyCompactList}\small\item\em Tensor representation of the Adjoint tendencies. \end{DoxyCompactList}\end{DoxyCompactItemize}

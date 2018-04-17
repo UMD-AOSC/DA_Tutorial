@@ -1,0 +1,114 @@
+\hypertarget{namespaceutil}{}\section{util Module Reference}
+\label{namespaceutil}\index{util@{util}}
+
+
+Utility module.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+character(len=20) function, public \hyperlink{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}{str} (k)
+\begin{DoxyCompactList}\small\item\em Convert an integer to string. \end{DoxyCompactList}\item 
+character(len=40) function, public \hyperlink{namespaceutil_ac1630658a46867b1f7255eaa51198bf3}{rstr} (x, fm)
+\begin{DoxyCompactList}\small\item\em Convert a real to string with a given format. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceutil_a3c2dcf05b068a55f0066d2b393e75dc7}{init\+\_\+random\+\_\+seed} ()
+\begin{DoxyCompactList}\small\item\em Random generator initialization routine. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}{init\+\_\+one} (A)
+\begin{DoxyCompactList}\small\item\em Initialize a square matrix A as a unit matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Utility module. 
+
+\begin{DoxyCopyright}{Copyright}
+2015 Lesley De Cruz \& Jonathan Demaeyer. See \hyperlink{LICENSE_8txt}{L\+I\+C\+E\+N\+S\+E.\+txt} for license information. 
+\end{DoxyCopyright}
+
+
+\subsection{Function/\+Subroutine Documentation}
+\index{util@{util}!init\+\_\+one@{init\+\_\+one}}
+\index{init\+\_\+one@{init\+\_\+one}!util@{util}}
+\subsubsection[{\texorpdfstring{init\+\_\+one(\+A)}{init_one(A)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public util\+::init\+\_\+one (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), dimension(\+:,\+:), intent(inout)}]{A}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}{}\label{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}
+
+
+Initialize a square matrix A as a unit matrix. 
+
+
+
+Definition at line 99 of file util.\+f90.
+
+
+\begin{DoxyCode}
+99      \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(:,:)},\textcolor{keywordtype}{INTENT(INOUT)} :: a
+100      \textcolor{keywordtype}{INTEGER} :: i,n
+101      n=\textcolor{keyword}{size}(a,1)
+102      a=0.0d0
+103      \textcolor{keywordflow}{DO} i=1,n
+104        a(i,i)=1.0d0
+105 \textcolor{keywordflow}{     END DO}
+106 
+\end{DoxyCode}
+\index{util@{util}!init\+\_\+random\+\_\+seed@{init\+\_\+random\+\_\+seed}}
+\index{init\+\_\+random\+\_\+seed@{init\+\_\+random\+\_\+seed}!util@{util}}
+\subsubsection[{\texorpdfstring{init\+\_\+random\+\_\+seed()}{init_random_seed()}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public util\+::init\+\_\+random\+\_\+seed (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_a3c2dcf05b068a55f0066d2b393e75dc7}{}\label{namespaceutil_a3c2dcf05b068a55f0066d2b393e75dc7}
+
+
+Random generator initialization routine. 
+
+
+
+Definition at line 44 of file util.\+f90.
+
+\index{util@{util}!rstr@{rstr}}
+\index{rstr@{rstr}!util@{util}}
+\subsubsection[{\texorpdfstring{rstr(x, fm)}{rstr(x, fm)}}]{\setlength{\rightskip}{0pt plus 5cm}character(len=40) function, public util\+::rstr (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), intent(in)}]{x, }
+\item[{character(len=20), intent(in)}]{fm}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_ac1630658a46867b1f7255eaa51198bf3}{}\label{namespaceutil_ac1630658a46867b1f7255eaa51198bf3}
+
+
+Convert a real to string with a given format. 
+
+
+
+Definition at line 36 of file util.\+f90.
+
+
+\begin{DoxyCode}
+36     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)} :: x
+37     \textcolor{keywordtype}{CHARACTER(len=20)}, \textcolor{keywordtype}{INTENT(IN)} :: fm
+38     \textcolor{keyword}{WRITE} (rstr, trim(adjustl(fm))) x
+39     rstr = adjustl(rstr)
+\end{DoxyCode}
+\index{util@{util}!str@{str}}
+\index{str@{str}!util@{util}}
+\subsubsection[{\texorpdfstring{str(k)}{str(k)}}]{\setlength{\rightskip}{0pt plus 5cm}character(len=20) function, public util\+::str (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{k}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}{}\label{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}
+
+
+Convert an integer to string. 
+
+
+
+Definition at line 29 of file util.\+f90.
+
+
+\begin{DoxyCode}
+29     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: k
+30     \textcolor{keyword}{WRITE} (str, *) k
+31     str = adjustl(str)
+\end{DoxyCode}

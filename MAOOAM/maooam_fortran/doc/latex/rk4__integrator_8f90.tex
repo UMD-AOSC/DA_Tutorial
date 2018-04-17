@@ -1,0 +1,23 @@
+\hypertarget{rk4__integrator_8f90}{}\section{rk4\+\_\+integrator.\+f90 File Reference}
+\label{rk4__integrator_8f90}\index{rk4\+\_\+integrator.\+f90@{rk4\+\_\+integrator.\+f90}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespaceintegrator}{integrator}
+\begin{DoxyCompactList}\small\item\em Module with the integration routines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, public \hyperlink{namespaceintegrator_ab01b1930fc627150051ed5c5465ac533}{integrator\+::init\+\_\+integrator}
+\begin{DoxyCompactList}\small\item\em Routine to initialise the integration buffers. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceintegrator_ae8158ec5bb2be4dca1daadb1a906ba96}{integrator\+::tendencies} (t, y, res)
+\begin{DoxyCompactList}\small\item\em Routine computing the tendencies of the model. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceintegrator_adaf5baacd0ff1905f334ce824cdcd58e}{integrator\+::step} (y, t, dt, res)
+\begin{DoxyCompactList}\small\item\em Routine to perform an integration step (Heun algorithm). The incremented time is returned. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespaceintegrator_a2afa4ff98b4a081aab43a4fae62fc8b1}{integrator\+::buf\+\_\+ka}
+\begin{DoxyCompactList}\small\item\em Buffer A to hold tendencies. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespaceintegrator_a6d3aa6db72a39f4bc0999ef8056ffba2}{integrator\+::buf\+\_\+kb}
+\begin{DoxyCompactList}\small\item\em Buffer B to hold tendencies. \end{DoxyCompactList}\end{DoxyCompactItemize}
