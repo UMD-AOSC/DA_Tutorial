@@ -33,7 +33,7 @@ python plot_error.py ETKF
 ## Todo and Wishlist (feel free to edit me)
 ### Todo
 * Limit B to projection of some modes
-    * [ ] BV-like mode separation of slower modes
+    * [X] BV-like mode separation of slower modes
     * [ ] CLV-based mode separation
         * CLVs are, in practice, difficult to obtain in real applications because it uses future dynamics. But it worth examined from theoretical perspective.
     * [ ] Static and dynamic B
@@ -46,6 +46,7 @@ python plot_error.py ETKF
     * Tested with branch "parallel". Not substantial speedup.
 * [X] Speedup by using fortran integration
     * About 100x faster (7a7b78d)
+    * Note that {int_params.nml, modeselection.nml, params.nml} are needed.
 * [ ] Rough estimation of necessary experiment length
 * [ ] Ens members should start from initial conditions independent from truth
     * **analysis_init.py** line 72
