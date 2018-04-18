@@ -52,6 +52,7 @@ python plot_error.py ETKF
     * Note that {int_params.nml, modeselection.nml, params.nml} are needed. Take care those doesn't diverge from parameters for python-MAOOAM.
 * [X] Rough estimation of necessary experiment length
     * Ocean streamfunction has timescale of 1E+5 time units (~ 30 years). Experiments with 1E+6 time units are enough.
+    * With time step of 0.1 time units, 1E+6 time units (1E+7 steps) single integration is about 80 secs after speedup.
 * [ ] Ens members should start from initial conditions independent from truth
     * **analysis_init.py** line 72
     * **generate_analysis_3dEns.py** lines 24-26
