@@ -1,7 +1,7 @@
 # DA Tutorial with MAOOAM
 ## Usage
 ```bash
-cd maooam_fortran; make; cd ../; cp maooam_fortran/step_maooam.so .
+cd maooam_fortran && make && cd ../ && cp maooam_fortran/step_maooam.so .
 # prepare truth, freerun, and obs
 sh clean.sh
 sh runall_tutorial_1.sh
@@ -24,7 +24,7 @@ python plot_error.py ETKF
     * **module_obs_network.py** provides static H operator with gridpoint obs of U and T. It can be changed.
 
 * To calculate CLVs:
-    * I haven't tried with this python version. Should be asked to other students.
+    * Included in runall_tutorial_1.sh (this uses pure python and is slow)
 
 * Analysis core programs for ETKF:
     * **generate_analysis_3dEns.py**
@@ -33,18 +33,26 @@ python plot_error.py ETKF
 ## Todo and Wishlist (feel free to edit me)
 ### Todo
 * Limit B to projection of some modes
-    * [ ] BV-like mode separation of slower modes
+    * [X] BV-like mode separation of slower modes
     * [ ] CLV-based mode separation
         * CLVs are, in practice, difficult to obtain in real applications because it uses future dynamics. But it worth examined from theoretical perspective.
-    * [ ] Static and dynamic B
+    * [X] Calculation of static B
+* [ ] Use of multiple covariances/gains
+* [ ] Test, test, test...
 
 ### Wishlist
 * More plots
-    * [ ] L2 norm error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
-    * [ ] CLVs and B (raw matrix and its eigenvectors)
+    * [ ] RMS error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
+    * [ ] CLVs
+    * [X] B (raw matrix and its eigenvectors)
 * [x] Parallelization of ensemble integration by multiprocessing.pool (**generate_analysis_3dEns.py** line 100)
     * Tested with branch "parallel". Not substantial speedup.
-* [ ] Rough estimation of necessary experiment length
+* [X] Speedup by using fortran integration
+    * About 100x faster (7a7b78d)
+    * Note that {int_params.nml, modeselection.nml, params.nml} are needed. Take care those doesn't diverge from parameters for python-MAOOAM.
+* [X] Rough estimation of necessary experiment length
+    * Ocean streamfunction has timescale of 1E+5 time units (~ 30 years). Experiments with 1E+6 time units are enough.
+    * With time step of 0.1 time units, 1E+6 time units (1E+7 steps) single integration is about 80 secs after speedup.
 * [ ] Ens members should start from initial conditions independent from truth
     * **analysis_init.py** line 72
     * **generate_analysis_3dEns.py** lines 24-26
