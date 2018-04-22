@@ -42,7 +42,7 @@ python plot_error.py ETKF
 
 ### Wishlist
 * More plots
-    * [ ] RMS error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
+    * [X] RMS error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
     * [ ] CLVs
     * [X] B (raw matrix and its eigenvectors)
 * [x] Parallelization of ensemble integration by multiprocessing.pool (**generate_analysis_3dEns.py** line 100)
