@@ -56,6 +56,7 @@ python plot_error.py ETKF
 * [ ] Ens members should start from initial conditions independent from truth
     * **analysis_init.py** line 72
     * **generate_analysis_3dEns.py** lines 24-26
+    * I heard this only changes the first several windows. I will do it later.
 
 ## Tested environment
 * Anaconda3-5.1.0
