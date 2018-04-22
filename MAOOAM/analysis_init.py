@@ -100,7 +100,7 @@ B = I * sigma_b**2
 #     [-0.02400967,  0.00074236,  0.03891405]]
 
 # Set observation error covariance
-sigma_r = 1.0  # this should match with generate_observations.py
+sigma_r = 10.0  # this should match with generate_observations.py
 R = I * (sigma_r ** 2)
 
 # Set the linear observation operator matrix as the identity by default 

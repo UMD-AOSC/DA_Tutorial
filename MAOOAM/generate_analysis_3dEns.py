@@ -82,6 +82,7 @@ method = das.getMethod()
 xa = das.x0
 xa_history = np.zeros_like(x_nature)
 xa_history[:] = np.nan
+Xens_a_history = np.empty((maxit, xdim, edim))
 KH_history = []
 KH_idx = []
 n_cyc_step = int(np.ceil((maxit - acyc_step) / acyc_step))
@@ -102,11 +103,15 @@ for j, i in enumerate(range(0,maxit-acyc_step,acyc_step)):
   # Preferably, run this loop in parallel:
   for k in range(das.edim):
     # Run model run for ensemble member k
+    assert len(t) == acyc_step + 1
     xf_4d_k =  model.run(Xa[:,k].A1,t)
     # Get last timestep of the forecast
     Xf[:,k] = np.transpose(np.matrix(xf_4d_k[-1,:]))
     # Compute forecast ensemble mean
     xf_4d = xf_4d + xf_4d_k
+
+    Xens_a_history[i:i+acyc_step, :, k] = xf_4d_k[:acyc_step, :]
+
   xf_4d = xf_4d / das.edim
   Pb_hist[j, :, :] = Xf @ Xf.T
   #----------------------------------------------
@@ -119,6 +124,7 @@ for j, i in enumerate(range(0,maxit-acyc_step,acyc_step)):
   # Compute analysis
   #----------------------------------------------
   Xa, KH = das.compute_analysis(Xf,yo)
+  Xens_a_history[i+acyc_step, :, :] = Xa[:, :]
   xa = np.mean(Xa,axis=1).T
 
   # print('xa = ')
@@ -131,6 +137,7 @@ for j, i in enumerate(range(0,maxit-acyc_step,acyc_step)):
   xa_history[i:i+acyc_step,:] = xf_4d[0:acyc_step,:]
   # Archive the analysis
   xa_history[i+acyc_step,:] = xa
+
 
   # print('xa_history[i:i+acyc_step+1,:] = ', xa_history[i:i+acyc_step+1,:])
 
@@ -151,6 +158,7 @@ print((1/(das.edim-1))*np.dot(Xa,np.transpose(Xa)))
 np.save("Pb_hist.npy", Pb_hist)
 
 sv.setTrajectory(xa_history)
+sv.setEnsembleTrajectory(Xens_a_history)
 sv.setName(name)
 das.setStateVector(sv)
 
