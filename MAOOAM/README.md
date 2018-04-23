@@ -53,10 +53,7 @@ python plot_error.py ETKF
 * [X] Rough estimation of necessary experiment length
     * Ocean streamfunction has timescale of 1E+5 time units (~ 30 years). Experiments with 1E+6 time units are enough.
     * With time step of 0.1 time units, 1E+6 time units (1E+7 steps) single integration is about 80 secs after speedup.
-* [ ] Ens members should start from initial conditions independent from truth
-    * **analysis_init.py** line 72
-    * **generate_analysis_3dEns.py** lines 24-26
-    * I heard this only changes the first several windows. I will do it later.
+* [X] Ens members should start from initial conditions independent from truth
 
 ## Tested environment
 * Anaconda3-5.1.0
