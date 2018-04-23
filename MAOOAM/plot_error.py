@@ -36,6 +36,7 @@ def plot_rmse_all(nature, freerun, analysis, method, slice, img_name):
         plt.plot(nature.getTimes(), np.linalg.norm(sprd[slice], axis=1),
             label='Analysis spread ({method})'.format(method=method))
     plt.legend()
+    plt.yscale("log")
     plt.xlabel('Time')
     plt.ylabel('Error', rotation='horizontal', labelpad=20)
     plt.title(img_name)

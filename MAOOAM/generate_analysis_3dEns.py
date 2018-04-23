@@ -113,7 +113,8 @@ for j, i in enumerate(range(0,maxit-acyc_step,acyc_step)):
     Xens_a_history[i:i+acyc_step, :, k] = xf_4d_k[:acyc_step, :]
 
   xf_4d = xf_4d / das.edim
-  Pb_hist[j, :, :] = Xf @ Xf.T
+  Xf_ptb = Xf - np.mean(Xf, axis=1)
+  Pb_hist[j, :, :] = Xf_ptb @ Xf_ptb.T / (das.edim - 1.0)
   #----------------------------------------------
   # Get the observations for this analysis cycle
   #----------------------------------------------

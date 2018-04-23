@@ -15,11 +15,9 @@ def plot_time_colormap(dat, img_name, vmin=None, vmax=None, title="", cmap="RdBu
     assert dat.__class__ == np.ndarray
     assert len(dat.shape) == 2
     assert dat.shape[1] == NDIM
-    if log:
-        cm = plt.imshow(dat, aspect="auto", cmap=cmap, origin="bottom",
-            norm=matplotlib.colors.SymLogNorm(linthresh=0.001 * vmax))
-    else:
-        cm = plt.imshow(dat, aspect="auto", cmap=cmap, origin="bottom")
+    norm = matplotlib.colors.SymLogNorm(linthresh=0.001 * vmax) if log else None
+    cm = plt.imshow(dat, aspect="auto", cmap=cmap, origin="bottom", norm=norm,
+        extent=get_extent_bottom_origin(dat))
     if (vmin is not None) and (vmax is not None):
         cm.set_clim(vmin, vmax)
     plt.colorbar(cm)
@@ -31,10 +29,8 @@ def plot_time_colormap(dat, img_name, vmin=None, vmax=None, title="", cmap="RdBu
 
 def plot_mean_bcov(bcov, img_name, title, log=False):
     vmax = np.max(bcov)
-    if log:
-        cm = plt.imshow(bcov, cmap="RdBu_r", norm=matplotlib.colors.SymLogNorm(linthresh=0.001 * vmax))
-    else:
-        cm = plt.imshow(bcov, cmap="RdBu_r")
+    norm = matplotlib.colors.SymLogNorm(linthresh=0.001 * vmax) if log else None
+    cm = plt.imshow(bcov, cmap="RdBu_r", norm=norm, extent=get_extent_square())
     cm.set_clim(-vmax, vmax)
     plt.colorbar(cm)
     plt.xlabel("model variable")
@@ -45,24 +41,33 @@ def plot_mean_bcov(bcov, img_name, title, log=False):
 
 def plot_eig_bcov(bcov, img_name_eigval, img_name_eigvec):
     eigval, eigvec = np.linalg.eig(bcov)
-    idx = eigval.argsort()[::-1]   
+    idx = eigval.argsort()[::-1]
     eigval = eigval[idx]
     eigvec = eigvec[:,idx]
 
     plt.plot(eigval)
     plt.yscale("log")
     plt.title("eigenvalues of B")
+    plt.xlabel("eigenvector index")
     plt.savefig(img_name_eigval)
     plt.close()
 
-    eigvec[:, -1] = 0.0
-    cm = plt.imshow(eigvec, cmap="RdBu_r")
+    cm = plt.imshow(eigvec, cmap="RdBu_r", extent=get_extent_square())
     cm.set_clim(-1, 1)
     plt.colorbar(cm)
     plt.xlabel("eigenvector index")
     plt.ylabel("model variable")
     plt.savefig(img_name_eigvec)
     plt.close()
+
+def get_extent_square():
+    # left, right, bottom, top
+    return [0.5, NDIM + 0.5, NDIM + 0.5, 0.5]
+
+def get_extent_bottom_origin(data):
+    sp = data.shape
+    assert len(sp) == 2
+    return [0.5, sp[1] + 0.5, 0.5, sp[0] + 0.5]
 
 def cov_to_corr(cov):
     corr = np.copy(cov)
@@ -116,8 +121,8 @@ def read_and_plot_bcov():
     Pb_hist = np.load("Pb_hist.npy")
     assert len(Pb_hist.shape) == 3
     assert Pb_hist.shape[1] == Pb_hist.shape[2]
-    mean_cov = np.mean(Pb_hist, axis=0)
     counter = Pb_hist.shape[0]
+    mean_cov = np.mean(Pb_hist[counter // 2:, :, :], axis=0)
     title = "mean B cov (sample = %d, BV dim = %f)" % (counter, get_bv_dim(mean_cov))
     plot_mean_bcov(mean_cov, "img/bcov.pdf", title, True)
     plot_eig_bcov(mean_cov, "img/bcov_eigval.pdf", "img/bcov_eigvec.pdf")
@@ -125,10 +130,11 @@ def read_and_plot_bcov():
     n = Pb_hist.shape[1]
     mean_corr = np.zeros((n, n))
     for t in range(counter):
-        mean_corr += cov_to_corr(Pb_hist[t, :, :])
+        mean_corr += cov_to_corr(Pb_hist[t, :, :]) / counter
     title = "mean B corr (sample = %d, BV dim = %f)" % (counter, get_bv_dim(mean_corr))
     plot_mean_bcov(mean_corr, "img/bcorr.pdf", title)
 
 if __name__ == "__main__":
+    np.set_printoptions(formatter={'float': '{: 10.6g}'.format}, threshold=2000, linewidth=150)
     __sample_read_files()
     read_and_plot_bcov()
