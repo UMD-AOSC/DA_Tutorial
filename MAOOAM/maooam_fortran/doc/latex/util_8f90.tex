@@ -12,10 +12,14 @@ character(len=20) function, public \hyperlink{namespaceutil_a1df36d0696c9183ceb6
 \begin{DoxyCompactList}\small\item\em Convert an integer to string. \end{DoxyCompactList}\item 
 character(len=40) function, public \hyperlink{namespaceutil_ac1630658a46867b1f7255eaa51198bf3}{util\+::rstr} (x, fm)
 \begin{DoxyCompactList}\small\item\em Convert a real to string with a given format. \end{DoxyCompactList}\item 
+integer function, dimension(size(s)), public \hyperlink{namespaceutil_a1e2cd46baa2070e28949e28c8a3e037e}{util\+::isin} (c, s)
+\begin{DoxyCompactList}\small\item\em Determine if a character is in a string and where. \end{DoxyCompactList}\item 
 subroutine, public \hyperlink{namespaceutil_a3c2dcf05b068a55f0066d2b393e75dc7}{util\+::init\+\_\+random\+\_\+seed} ()
 \begin{DoxyCompactList}\small\item\em Random generator initialization routine. \end{DoxyCompactList}\item 
 integer function \hyperlink{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{lcg} (s)
 \item 
+subroutine, public \hyperlink{namespaceutil_af8d0a8ec8cb7391ddbf455dc92f2189d}{util\+::piksrt} (k, arr, par)
+\begin{DoxyCompactList}\small\item\em Simple card player sorting function. \end{DoxyCompactList}\item 
 subroutine, public \hyperlink{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}{util\+::init\+\_\+one} (A)
 \begin{DoxyCompactList}\small\item\em Initialize a square matrix A as a unit matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -30,18 +34,18 @@ subroutine, public \hyperlink{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}{u
 )}\hypertarget{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{}\label{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}
 
 
-Definition at line 84 of file util.\+f90.
+Definition at line 102 of file util.\+f90.
 
 
 \begin{DoxyCode}
-84       \textcolor{keywordtype}{integer} :: \hyperlink{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{lcg}
-85       \textcolor{keywordtype}{integer(int64)} :: s
-86       \textcolor{keywordflow}{IF} (s == 0) \textcolor{keywordflow}{THEN}
-87          s = 104729
-88       \textcolor{keywordflow}{ELSE}
-89          s = mod(s, 4294967296\_int64)
-90 \textcolor{keywordflow}{      END IF}
-91       s = mod(s * 279470273\_int64, 4294967291\_int64)
-92       \hyperlink{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{lcg} = int(mod(s, int(huge(0), int64)), kind(0))
-93 \textcolor{keyword}{    END FUNCTION }\hyperlink{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{lcg}
+102       \textcolor{keywordtype}{integer} :: \hyperlink{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{lcg}
+103       \textcolor{keywordtype}{integer(int64)} :: s
+104       \textcolor{keywordflow}{IF} (s == 0) \textcolor{keywordflow}{THEN}
+105          s = 104729
+106       \textcolor{keywordflow}{ELSE}
+107          s = mod(s, 4294967296\_int64)
+108 \textcolor{keywordflow}{      END IF}
+109       s = mod(s * 279470273\_int64, 4294967291\_int64)
+110       \hyperlink{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{lcg} = int(mod(s, int(huge(0), int64)), kind(0))
+111 \textcolor{keyword}{    END FUNCTION }\hyperlink{util_8f90_a669ac8da4cdd11efd16a0ef72a4f7915}{lcg}
 \end{DoxyCode}

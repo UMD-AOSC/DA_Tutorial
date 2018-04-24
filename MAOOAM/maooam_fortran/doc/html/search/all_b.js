@@ -7,6 +7,7 @@ var searchData=
   ['license',['License',['../LICENSE_8txt.html#a5265396c41b42f76bb8ac88275c2535e',1,'LICENSE.txt']]],
   ['license_2etxt',['LICENSE.txt',['../LICENSE_8txt.html',1,'']]],
   ['load_5fic',['load_ic',['../namespaceic__def.html#af3d9de16d535e27cf3bacd7f82d68d54',1,'ic_def']]],
+  ['load_5ftensor_5ffrom_5ffile',['load_tensor_from_file',['../namespacetensor.html#ac4c6ebce7aee73aebac2514e45f7cc78',1,'tensor']]],
   ['lpa',['lpa',['../namespaceparams.html#abc64b12ee840e1d848729ea868221117',1,'params']]],
   ['lpo',['lpo',['../namespaceparams.html#aa668795ed0785dc42a43980c82ba058e',1,'params']]],
   ['lr',['lr',['../namespaceparams.html#a3082530044275cbd794604b81a7e6be0',1,'params']]],

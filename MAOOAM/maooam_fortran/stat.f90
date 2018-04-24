@@ -3,9 +3,9 @@
 !
 !>  Statistics accumulators
 !
-!> @copyright
+!> @copyright                                                               
 !> 2015 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
 
@@ -16,14 +16,14 @@ MODULE stat
   IMPLICIT NONE
 
   PRIVATE
-
+  
   INTEGER :: i=0 !< Number of stats accumulated
-
+  
   ! Vectors holding the stats
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: m       !< Vector storing the inline mean
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: mprev   !< Previous mean vector
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: v       !< Vector storing the inline variance
-  REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: mtmp
+  REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: mtmp  
 
 
   PUBLIC :: acc,init_stat,mean,var,iter,reset
@@ -33,14 +33,14 @@ MODULE stat
     !> Initialise the accumulators
     SUBROUTINE init_stat
       INTEGER :: AllocStat
-
+      
       ALLOCATE(m(0:ndim),mprev(0:ndim),v(0:ndim),mtmp(0:ndim), STAT=AllocStat)
       IF (AllocStat /= 0) STOP '*** Not enough memory ***'
       m=0.D0
       mprev=0.D0
       v=0.D0
       mtmp=0.D0
-
+      
     END SUBROUTINE init_stat
 
     !> Accumulate one state
@@ -80,6 +80,6 @@ MODULE stat
       v=0.D0
       i=0
     END SUBROUTINE reset
-
+      
 
   END MODULE stat

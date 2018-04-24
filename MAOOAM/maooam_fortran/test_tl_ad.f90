@@ -3,10 +3,10 @@
 !
 !> Tests for the Tangent Linear (TL) and Adjoint (AD) model versions
 !> of MAOOAM.
-!
-!> @copyright
+!     
+!> @copyright                                                               
 !> 2016 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
 
@@ -17,18 +17,16 @@ PROGRAM test_tl_ad
   USE integrator, only: init_integrator,step
   USE tl_ad_tensor, only: init_tltensor, init_adtensor
   USE tl_ad_integrator, only: init_tl_ad_integrator,tl_step,ad_step
-  USE wrap_lapack
   IMPLICIT NONE
 
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: y0_IC,y0,y0prime,dy0,dy0_bis
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: y1,y1prime
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: dy,dy_bis
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: dy1,dy1_tl,dy1_bis_tl,dy1_ad,dy1_bis_ad
-  REAL(KIND=8), DIMENSION(:, :), ALLOCATABLE :: tlm
   REAL(KIND=8) :: t=0.D0
   REAL(KIND=8) :: norm1,norm2,gasdev
   INTEGER :: i,idum1,n
-
+  
   ! Compute the tensors
 
   CALL init_aotensor
@@ -45,8 +43,7 @@ PROGRAM test_tl_ad
   ALLOCATE(dy1(0:ndim),dy1_tl(0:ndim),dy_bis(0:ndim)&
        &,dy1_bis_tl(0:ndim),dy1_ad(0:ndim),dy1_bis_ad(0:ndim))!, STAT&
        ! &=AllocStat)
-  ALLOCATE(tlm(0:ndim, 0:ndim))
-
+ 
 
   ! Test Taylor property for the Tangent Linear.
   ! lim(\lambda->0) M(x+\lambda dx) - M(x) / M'(\lambda dx) = 1
@@ -79,7 +76,7 @@ PROGRAM test_tl_ad
      dy=2.D0**(-n)/sqrt(real(ndim))
      dy(0)=0.D0
      PRINT*, "Perturbation size:",dot_product(dy,dy)
-
+     
      y0 = y0_IC*1
      y0prime = y0 + dy
      CALL step(y0,t,dt,y1)
@@ -101,7 +98,7 @@ PROGRAM test_tl_ad
   END DO
 
   ! Test 2: Adjoint Identity: <M(TL).x,y> = <x,M(AD).y>
-
+  
   DO i=1,100
      ! Any perturbation.
      DO n=1,ndim
@@ -117,19 +114,13 @@ PROGRAM test_tl_ad
      ! Calculate M(TL).x in dy1_tl
      dy0 = dy*1
      CALL tl_step(dy0,y0_IC,t,dt,dy1_tl)
-     CALL tl_matrix(y0_IC, dt, tlm)
-     call wrt_mat(tlm)
-     print *, maxval(abs(dy1_tl - matmul(tlm, dy0)))
-
+     
      ! Calculate M(AD).x in dy1_ad
      CALL ad_step(dy0,y0_IC,t,dt,dy1_ad)
-     print *, maxval(abs(dy1_ad - matmul(transpose(tlm), dy0)))
-     stop (107)
 
      ! Calculate M(TL).y in dy1_bis_tl
-     dy0_bis = dy_bis
      CALL tl_step(dy0_bis,y0_IC,t,dt,dy1_bis_tl)
-
+     
      ! Calculate M(AD).y in dy1_bis_ad
      CALL ad_step(dy0_bis,y0_IC,t,dt,dy1_bis_ad)
 
@@ -212,26 +203,3 @@ FUNCTION ran2(idum)
   ran2=min(AM*iy,RNMX)
   return
 END FUNCTION ran2
-
-SUBROUTINE tl_matrix(xctl, dt, tlm)
-  USE params, only: ndim
-  USE integrator, only: step
-  IMPLICIT NONE
-  REAL(8), DIMENSION(0:ndim), INTENT(IN) :: xctl
-  REAL(8), INTENT(IN) :: dt
-  REAL(8), DIMENSION(0:ndim, 0:ndim), INTENT(OUT) :: tlm
-  REAL(8), PARAMETER :: eps = 1.0D-8
-  REAL(8), DIMENSION(0:ndim) :: xptb, xctl2, xptb2
-  REAL(8) :: dummy_t = 0.0D0
-  INTEGER :: j
-
-  CALL step(xctl, dummy_t, dt, xctl2)
-
-  do j = 1, ndim
-    xptb(:) = xctl(:)
-    xptb(j) = xptb(j) + eps
-    CALL step(xptb, dummy_t, dt, xptb2)
-    tlm(:, j) = (xptb2(:) - xctl2(:)) / eps
-  end do
-END SUBROUTINE tl_matrix
-

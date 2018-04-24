@@ -5,16 +5,16 @@
 !>  with temperature which allows for an extensible set of modes
 !>  in the ocean and in the atmosphere.
 !
-!> @copyright
+!> @copyright                                                               
 !> 2015 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
-!
-!> @remark
-!> Generated Fortran90/95 code
+!                                                                           
+!> @remark                                                                 
+!> Generated Fortran90/95 code 
 !> from aotensor.lua
-!
+!                                                                           
 !---------------------------------------------------------------------------!
 
 
@@ -140,7 +140,8 @@ CONTAINS
     CALL func(theta(1),0,0,(Cpa / (1 - atmos%a(1,1) * sig0)))
     DO i = 1, natm
        DO j = 1, natm
-          CALL func(psi(i),psi(j),0,-(((atmos%c(i,j) * betp) / atmos%a(i,i))) - (kd * kdelta(i,j)) / 2)
+          CALL func(psi(i),psi(j),0,-(((atmos%c(i,j) * betp) / atmos%a(i,i))) -&
+               &(kd * kdelta(i,j)) / 2 + atmos%a(i,j)*nuap)
           CALL func(theta(i),psi(j),0,(atmos%a(i,j) * kd * sig0) / (-2 + 2 * atmos%a(i,i) * sig0))
           CALL func(psi(i),theta(j),0,(kd * kdelta(i,j)) / 2)
           CALL func(theta(i),theta(j),0,(-((sig0 * (2. * atmos%c(i,j) * betp +&
@@ -167,8 +168,8 @@ CONTAINS
           CALL func(A(i),theta(j),0,-(ocean%K(i,j)) * dp / (ocean%M(i,i) + G))
        END DO
        DO j = 1, noc
-          CALL func(A(i),A(j),0,-((ocean%N(i,j) * betp + ocean%M(i&
-               &,i) * (rp + dp) * kdelta(i,j))) / (ocean%M(i,i) + G))
+          CALL func(A(i),A(j),0,-((ocean%N(i,j) * betp + ocean%M(i,i) * (rp + dp) * kdelta(i,j)&
+               & - ocean%M(i,j)**2*nuop)) / (ocean%M(i,i) + G))
           DO k = 1, noc
              CALL func(A(i),A(j),A(k),-(ocean%C(i,j,k)) / (ocean%M(i,i) + G))
           END DO
@@ -200,7 +201,7 @@ CONTAINS
   !> anymore at this point.
   SUBROUTINE init_aotensor
     INTEGER :: i
-    INTEGER :: AllocStat
+    INTEGER :: AllocStat 
 
     CALL init_params  ! Iniatialise the parameter
 
@@ -219,15 +220,13 @@ CONTAINS
 
     DEALLOCATE(count_elems, STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Deallocation problem ! ***"
-
+    
     CALL compute_aotensor(coeff)
 
     CALL simplify(aotensor)
 
-    CALL deallocate_inprod ! Clean the inner product tensors
-
   END SUBROUTINE init_aotensor
 END MODULE aotensor_def
-
+      
 
 

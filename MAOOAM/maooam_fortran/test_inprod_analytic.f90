@@ -1,11 +1,11 @@
 
 ! test_inprod_analytic.f90
 !
-!> Small program to print the inner products.
-!
-!> @copyright
+!> Small program to print the inner products.   
+!     
+!> @copyright                                                               
 !> 2015 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
 !

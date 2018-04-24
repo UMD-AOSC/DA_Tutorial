@@ -4,16 +4,16 @@
 !> Tangent Linear (TL) and Adjoint (AD) model versions of MAOOAM.
 !> Tensors definition module
 !
-!> @copyright
+!> @copyright                                                               
 !> 2016 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
-!
-!> @remark
+!                                                                           
+!> @remark                                                                 
 !> The routines of this module should be called only after
 !> params::init_params() and aotensor_def::init_aotensor() have been called !
-!
+!                                                                           
 !---------------------------------------------------------------------------!
 
 MODULE tl_ad_tensor
@@ -44,7 +44,7 @@ MODULE tl_ad_tensor
   TYPE(coolist), DIMENSION(:), ALLOCATABLE, PUBLIC :: adtensor
 
   PUBLIC :: init_tltensor,init_adtensor,init_adtensor_ref,ad,tl,jacobian_mat
-
+  
   !-----------------------------------------------------!
   !                                                     !
   ! End of preamble                                     !
@@ -91,11 +91,11 @@ CONTAINS
   ! Tangent linear model functions                      !
   !                                                     !
   !-----------------------------------------------------!
-
+  
   !> Routine to initialize the TL tensor
   SUBROUTINE init_tltensor
     INTEGER :: i
-    INTEGER :: AllocStat
+    INTEGER :: AllocStat 
     ALLOCATE(tltensor(ndim),count_elems(ndim), STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
     count_elems=0
@@ -108,7 +108,7 @@ CONTAINS
 
     DEALLOCATE(count_elems, STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Deallocation problem ! ***"
-
+    
     CALL compute_tltensor(tl_coeff)
 
     CALL simplify(tltensor)
@@ -191,7 +191,7 @@ CONTAINS
   !> Routine to initialize the AD tensor
   SUBROUTINE init_adtensor
     INTEGER :: i
-    INTEGER :: AllocStat
+    INTEGER :: AllocStat 
     ALLOCATE(adtensor(ndim),count_elems(ndim), STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
     count_elems=0
@@ -204,7 +204,7 @@ CONTAINS
 
     DEALLOCATE(count_elems, STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Deallocation problem ! ***"
-
+    
     CALL compute_adtensor(ad_coeff)
 
     CALL simplify(adtensor)
@@ -292,7 +292,7 @@ CONTAINS
   !> @remark The #tltensor must be initialised before using this method.
   SUBROUTINE init_adtensor_ref
     INTEGER :: i
-    INTEGER :: AllocStat
+    INTEGER :: AllocStat 
     ALLOCATE(adtensor(ndim),count_elems(ndim), STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
     count_elems=0
@@ -305,7 +305,7 @@ CONTAINS
 
     DEALLOCATE(count_elems, STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Deallocation problem ! ***"
-
+    
     CALL compute_adtensor_ref(ad_coeff_ref)
 
     CALL simplify(adtensor)

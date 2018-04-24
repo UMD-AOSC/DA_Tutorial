@@ -21,5 +21,6 @@ var searchData=
   ['inprod_5fanalytic_2ef90',['inprod_analytic.f90',['../inprod__analytic_8f90.html',1,'']]],
   ['inprod_5fanalytic_5ftest',['inprod_analytic_test',['../test__inprod__analytic_8f90.html#ab39906c756570260b929dab5e6f182c1',1,'test_inprod_analytic.f90']]],
   ['integrator',['integrator',['../namespaceintegrator.html',1,'']]],
+  ['isin',['isin',['../namespaceutil.html#a1e2cd46baa2070e28949e28c8a3e037e',1,'util']]],
   ['iter',['iter',['../namespacestat.html#aca30ccb65a1fc6af92be1018ec40f6c6',1,'stat']]]
 ];

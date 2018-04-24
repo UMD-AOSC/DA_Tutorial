@@ -185,41 +185,39 @@ Definition at line 132 of file aotensor\+\_\+def.\+f90.
 Subroutine to initialise the \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor} tensor. 
 
 \begin{DoxyRemark}{Remarks}
-This procedure will also call \hyperlink{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{params\+::init\+\_\+params()} and \hyperlink{namespaceinprod__analytic_a7491dd2b8ba26eb10d160eb0bf072e56}{inprod\+\_\+analytic\+::init\+\_\+inprod()} . It will finally call \hyperlink{namespaceinprod__analytic_a77718deee55b484b0946e6c8faf72cd6}{inprod\+\_\+analytic\+::deallocate\+\_\+inprod()} to remove the inner products, which are not needed anymore at this point. 
+This procedure will also call \hyperlink{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{params\+::init\+\_\+params()} and \hyperlink{namespaceinprod__analytic_a7491dd2b8ba26eb10d160eb0bf072e56}{inprod\+\_\+analytic\+::init\+\_\+inprod()} . It will finally call inprod\+\_\+analytic\+::deallocate\+\_\+inprod() to remove the inner products, which are not needed anymore at this point. 
 \end{DoxyRemark}
 
 
-Definition at line 202 of file aotensor\+\_\+def.\+f90.
+Definition at line 203 of file aotensor\+\_\+def.\+f90.
 
 
 \begin{DoxyCode}
-202     \textcolor{keywordtype}{INTEGER} :: i
-203     \textcolor{keywordtype}{INTEGER} :: allocstat 
-204 
-205     \textcolor{keyword}{CALL }init\_params  \textcolor{comment}{! Iniatialise the parameter}
-206 
-207     \textcolor{keyword}{CALL }init\_inprod  \textcolor{comment}{! Initialise the inner product tensors}
-208 
-209     \textcolor{keyword}{ALLOCATE}(aotensor(ndim),count\_elems(ndim), \hyperlink{namespacestat}{stat}=allocstat)
-210     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
-211     count\_elems=0
-212 
-213     \textcolor{keyword}{CALL }compute\_aotensor(add\_count)
-214 
-215     \textcolor{keywordflow}{DO} i=1,ndim
-216        \textcolor{keyword}{ALLOCATE}(aotensor(i)%elems(count\_elems(i)), \hyperlink{namespacestat}{stat}=allocstat)
-217        \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
-218 \textcolor{keywordflow}{    END DO}
-219 
-220     \textcolor{keyword}{DEALLOCATE}(count\_elems, \hyperlink{namespacestat}{stat}=allocstat)
-221     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Deallocation problem ! ***"}
-222     
-223     \textcolor{keyword}{CALL }compute\_aotensor(coeff)
-224 
-225     \textcolor{keyword}{CALL }simplify(aotensor)
-226 
-227     \textcolor{keyword}{CALL }deallocate\_inprod \textcolor{comment}{! Clean the inner product tensors}
-228 
+203     \textcolor{keywordtype}{INTEGER} :: i
+204     \textcolor{keywordtype}{INTEGER} :: allocstat 
+205 
+206     \textcolor{keyword}{CALL }init\_params  \textcolor{comment}{! Iniatialise the parameter}
+207 
+208     \textcolor{keyword}{CALL }init\_inprod  \textcolor{comment}{! Initialise the inner product tensors}
+209 
+210     \textcolor{keyword}{ALLOCATE}(aotensor(ndim),count\_elems(ndim), \hyperlink{namespacestat}{stat}=allocstat)
+211     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+212     count\_elems=0
+213 
+214     \textcolor{keyword}{CALL }compute\_aotensor(add\_count)
+215 
+216     \textcolor{keywordflow}{DO} i=1,ndim
+217        \textcolor{keyword}{ALLOCATE}(aotensor(i)%elems(count\_elems(i)), \hyperlink{namespacestat}{stat}=allocstat)
+218        \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+219 \textcolor{keywordflow}{    END DO}
+220 
+221     \textcolor{keyword}{DEALLOCATE}(count\_elems, \hyperlink{namespacestat}{stat}=allocstat)
+222     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Deallocation problem ! ***"}
+223     
+224     \textcolor{keyword}{CALL }compute\_aotensor(coeff)
+225 
+226     \textcolor{keyword}{CALL }simplify(aotensor)
+227 
 \end{DoxyCode}
 \index{aotensor\+\_\+def@{aotensor\+\_\+def}!kdelta@{kdelta}}
 \index{kdelta@{kdelta}!aotensor\+\_\+def@{aotensor\+\_\+def}}

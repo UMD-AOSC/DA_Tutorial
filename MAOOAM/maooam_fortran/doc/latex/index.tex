@@ -25,9 +25,32 @@ A pdf version of this manual is available \href{../latex/Reference_manual.pdf}{\
 
 The program can be installed with Makefile. We provide configuration files for two compilers \+: gfortran and ifort.
 
-By default, gfortran is selected. To select one or the other, simply modify the Makefile accordingly. If gfortran is selected, the code should be compiled with gfortran 4.\+7+ (allows for allocatable arrays in namelists). If ifort is selected, the code has been tested with the version 14.\+0.\+2 and we do not guarantee compatibility with older compiler version.
+By default, gfortran is selected. To select one or the other, simply modify the Makefile accordingly or pass the C\+O\+M\+P\+I\+L\+ER flag to {\ttfamily make}. If gfortran is selected, the code should be compiled with gfortran 4.\+7+ (allows for allocatable arrays in namelists). If ifort is selected, the code has been tested with the version 14.\+0.\+2 and we do not guarantee compatibility with older compiler version.
 
-To install, unpack the archive in a folder, and run\+: make
+To install, unpack the archive in a folder or clone with git\+:
+
+
+\begin{DoxyCode}
+1 git clone https://github.com/Climdyn/MAOOAM.git
+2 cd MAOOAM
+\end{DoxyCode}
+
+
+and run\+:
+
+
+\begin{DoxyCode}
+1 make
+\end{DoxyCode}
+ By default, the inner products of the basis functions, used to compute the coefficients of the O\+D\+Es, are not stored in memory. If you want to enable the storage in memory of these inner products, run make with the following flag\+:
+
+
+\begin{DoxyCode}
+1 make RES=store
+\end{DoxyCode}
+
+
+Depending on the chosen resolution, storing the inner products may result in a huge memory usage and is not recommended unless you need them for a specific purpose.
 
 Remark\+: The command \char`\"{}make clean\char`\"{} removes the compiled files.
 
@@ -48,8 +71,6 @@ The model tendencies are represented through a tensor called aotensor which incl
 \item \hyperlink{rk2__integrator_8f90}{rk2\+\_\+integrator.\+f90} \+: A module which contains the Heun integrator for the model equations.
 \item \hyperlink{rk4__integrator_8f90}{rk4\+\_\+integrator.\+f90} \+: A module which contains the R\+K4 integrator for the model equations.
 \item Makefile \+: The Makefile.
-\item gfortran.\+mk \+: Gfortran compiler options file.
-\item ifort.\+mk \+: Ifort compiler options file.
 \item \hyperlink{params_8f90}{params.\+f90} \+: The model parameters module.
 \item \hyperlink{tl__ad__tensor_8f90}{tl\+\_\+ad\+\_\+tensor.\+f90} \+: Tangent Linear (TL) and Adjoint (AD) model tensors definition module
 \item \hyperlink{rk2__tl__ad__integrator_8f90}{rk2\+\_\+tl\+\_\+ad\+\_\+integrator.\+f90} \+: Heun Tangent Linear (TL) and Adjoint (AD) model integrators module
@@ -82,6 +103,8 @@ The modeselection.\+nml namelist can then be filled \+:
 \item Note that the variables of the model are numbered according to the chosen order of the blocks.
 \end{DoxyItemize}
 
+The Makefile allows to change the integrator being used for the time evolution. The user should modify it according to its need. By default a R\+K2 scheme is selected.
+
 Finally, the I\+C.\+nml file specifying the initial condition should be defined. To obtain an example of this configuration file corresponding to the model you have previously defined, simply delete the current I\+C.\+nml file (if it exists) and run the program \+: \begin{DoxyVerb}./maooam
 \end{DoxyVerb}
 
@@ -96,7 +119,7 @@ It will generate two files \+:
 \item mean\+\_\+field.\+dat \+: the mean field (the climatology)
 \end{DoxyItemize}
 
-The tangent linear and adjoint models of M\+A\+O\+O\+AM are provided in the \hyperlink{namespacetl__ad__tensor}{tl\+\_\+ad\+\_\+tensor}, rk2\+\_\+tl\+\_\+ad\+\_\+integrator and rk4\+\_\+tl\+\_\+ad\+\_\+integrator modules. It is documented \href{./md_tl_ad_doc.html}{\tt here}.
+The tangent linear and adjoint models of M\+A\+O\+O\+AM are provided in the \hyperlink{namespacetl__ad__tensor}{tl\+\_\+ad\+\_\+tensor}, rk2\+\_\+tl\+\_\+ad\+\_\+integrator and rk4\+\_\+tl\+\_\+ad\+\_\+integrator modules. It is documented \href{./md_doc_tl_ad_doc.html}{\tt here}.
 
 
 

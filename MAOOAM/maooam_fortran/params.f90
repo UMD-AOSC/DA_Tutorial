@@ -1,18 +1,18 @@
 
-! params.f90
+! params.f90                                                                
 !
-!>  The model parameters module.
+!>  The model parameters module. 
 !
-!> @copyright
+!> @copyright                                                               
 !> 2015 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------
-!
-!>  @remark
-!>  Once the init_params() subroutine is called, the parameters are loaded
-!>  globally in the main program and its subroutines and function
-!
+!                                                                           
+!>  @remark                                                                 
+!>  Once the init_params() subroutine is called, the parameters are loaded           
+!>  globally in the main program and its subroutines and function           
+!                                                                           
 !---------------------------------------------------------------------------
 
 MODULE params
@@ -21,7 +21,6 @@ MODULE params
 
   PUBLIC
 
-  REAL(KIND=8) :: couple
   REAL(KIND=8) :: n         !< \f$n = 2 L_y / L_x\f$ - Aspect ratio
   REAL(KIND=8) :: phi0      !< Latitude in radian
   REAL(KIND=8) :: rra       !< Earth radius
@@ -67,13 +66,18 @@ MODULE params
   REAL(KIND=8) :: sB        !< Stefan–Boltzmann constant
   REAL(KIND=8) :: betp      !< \f$\beta'\f$ - Non-dimensional beta parameter
 
+  REAL(KIND=8) :: nua=0.D0  !< Dissipation in the atmosphere
+  REAL(KIND=8) :: nuo=0.D0  !< Dissipation in the ocean
+
+  REAL(KIND=8) :: nuap      !< Non-dimensional dissipation in the atmosphere
+  REAL(KIND=8) :: nuop      !< Non-dimensional dissipation in the ocean
+
   REAL(KIND=8) :: t_trans   !< Transient time period
   REAL(KIND=8) :: t_run     !< Effective intergration time (length of the generated trajectory)
   REAL(KIND=8) :: dt        !< Integration time step
   REAL(KIND=8) :: tw        !< Write all variables every tw time units
   LOGICAL :: writeout       !< Write to file boolean
-  LOGICAL :: progress
-
+  
   INTEGER :: nboc   !< Number of atmospheric blocks
   INTEGER :: nbatm  !< Number of oceanic blocks
   INTEGER :: natm=0 !< Number of atmospheric basis functions
@@ -92,9 +96,9 @@ CONTAINS
   SUBROUTINE init_nml
     INTEGER :: AllocStat
 
-    NAMELIST /aoscale/  couple,scale,f0,n,rra,phi0_npi
-    NAMELIST /oparams/  gp,r,H,d
-    NAMELIST /aparams/  k,kp,sig0
+    NAMELIST /aoscale/  scale,f0,n,rra,phi0_npi
+    NAMELIST /oparams/  gp,r,H,d,nuo
+    NAMELIST /aparams/  k,kp,sig0,nua
     NAMELIST /toparams/ Go,Co,To0
     NAMELIST /taparams/ Ga,Ca,epsa,Ta0
     NAMELIST /otparams/ sc,lambda,RR,sB
@@ -102,7 +106,7 @@ CONTAINS
     NAMELIST /modeselection/ oms,ams
     NAMELIST /numblocs/ nboc,nbatm
 
-    NAMELIST /int_params/ t_trans,t_run,dt,tw,writeout,progress
+    NAMELIST /int_params/ t_trans,t_run,dt,tw,writeout
 
     OPEN(8, file="params.nml", status='OLD', recl=80, delim='APOSTROPHE')
 
@@ -114,10 +118,6 @@ CONTAINS
     READ(8,nml=otparams)
 
     CLOSE(8)
-
-    d = d * couple
-    k = k * couple
-    lambda = lambda * couple
 
     OPEN(8, file="modeselection.nml", status='OLD', recl=80, delim='APOSTROPHE')
     READ(8,nml=numblocs)
@@ -131,10 +131,9 @@ CONTAINS
     OPEN(8, file="int_params.nml", status='OLD', recl=80, delim='APOSTROPHE')
     READ(8,nml=int_params)
 
-
   END SUBROUTINE init_nml
 
-  !> Parameters initialisation routine
+  !> Parameters initialisation routine 
   SUBROUTINE init_params
     INTEGER, DIMENSION(2) :: s
     INTEGER :: i
@@ -188,9 +187,11 @@ CONTAINS
     Cpa=Ca/(Ga*f0) * RR/(f0**2*L**2)/2 ! Cpa acts on psi1-psi3, not on theta
     Lpa=lambda/(Ga*f0)
     sBpo=4*sB*To0**3/(Go*f0) ! long wave radiation lost by ocean to atmosphere space
-    sBpa=couple*8*epsa*sB*Ta0**3/(Go*f0) ! long wave radiation from atmosphere absorbed by ocean
-    LSBpo=couple*2*epsa*sB*To0**3/(Ga*f0) ! long wave radiation from ocean absorbed by atmosphere
+    sBpa=8*epsa*sB*Ta0**3/(Go*f0) ! long wave radiation from atmosphere absorbed by ocean
+    LSBpo=2*epsa*sB*To0**3/(Ga*f0) ! long wave radiation from ocean absorbed by atmosphere
     LSBpa=8*epsa*sB*Ta0**3/(Ga*f0) ! long wave radiation lost by atmosphere to space & ocea
+    nuap=nua/(f0*L**2)
+    nuop=nuo/(f0*L**2)
 
   END SUBROUTINE init_params
 END MODULE params

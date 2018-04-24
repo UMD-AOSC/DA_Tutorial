@@ -8,5 +8,8 @@ var searchData=
   ['ad_5fcoeff',['ad_coeff',['../namespacetl__ad__tensor.html#a177e8f1ebac5de029f565ef7624926f2',1,'tl_ad_tensor']]],
   ['ad_5fcoeff_5fref',['ad_coeff_ref',['../namespacetl__ad__tensor.html#aef0157a16688323e3c855ef451d6948f',1,'tl_ad_tensor']]],
   ['ad_5fstep',['ad_step',['../namespacetl__ad__integrator.html#a708ece5eac01486e65e889d19073fd19',1,'tl_ad_integrator']]],
-  ['add_5fcount',['add_count',['../namespaceaotensor__def.html#ac8104c190904681c1fd27eec036114aa',1,'aotensor_def']]]
+  ['add_5fcheck',['add_check',['../namespacetensor.html#ac86b7b23b35e64127e04b31d7cfc7ae9',1,'tensor']]],
+  ['add_5fcount',['add_count',['../namespaceaotensor__def.html#ac8104c190904681c1fd27eec036114aa',1,'aotensor_def']]],
+  ['add_5felem',['add_elem',['../namespacetensor.html#a7f144457b3535357ab582fc3ff0da3a0',1,'tensor']]],
+  ['add_5fto_5ftensor',['add_to_tensor',['../namespacetensor.html#aad7cd55f3a4cec4676cc7ca34b05f1a8',1,'tensor']]]
 ];

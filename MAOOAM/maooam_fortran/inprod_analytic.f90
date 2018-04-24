@@ -8,16 +8,16 @@
 !>  weather regimes-A critical reexamination. Part II: Baroclinic two-layer
 !>  models. Journal of the atmospheric sciences, 44(21), 3282-3303, 1987.
 !
-!> @copyright
+!> @copyright                                                               
 !> 2015 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
-!
-!> @remark
-!> Generated Fortran90/95 code
+!                                                                           
+!> @remark                                                                 
+!> Generated Fortran90/95 code 
 !> from inprod_analytic.lua
-!
+!                                                                           
 !---------------------------------------------------------------------------!
 
 MODULE inprod_analytic
@@ -29,14 +29,15 @@ MODULE inprod_analytic
   !-----------------------------------------------------!
 
   USE params, only: nbatm, nboc, natm, noc, n, oms, ams, pi
+  USE util, only: isin,piksrt
   IMPLICIT NONE
 
   PRIVATE
 
-  PUBLIC :: init_inprod, deallocate_inprod
+  PUBLIC :: init_inprod
 
   !> Atmospheric bloc specification type
-  TYPE :: atm_wavenum
+  TYPE :: atm_wavenum 
      CHARACTER :: typ
      INTEGER :: M=0,P=0,H=0
      REAL(KIND=8) :: Nx=0.,Ny=0.
@@ -50,23 +51,31 @@ MODULE inprod_analytic
 
   !> Type holding the atmospheric inner products tensors
   TYPE :: atm_tensors
-     REAL(KIND=8), DIMENSION(:,:), ALLOCATABLE :: a,c,d,s
-     REAL(KIND=8), DIMENSION(:,:,:), ALLOCATABLE :: b,g
+     PROCEDURE(calculate_a), POINTER, NOPASS :: a
+     PROCEDURE(calculate_b), POINTER, NOPASS :: b
+     PROCEDURE(calculate_c_atm), POINTER, NOPASS :: c
+     PROCEDURE(calculate_d), POINTER, NOPASS :: d
+     PROCEDURE(calculate_g), POINTER, NOPASS :: g
+     PROCEDURE(calculate_s), POINTER, NOPASS :: s
   END TYPE atm_tensors
 
   !> Type holding the oceanic inner products tensors
   TYPE :: ocean_tensors
-     REAL(KIND=8), DIMENSION(:,:), ALLOCATABLE :: K,M,N,W
-     REAL(KIND=8), DIMENSION(:,:,:), ALLOCATABLE :: O,C
+     PROCEDURE(calculate_K), POINTER, NOPASS :: K
+     PROCEDURE(calculate_M), POINTER, NOPASS :: M
+     PROCEDURE(calculate_C_oc), POINTER, NOPASS :: C
+     PROCEDURE(calculate_N), POINTER, NOPASS :: N
+     PROCEDURE(calculate_O), POINTER, NOPASS :: O
+     PROCEDURE(calculate_W), POINTER, NOPASS :: W
   END TYPE ocean_tensors
 
   !> Atmospheric blocs specification
-  TYPE(atm_wavenum), DIMENSION(:), ALLOCATABLE, PUBLIC :: awavenum
+  TYPE(atm_wavenum), DIMENSION(:), ALLOCATABLE, PUBLIC :: awavenum 
   !> Oceanic blocs specification
-  TYPE(ocean_wavenum), DIMENSION(:), ALLOCATABLE, PUBLIC :: owavenum
+  TYPE(ocean_wavenum), DIMENSION(:), ALLOCATABLE, PUBLIC :: owavenum 
 
   !> Atmospheric tensors
-  TYPE(atm_tensors), PUBLIC :: atmos
+  TYPE(atm_tensors), PUBLIC :: atmos 
   !> Oceanic tensors
   TYPE(ocean_tensors), PUBLIC :: ocean
 
@@ -141,492 +150,280 @@ CONTAINS
     INTEGER :: Pj,Pk,Hj,Hk
     S4 = (Pk * Hj - Pj * Hk) / 2.D0
   END FUNCTION S4
-
+ 
   !-----------------------------------------------------!
   ! Inner products definition routines                  !
   !--------------------------------------------------------!
   ! 1. Inner products in the equations for the atmosphere  !
   !--------------------------------------------------------!
-
+  
   !> Eigenvalues of the Laplacian (atmospheric)
-  !>
+  !> 
   !> \f$ a_{i,j} = (F_i, \nabla^2 F_j)\f$ .
-  SUBROUTINE calculate_a
-    INTEGER :: i
+  REAL(KIND=8) FUNCTION calculate_a(i,j)
+    INTEGER, INTENT(IN) :: i,j
     TYPE(atm_wavenum) :: Ti
-    INTEGER :: AllocStat
-    IF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_a : natm==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(atmos%a)) THEN
-          ALLOCATE(atmos%a(natm,natm), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    atmos%a=0.D0
-
-    DO i=1,natm
+    
+    calculate_a = 0.D0
+    IF (i==j) THEN
        Ti = awavenum(i)
-       atmos%a(i,i) = -(n**2) * Ti%Nx**2 - Ti%Ny**2
-    ENDDO
-  END SUBROUTINE calculate_a
+       calculate_a = -(n**2) * Ti%Nx**2 - Ti%Ny**2
+    END IF
+  END FUNCTION calculate_a
 
   !> Streamfunction advection terms (atmospheric)
-  !>
+  !> 
   !> \f$ b_{i,j,k} = (F_i, J(F_j, \nabla^2 F_k))\f$ .
-  !
-  !> @remark
-  !> Atmospheric g and a tensors must be computed before calling
-  !> this routine
-  SUBROUTINE calculate_b
-    INTEGER :: i,j,k
-    INTEGER :: AllocStat
+  REAL(KIND=8) FUNCTION calculate_b(i,j,k)
+    INTEGER, INTENT(IN) :: i,j,k
 
-    IF ((.NOT. ALLOCATED(atmos%a)) .OR. (.NOT. ALLOCATED(atmos%g))) THEN
-       STOP "*** atmos%a and atmos%g must be defined before calling calculate_b ! ***"
-    END IF
+    calculate_b = calculate_a(k,k) * calculate_g(i,j,k)
 
-    IF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_b : natm==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(atmos%b)) THEN
-          ALLOCATE(atmos%b(natm,natm,natm), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    atmos%b=0.D0
-
-    DO i=1,natm
-       DO j=1,natm
-          DO k=1,natm
-             atmos%b(i,j,k)= atmos%a(k,k) * atmos%g(i,j,k)
-          END DO
-       END DO
-    END DO
-  END SUBROUTINE calculate_b
+  END FUNCTION calculate_b
 
   !> Beta term for the atmosphere
-  !>
+  !> 
   !> \f$ c_{i,j} = (F_i, \partial_x F_j)\f$ .
-  !
-  !> @remark
-  !> Strict function !! Only accepts KL type.
-  !> For any other combination, it will not calculate anything
-  SUBROUTINE calculate_c_atm
-    INTEGER :: i,j
+  REAL(KIND=8) FUNCTION calculate_c_atm(i,j)
+    INTEGER, INTENT(IN) :: i,j
     TYPE(atm_wavenum) :: Ti, Tj
-    REAL(KIND=8) :: val
-    INTEGER :: AllocStat
 
-    IF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_c_atm : natm==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(atmos%c)) THEN
-          ALLOCATE(atmos%c(natm,natm), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
+    Ti = awavenum(i)
+    Tj = awavenum(j)
+    calculate_c_atm = 0.D0
+    IF ((Ti%typ == "K") .AND. (Tj%typ == "L")) THEN 
+       calculate_c_atm = n * Ti%M * delta(Ti%M - Tj%H) * delta(Ti%P - Tj%P)
+    ELSE IF ((Ti%typ == "L") .AND. (Tj%typ == "K")) THEN
+       Ti = awavenum(j)
+       Tj = awavenum(i)
+       calculate_c_atm = - n * Ti%M * delta(Ti%M - Tj%H) * delta(Ti%P - Tj%P)
     END IF
-    atmos%c=0.D0
-
-    DO i=1,natm
-       DO j=1,natm
-          Ti = awavenum(i)
-          Tj = awavenum(j)
-          val = 0.D0
-          IF ((Ti%typ == "K") .AND. (Tj%typ == "L")) THEN
-             val = n * Ti%M * delta(Ti%M - Tj%H) * delta(Ti%P - Tj%P)
-          END IF
-          IF (val /= 0.D0) THEN
-             atmos%c(i,j)=val
-             atmos%c(j,i)= - val
-          ENDIF
-       END DO
-    END DO
-  END SUBROUTINE calculate_c_atm
+    
+  END FUNCTION calculate_c_atm
 
   !> Forcing of the ocean on the atmosphere.
-  !>
+  !> 
   !> \f$ d_{i,j} = (F_i, \nabla^2 \eta_j)\f$ .
-  !
-  !> @remark
-  !> Atmospheric s tensor and oceanic M tensor must be computed before
-  !> calling this routine !
-  SUBROUTINE calculate_d
-    INTEGER :: i,j
-    INTEGER :: AllocStat
+  REAL(KIND=8) FUNCTION calculate_d(i,j)
+    INTEGER, INTENT(IN) :: i,j
 
-    IF ((.NOT. ALLOCATED(atmos%s)) .OR. (.NOT. ALLOCATED(ocean%M))) THEN
-       STOP "*** atmos%s and ocean%M must be defined before calling calculate_d ! ***"
-    END IF
+    calculate_d=calculate_s(i,j) * calculate_M(j,j)
 
-
-    IF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_d : natm==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(atmos%d)) THEN
-          ALLOCATE(atmos%d(natm,noc), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    atmos%d=0.D0
-
-    DO i=1,natm
-       DO j=1,noc
-          atmos%d(i,j)=atmos%s(i,j) * ocean%M(j,j)
-       END DO
-    END DO
-  END SUBROUTINE calculate_d
+  END FUNCTION calculate_d
 
   !> Temperature advection terms (atmospheric)
-  !>
+  !> 
   !> \f$ g_{i,j,k} = (F_i, J(F_j, F_k))\f$ .
-  !
-  ! @remark
-  ! This is a strict function: it only accepts AKL KKL and LLL types.
-  ! For any other combination, it will not calculate anything.
-  SUBROUTINE calculate_g
-    INTEGER :: i,j,k
-    TYPE(atm_wavenum) :: Ti, Tj, Tk
+  REAL(KIND=8) FUNCTION calculate_g(i,j,k)
+    INTEGER, INTENT(IN) :: i,j,k
+    TYPE(atm_wavenum) :: Ti,Tj,Tk
     REAL(KIND=8) :: val,vb1, vb2, vs1, vs2, vs3, vs4
-    INTEGER :: AllocStat
+    INTEGER, DIMENSION(3) :: a,b
+    INTEGER, DIMENSION(3,3) :: w
+    CHARACTER, DIMENSION(3) :: s
+    INTEGER :: par
 
-    IF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_g : natm==0 ! ***"
+    Ti = awavenum(i)
+    Tj = awavenum(j)
+    Tk = awavenum(k)
+
+    a(1)=i
+    a(2)=j
+    a(3)=k
+
+    val=0.D0
+
+    IF ((Ti%typ == "L") .AND. (Tj%typ == "L") .AND. (Tk%typ == "L")) THEN
+       
+       CALL piksrt(3,a,par)
+
+       Ti = awavenum(a(1))
+       Tj = awavenum(a(2))
+       Tk = awavenum(a(3))
+
+       vs3 = S3(Tj%P,Tk%P,Tj%H,Tk%H)
+       vs4 = S4(Tj%P,Tk%P,Tj%H,Tk%H)
+       val = vs3 * ((delta(Tk%H - Tj%H - Ti%H) - delta(Tk%H &
+            &- Tj%H + Ti%H)) * delta(Tk%P + Tj%P - Ti%P) +&
+            & delta(Tk%H + Tj%H - Ti%H) * (delta(Tk%P - Tj%P&
+            & + Ti%P) - delta(Tk%P - Tj%P - Ti%P))) + vs4 *&
+            & ((delta(Tk%H + Tj%H - Ti%H) * delta(Tk%P - Tj&
+            &%P - Ti%P)) + (delta(Tk%H - Tj%H + Ti%H) -&
+            & delta(Tk%H - Tj%H - Ti%H)) * (delta(Tk%P - Tj&
+            &%P - Ti%P) - delta(Tk%P - Tj%P + Ti%P)))
     ELSE
-       IF (.NOT. ALLOCATED(atmos%g)) THEN
-          ALLOCATE(atmos%g(natm,natm,natm), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    atmos%g=0.D0
 
-    DO i=1,natm
-       DO j=1,natm
-          DO k=1,natm
-             Ti = awavenum(i)
-             Tj = awavenum(j)
-             Tk = awavenum(k)
-             val=0.D0
-             IF ((Ti%typ == "A") .AND. (Tj%typ == "K") .AND. (Tk%typ == "L")) THEN
-                vb1 = B1(Ti%P,Tj%P,Tk%P)
-                vb2 = B2(Ti%P,Tj%P,Tk%P)
-                val = -2 * sqrt(2.) / pi * Tj%M * delta(Tj%M - Tk%H) * flambda(Ti%P + Tj%P + Tk%P)
-                IF (val /= 0.D0) val = val * (vb1**2 / (vb1**2 - 1) - vb2**2 / (vb2**2 - 1))
-             ELSEIF ((Ti%typ == "K") .AND. (Tj%typ == "K") .AND. (Tk%typ == "L")) THEN
-                vs1 = S1(Tj%P,Tk%P,Tj%M,Tk%H)
-                vs2 = S2(Tj%P,Tk%P,Tj%M,Tk%H)
-                val = vs1 * (delta(Ti%M - Tk%H - Tj%M) * delta(Ti%P -&
-                     & Tk%P + Tj%P) - delta(Ti%M- Tk%H - Tj%M) *&
-                     & delta(Ti%P + Tk%P - Tj%P) + (delta(Tk%H - Tj%M&
-                     & + Ti%M) + delta(Tk%H - Tj%M - Ti%M)) *&
-                     & delta(Tk%P + Tj%P - Ti%P)) + vs2 * (delta(Ti%M&
-                     & - Tk%H - Tj%M) * delta(Ti%P - Tk%P - Tj%P) +&
-                     & (delta(Tk%H - Tj%M - Ti%M) + delta(Ti%M + Tk%H&
-                     & - Tj%M)) * (delta(Ti%P - Tk%P + Tj%P) -&
-                     & delta(Tk%P - Tj%P + Ti%P)))
-             END IF
-             val=val*n
-             IF (val /= 0.D0) THEN
-                atmos%g(i,j,k) = val
-                atmos%g(j,k,i) = val
-                atmos%g(k,i,j) = val
-                atmos%g(i,k,j) = -val
-                atmos%g(j,i,k) = -val
-                atmos%g(k,j,i) = -val
-             ENDIF
-          END DO
-       END DO
-    END DO
+       s(1)=Ti%typ
+       s(2)=Tj%typ
+       s(3)=Tk%typ
 
-    DO i=1,natm
-       DO j=i,natm
-          DO k=j,natm
-             Ti = awavenum(i)
-             Tj = awavenum(j)
-             Tk = awavenum(k)
-             val=0.D0
+       w(1,:)=isin("A",s)
+       w(2,:)=isin("K",s)
+       w(3,:)=isin("L",s)
 
-             IF ((Ti%typ == "L") .AND. (Tj%typ == "L") .AND. (Tk%typ == "L")) THEN
-                vs3 = S3(Tj%P,Tk%P,Tj%H,Tk%H)
-                vs4 = S4(Tj%P,Tk%P,Tj%H,Tk%H)
-                val = vs3 * ((delta(Tk%H - Tj%H - Ti%H) - delta(Tk%H &
-                     &- Tj%H + Ti%H)) * delta(Tk%P + Tj%P - Ti%P) +&
-                     & delta(Tk%H + Tj%H - Ti%H) * (delta(Tk%P - Tj%P&
-                     & + Ti%P) - delta(Tk%P - Tj%P - Ti%P))) + vs4 *&
-                     & ((delta(Tk%H + Tj%H - Ti%H) * delta(Tk%P - Tj&
-                     &%P - Ti%P)) + (delta(Tk%H - Tj%H + Ti%H) -&
-                     & delta(Tk%H - Tj%H - Ti%H)) * (delta(Tk%P - Tj&
-                     &%P - Ti%P) - delta(Tk%P - Tj%P + Ti%P)))
-             ENDIF
-             val=val*n
-             IF (val /= 0.D0) THEN
-                atmos%g(i,j,k) = val
-                atmos%g(j,k,i) = val
-                atmos%g(k,i,j) = val
-                atmos%g(i,k,j) = -val
-                atmos%g(j,i,k) = -val
-                atmos%g(k,j,i) = -val
-             ENDIF
-          ENDDO
-       ENDDO
-    ENDDO
-
-  END SUBROUTINE calculate_g
+       IF (ANY(w(1,:)/=0) .AND. ANY(w(2,:)/=0) .AND. ANY(w(3,:)/=0)) THEN
+          b=w(:,1)
+          Ti = awavenum(a(b(1)))
+          Tj = awavenum(a(b(2)))
+          Tk = awavenum(a(b(3)))
+          call piksrt(3,b,par)
+          vb1 = B1(Ti%P,Tj%P,Tk%P)
+          vb2 = B2(Ti%P,Tj%P,Tk%P)
+          val = -2 * sqrt(2.) / pi * Tj%M * delta(Tj%M - Tk%H) * flambda(Ti%P + Tj%P + Tk%P)
+          IF (val /= 0.D0) val = val * (vb1**2 / (vb1**2 - 1) - vb2**2 / (vb2**2 - 1))
+       ELSEIF ((w(2,2)/=0) .AND. (w(2,3)==0) .AND. ANY(w(3,:)/=0)) THEN
+          Ti = awavenum(a(w(2,1)))
+          Tj = awavenum(a(w(2,2)))
+          Tk = awavenum(a(w(3,1)))
+          b(1)=w(2,1)
+          b(2)=w(2,2)
+          b(3)=w(3,1)
+          call piksrt(3,b,par)
+          vs1 = S1(Tj%P,Tk%P,Tj%M,Tk%H)
+          vs2 = S2(Tj%P,Tk%P,Tj%M,Tk%H)
+          val = vs1 * (delta(Ti%M - Tk%H - Tj%M) * delta(Ti%P -&
+               & Tk%P + Tj%P) - delta(Ti%M- Tk%H - Tj%M) *&
+               & delta(Ti%P + Tk%P - Tj%P) + (delta(Tk%H - Tj%M&
+               & + Ti%M) + delta(Tk%H - Tj%M - Ti%M)) *&
+               & delta(Tk%P + Tj%P - Ti%P)) + vs2 * (delta(Ti%M&
+               & - Tk%H - Tj%M) * delta(Ti%P - Tk%P - Tj%P) +&
+               & (delta(Tk%H - Tj%M - Ti%M) + delta(Ti%M + Tk%H&
+               & - Tj%M)) * (delta(Ti%P - Tk%P + Tj%P) -&
+               & delta(Tk%P - Tj%P + Ti%P)))
+       ENDIF
+    ENDIF
+    calculate_g=par*val*n
+ 
+  END FUNCTION calculate_g
 
   !> Forcing (thermal) of the ocean on the atmosphere.
-  !>
+  !> 
   !> \f$ s_{i,j} = (F_i, \eta_j)\f$ .
-  SUBROUTINE calculate_s
-    INTEGER :: i,j
+  REAL(KIND=8) FUNCTION calculate_s(i,j)
+    INTEGER, INTENT(IN) :: i,j
     TYPE(atm_wavenum) :: Ti
     TYPE(ocean_wavenum) :: Dj
     REAL(KIND=8) :: val
-    INTEGER :: AllocStat
-    IF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_s : natm==0 ! ***"
-    ELSEIF (noc == 0) then
-       STOP "*** Problem with calculate_s : noc==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(atmos%s)) THEN
-          ALLOCATE(atmos%s(natm,noc), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
+    
+    Ti = awavenum(i)
+    Dj = owavenum(j)
+    val=0.D0
+    IF (Ti%typ == "A") THEN
+       val = flambda(Dj%H) * flambda(Dj%P + Ti%P)
+       IF (val /= 0.D0) THEN
+          val = val*8*sqrt(2.)*Dj%P/(pi**2 * (Dj%P**2 - Ti%P**2) * Dj%H)
        END IF
+    ELSEIF (Ti%typ == "K") THEN
+       val = flambda(2 * Ti%M + Dj%H) * delta(Dj%P - Ti%P)
+       IF (val /= 0.D0) THEN
+          val = val*4*Dj%H/(pi * (-4 * Ti%M**2 + Dj%H**2))
+       END IF
+    ELSEIF (Ti%typ == "L") THEN
+       val = delta(Dj%P - Ti%P) * delta(2 * Ti%H - Dj%H)
     END IF
-    atmos%s=0.D0
-
-    DO i=1,natm
-       DO j=1,noc
-          Ti = awavenum(i)
-          Dj = owavenum(j)
-          val=0.D0
-          IF (Ti%typ == "A") THEN
-             val = flambda(Dj%H) * flambda(Dj%P + Ti%P)
-             IF (val /= 0.D0) THEN
-                val = val*8*sqrt(2.)*Dj%P/(pi**2 * (Dj%P**2 - Ti%P**2) * Dj%H)
-             END IF
-          ELSEIF (Ti%typ == "K") THEN
-             val = flambda(2 * Ti%M + Dj%H) * delta(Dj%P - Ti%P)
-             IF (val /= 0.D0) THEN
-                val = val*4*Dj%H/(pi * (-4 * Ti%M**2 + Dj%H**2))
-             END IF
-          ELSEIF (Ti%typ == "L") THEN
-             val = delta(Dj%P - Ti%P) * delta(2 * Ti%H - Dj%H)
-          END IF
-          IF (val /= 0.D0) THEN
-             atmos%s(i,j)=val
-          ENDIF
-       END DO
-    END DO
-  END SUBROUTINE calculate_s
+    calculate_s=val
+    
+  END FUNCTION calculate_s
 
   !--------------------------------------------------------!
   ! 2. Inner products in the equations for the ocean       !
   !--------------------------------------------------------!
-
+  
   !> Forcing of the atmosphere on the ocean.
-  !>
+  !> 
   !> \f$ K_{i,j} = (\eta_i, \nabla^2 F_j)\f$ .
-  !
-  !> @remark
-  !> atmospheric a and s tensors must be computed before calling
-  !> this function !
-  SUBROUTINE calculate_K
-    INTEGER :: i,j
-    INTEGER :: AllocStat
+  REAL(KIND=8) FUNCTION calculate_K(i,j)
+    INTEGER, INTENT(IN) :: i,j
 
-    IF ((.NOT. ALLOCATED(atmos%a)) .OR. (.NOT. ALLOCATED(atmos%s))) THEN
-       STOP "*** atmos%a and atmos%s must be defined before calling calculate_K ! ***"
-    END IF
-
-    IF (noc == 0 ) THEN
-       STOP "*** Problem with calculate_K : noc==0 ! ***"
-    ELSEIF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_K : natm==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(ocean%K)) THEN
-          ALLOCATE(ocean%K(noc,natm), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    ocean%K=0.D0
-
-    DO i=1,noc
-       DO j=1,natm
-          ocean%K(i,j) = atmos%s(j,i) * atmos%a(j,j)
-       END DO
-    END DO
-  END SUBROUTINE calculate_K
+    calculate_K = calculate_s(j,i) * calculate_a(j,j)
+  END FUNCTION calculate_K
 
   !> Forcing of the ocean fields on the ocean.
-  !>
+  !> 
   !> \f$ M_{i,j} = (eta_i, \nabla^2 \eta_j)\f$ .
-  SUBROUTINE calculate_M
-    INTEGER :: i
+  REAL(KIND=8) FUNCTION calculate_M(i,j)
+    INTEGER, INTENT(IN) :: i,j
     TYPE(ocean_wavenum) :: Di
-    INTEGER :: AllocStat
-    IF (noc == 0 ) THEN
-       STOP "*** Problem with calculate_M : noc==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(ocean%M)) THEN
-          ALLOCATE(ocean%M(noc,noc), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    ocean%M=0.D0
 
-    DO i=1,noc
+    calculate_M=0.D0
+    IF (i==j) THEN
        Di = owavenum(i)
-       ocean%M(i,i) = -(n**2) * Di%Nx**2 - Di%Ny**2
-    END DO
-  END SUBROUTINE calculate_M
+       calculate_M = -(n**2) * Di%Nx**2 - Di%Ny**2
+    END IF
+  END FUNCTION calculate_M
 
   !> Beta term for the ocean
-  !>
+  !> 
   !> \f$ N_{i,j} = (\eta_i, \partial_x \eta_j) \f$.
-  SUBROUTINE calculate_N
-    INTEGER :: i,j
+  REAL(KIND=8) FUNCTION calculate_N(i,j)
+    INTEGER, INTENT(IN) :: i,j
     TYPE(ocean_wavenum) :: Di,Dj
     REAL(KIND=8) :: val
-    INTEGER :: AllocStat
-    IF (noc == 0 ) THEN
-       STOP "*** Problem with calculate_N : noc==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(ocean%N)) THEN
-          ALLOCATE(ocean%N(noc,noc), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    ocean%N=0.D0
-    val=0.D0
 
-    DO i=1,noc
-       DO j=1,noc
-          Di = owavenum(i)
-          Dj = owavenum(j)
-          val = delta(Di%P - Dj%P) * flambda(Di%H + Dj%H)
-          IF (val /= 0.D0) ocean%N(i,j) = val * (-2) * Dj%H * Di%H * n / ((Dj%H**2 - Di%H**2) * pi)
-       END DO
-    END DO
-  END SUBROUTINE calculate_N
+    Di = owavenum(i)
+    Dj = owavenum(j)
+    calculate_N = 0.D0
+    IF (Dj%H/=Di%H) THEN
+       val = delta(Di%P - Dj%P) * flambda(Di%H + Dj%H)
+       calculate_N = val * (-2) * Dj%H * Di%H * n / ((Dj%H**2 - Di%H**2) * pi)
+    ENDIF
+        
+  END FUNCTION calculate_N
 
   !> Temperature advection term (passive scalar)
-  !>
+  !> 
   !> \f$ O_{i,j,k} = (\eta_i, J(\eta_j, \eta_k))\f$ .
-  SUBROUTINE calculate_O
-    INTEGER :: i,j,k
-    REAL(KIND=8) :: vs3,vs4,val
+  REAL(KIND=8) FUNCTION calculate_O(i,j,k)
+    INTEGER, INTENT(IN) :: i,j,k
     TYPE(ocean_wavenum) :: Di,Dj,Dk
-    INTEGER :: AllocStat
-    IF (noc == 0 ) THEN
-       STOP "*** Problem with calculate_O : noc==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(ocean%O)) THEN
-          ALLOCATE(ocean%O(noc,noc,noc), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    ocean%O=0.D0
+    REAL(KIND=8) :: vs3,vs4,val
+    INTEGER, DIMENSION(3) :: a
+    INTEGER :: par
+
     val=0.D0
 
-    DO i=1,noc
-       DO j=i,noc
-          DO k=j,noc
-             Di = owavenum(i)
-             Dj = owavenum(j)
-             Dk = owavenum(k)
-             vs3 = S3(Dj%P,Dk%P,Dj%H,Dk%H)
-             vs4 = S4(Dj%P,Dk%P,Dj%H,Dk%H)
-             val = vs3*((delta(Dk%H - Dj%H - Di%H) - delta(Dk%H - Dj&
-                  &%H + Di%H)) * delta(Dk%P + Dj%P - Di%P) + delta(Dk&
-                  &%H + Dj%H - Di%H) * (delta(Dk%P - Dj%P + Di%P) -&
-                  & delta(Dk%P - Dj%P - Di%P))) + vs4 * ((delta(Dk%H &
-                  &+ Dj%H - Di%H) * delta(Dk%P - Dj%P - Di%P)) +&
-                  & (delta(Dk%H - Dj%H + Di%H) - delta(Dk%H - Dj%H -&
-                  & Di%H)) * (delta(Dk%P - Dj%P - Di%P) - delta(Dk%P &
-                  &- Dj%P + Di%P)))
-             val = val * n / 2
-             IF (val /= 0.D0) THEN
-                ocean%O(i,j,k) = val
-                ocean%O(j,k,i) = val
-                ocean%O(k,i,j) = val
-                ocean%O(i,k,j) = -val
-                ocean%O(j,i,k) = -val
-                ocean%O(k,j,i) = -val
-             END IF
-          END DO
-       END DO
-    END DO
-  END SUBROUTINE calculate_O
+    a(1)=i
+    a(2)=j
+    a(3)=k
+
+    CALL piksrt(3,a,par)
+
+    Di = owavenum(a(1))
+    Dj = owavenum(a(2))
+    Dk = owavenum(a(3))
+
+    vs3 = S3(Dj%P,Dk%P,Dj%H,Dk%H)
+    vs4 = S4(Dj%P,Dk%P,Dj%H,Dk%H)
+    val = vs3*((delta(Dk%H - Dj%H - Di%H) - delta(Dk%H - Dj&
+         &%H + Di%H)) * delta(Dk%P + Dj%P - Di%P) + delta(Dk&
+         &%H + Dj%H - Di%H) * (delta(Dk%P - Dj%P + Di%P) -&
+         & delta(Dk%P - Dj%P - Di%P))) + vs4 * ((delta(Dk%H &
+         &+ Dj%H - Di%H) * delta(Dk%P - Dj%P - Di%P)) +&
+         & (delta(Dk%H - Dj%H + Di%H) - delta(Dk%H - Dj%H -&
+         & Di%H)) * (delta(Dk%P - Dj%P - Di%P) - delta(Dk%P &
+         &- Dj%P + Di%P)))
+    calculate_O = par * val * n / 2
+  END FUNCTION calculate_O
 
   !> Streamfunction advection terms (oceanic)
-  !>
+  !> 
   !> \f$ C_{i,j,k} = (\eta_i, J(\eta_j,\nabla^2 \eta_k))\f$ .
-  !
-  !> @remark
-  !> Requires O_{i,j,k} and M_{i,j} to be calculated beforehand.
-  SUBROUTINE calculate_C_oc
-    INTEGER :: i,j,k
-    REAL(KIND=8) :: val
-    INTEGER :: AllocStat
+  REAL(KIND=8) FUNCTION calculate_C_oc(i,j,k)
+    INTEGER, INTENT(IN) :: i,j,k
 
-    IF ((.NOT. ALLOCATED(ocean%O)) .OR. (.NOT. ALLOCATED(ocean%M))) THEN
-       STOP "*** ocean%O and ocean%M must be defined before calling calculate_C ! ***"
-    END IF
+    calculate_C_oc = calculate_M(k,k) * calculate_O(i,j,k)
 
-    IF (noc == 0 ) THEN
-       STOP "*** Problem with calculate_C : noc==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(ocean%C)) THEN
-          ALLOCATE(ocean%C(noc,noc,noc), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    ocean%C=0.D0
-    val=0.D0
-
-    DO i=1,noc
-       DO j=1,noc
-          DO k=1,noc
-             val = ocean%M(k,k) * ocean%O(i,j,k)
-             IF (val /= 0.D0) ocean%C(i,j,k) = val
-          END DO
-       END DO
-    END DO
-  END SUBROUTINE calculate_C_oc
+  END FUNCTION calculate_C_oc
 
   !> Short-wave radiative forcing of the ocean
-  !>
+  !> 
   !> \f$ W_{i,j} = (\eta_i, F_j)\f$ .
-  !
-  !> @remark
-  !> atmospheric s tensor must be computed before calling
-  !> this function !
-  SUBROUTINE calculate_W
-    INTEGER :: i,j
-    INTEGER :: AllocStat
+  REAL(KIND=8) FUNCTION calculate_W(i,j)
+    INTEGER, INTENT(IN) :: i,j
+    
+    calculate_W = calculate_s(j,i)
 
-    IF (.NOT. ALLOCATED(atmos%s)) THEN
-       STOP "*** atmos%s must be defined before calling calculate_W ! ***"
-    END IF
-
-    IF (noc == 0 ) THEN
-       STOP "*** Problem with calculate_W : noc==0 ! ***"
-    ELSEIF (natm == 0 ) THEN
-       STOP "*** Problem with calculate_W : natm==0 ! ***"
-    ELSE
-       IF (.NOT. ALLOCATED(ocean%W)) THEN
-          ALLOCATE(ocean%W(noc,natm), STAT=AllocStat)
-          IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
-       END IF
-    END IF
-    ocean%W=0.D0
-
-    DO i=1,noc
-       DO j=1,natm
-          ocean%W(i,j) = atmos%s(j,i)
-       END DO
-    END DO
-  END SUBROUTINE calculate_W
+  END FUNCTION calculate_W
 
   !-----------------------------------------------------!
   !                                                     !
@@ -638,6 +435,13 @@ CONTAINS
   SUBROUTINE init_inprod
     INTEGER :: i,j
     INTEGER :: AllocStat
+
+    IF (natm == 0 ) THEN
+       STOP "*** Problem : natm==0 ! ***"
+    ELSEIF (noc == 0) then
+       STOP "*** Problem : noc==0 ! ***"
+    END IF
+
 
     ! Definition of the types and wave numbers tables
 
@@ -692,85 +496,26 @@ CONTAINS
 
     ENDDO
 
-    ! Computation of the atmospheric inner products tensors
+    ! Pointing to the atmospheric inner products functions
 
-    CALL calculate_a
-    CALL calculate_g
-    CALL calculate_s
-    CALL calculate_b
-    CALL calculate_c_atm
+    atmos%a => calculate_a
+    atmos%g => calculate_g
+    atmos%s => calculate_s
+    atmos%b => calculate_b
+    atmos%d => calculate_d
+    atmos%c => calculate_c_atm
 
-    ! Computation of the oceanic inner products tensors
+    ! Pointing to the oceanic inner products functions
 
-    CALL calculate_M
-    CALL calculate_N
-    CALL calculate_O
-    CALL calculate_C_oc
-    CALL calculate_W
-    CALL calculate_K
-
-    ! A last atmospheric one that needs ocean%M
-
-    CALL calculate_d
-
-
+    ocean%M => calculate_M
+    ocean%N => calculate_N
+    ocean%O => calculate_O
+    ocean%C => calculate_C_oc
+    ocean%W => calculate_W
+    ocean%K => calculate_K
 
   END SUBROUTINE init_inprod
 
-  !> Deallocation of the inner products
-  SUBROUTINE deallocate_inprod
-    INTEGER :: AllocStat
-
-    ! Deallocation of atmospheric inprod
-    AllocStat=0
-    IF (ALLOCATED(atmos%a)) DEALLOCATE(atmos%a, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(atmos%c)) DEALLOCATE(atmos%c, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(atmos%d)) DEALLOCATE(atmos%d, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(atmos%s)) DEALLOCATE(atmos%s, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(atmos%g)) DEALLOCATE(atmos%g, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(atmos%b)) DEALLOCATE(atmos%b, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    ! Deallocation of oceanic inprod
-    AllocStat=0
-    IF (ALLOCATED(ocean%K)) DEALLOCATE(ocean%K, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(ocean%M)) DEALLOCATE(ocean%M, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(ocean%N)) DEALLOCATE(ocean%N, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(ocean%W)) DEALLOCATE(ocean%W, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(ocean%O)) DEALLOCATE(ocean%O, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-
-    AllocStat=0
-    IF (ALLOCATED(ocean%C)) DEALLOCATE(ocean%C, STAT=AllocStat)
-    IF (AllocStat /= 0)  STOP "*** Problem to deallocate ! ***"
-  END SUBROUTINE deallocate_inprod
 
 END MODULE inprod_analytic
 

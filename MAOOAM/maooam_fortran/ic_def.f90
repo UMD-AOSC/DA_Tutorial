@@ -3,9 +3,9 @@
 !
 !>  Module to load the initial condition.
 !
-!> @copyright
+!> @copyright                                                               
 !> 2016 Lesley De Cruz, Jonathan Demaeyer & Sebastian Schubert
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
 
@@ -19,7 +19,7 @@ MODULE ic_def
   PRIVATE
 
   LOGICAL :: exists !< Boolean to test for file existence.
-
+  
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE, PUBLIC :: IC !< Initial condition vector
 
   PUBLIC ::load_IC
@@ -33,7 +33,7 @@ CONTAINS
     CHARACTER(len=20) :: fm
     REAL(KIND=8) :: size_of_random_noise
     INTEGER, DIMENSION(:), ALLOCATABLE :: seed
-    CHARACTER(LEN=4) :: init_type
+    CHARACTER(LEN=4) :: init_type 
     NAMELIST /IClist/ IC
     NAMELIST /RAND/ init_type,size_of_random_noise,seed
 
@@ -41,7 +41,7 @@ CONTAINS
     fm(1:6)='(F3.1)'
 
     CALL random_seed(size=j)
-
+   
     IF (ndim == 0) STOP "*** Number of dimensions is 0! ***"
     ALLOCATE(IC(0:ndim),seed(j), STAT=AllocStat)
     IF (AllocStat /= 0) STOP "*** Not enough memory ! ***"
@@ -135,7 +135,7 @@ CONTAINS
     WRITE(8,'(a)') "!        'seed': use the seed below (generate the same IC)"
     WRITE(8,*) ""
     WRITE(8,'(a)') "&RAND"
-    WRITE(8,'(a)') "  init_type= '"//init_type//"'"
+    WRITE(8,'(a)') "  init_type= '"//init_type//"'" 
     WRITE(8,'(a,d15.7)') "  size_of_random_noise = ",size_of_random_noise
     DO i=1,j
        WRITE(8,*) " seed("//TRIM(str(i))//") = ",seed(i)
@@ -143,6 +143,6 @@ CONTAINS
     WRITE(8,'(a)') "&END"
     WRITE(8,*) ""
     CLOSE(8)
-
+    
   END SUBROUTINE load_IC
 END MODULE ic_def

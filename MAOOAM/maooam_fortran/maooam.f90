@@ -1,17 +1,17 @@
 
 !  maooam.f90
 !
-!> Fortran 90 implementation of the modular arbitrary-order ocean-atmosphere
+!> Fortran 90 implementation of the modular arbitrary-order ocean-atmosphere 
 !> model MAOOAM.
 !
-!> @copyright
+!> @copyright                                                               
 !> 2015 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
 
-PROGRAM maooam
-  USE params, only: ndim, dt, tw, t_trans, t_run, writeout, progress
+PROGRAM maooam 
+  USE params, only: ndim, dt, tw, t_trans, t_run, writeout
   USE aotensor_def, only: init_aotensor
   USE IC_def, only: load_IC, IC
   USE integrator, only: init_integrator,step
@@ -23,7 +23,7 @@ PROGRAM maooam
   REAL(KIND=8) :: t=0.D0                             !< Time variable
   REAL(KIND=8) :: t_up
 
-  PRINT*, 'Model MAOOAM v1.2'
+  PRINT*, 'Model MAOOAM v1.3'
   PRINT*, 'Loading information...'
 
   CALL init_aotensor    ! Compute the tensor
@@ -45,14 +45,15 @@ PROGRAM maooam
   DO WHILE (t<t_trans)
      CALL step(X,t,dt,Xnew)
      X=Xnew
-     IF (progress .and. mod(t/t_trans*100.D0,0.1)<t_up) WRITE(*,'(" Progress ",F6.1," %",A,$)') t/t_trans*100.D0,char(13)
+     IF (mod(t/t_trans*100.D0,0.1)<t_up) WRITE(*,'(" Progress ",F6.1," %",A,$)') t/t_trans*100.D0,char(13)
   END DO
 
   PRINT*, 'Starting the time evolution...'
 
   CALL init_stat
-
+  
   t=0.D0
+  t_up=dt/t_run*100.D0
 
   IF (writeout) WRITE(10,*) t,X(1:ndim)
 
@@ -63,7 +64,7 @@ PROGRAM maooam
         IF (writeout) WRITE(10,*) t,X(1:ndim)
         CALL acc(X)
      END IF
-     IF (progress .and. mod(t/t_run*100.D0,0.1)<t_up) WRITE(*,'(" Progress ",F6.1," %",A,$)') t/t_run*100.D0,char(13)
+     IF (mod(t/t_run*100.D0,0.1)<t_up) WRITE(*,'(" Progress ",F6.1," %",A,$)') t/t_run*100.D0,char(13)
   END DO
 
   PRINT*, 'Evolution finished.'
@@ -76,4 +77,4 @@ PROGRAM maooam
   IF (writeout) WRITE(10,*) X(1:ndim)
   IF (writeout) CLOSE(10)
 
-END PROGRAM maooam
+END PROGRAM maooam 

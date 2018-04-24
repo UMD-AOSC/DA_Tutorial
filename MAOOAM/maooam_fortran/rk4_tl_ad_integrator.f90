@@ -4,17 +4,17 @@
 !> Tangent Linear (TL) and Adjoint (AD) model versions of MAOOAM.
 !> Integrators module.
 !
-!> @copyright
+!> @copyright                                                               
 !> 2016 Lesley De Cruz, Jonathan Demaeyer & Sebastian Schubert.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
-!
-!>  @remark
+!                                                                           
+!>  @remark                                                                 
 !>  This module actually contains the RK4 algorithm routines.
 !>  The user can modify it according to its preferred integration scheme.
 !>  For higher-order schemes, additional bufers will probably have to be defined.
-!
+!                                                                           
 !---------------------------------------------------------------------------
 
 
@@ -33,7 +33,7 @@ MODULE tl_ad_integrator
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: buf_kA !< Buffer to hold tendencies in the RK4 scheme for the tangent linear model
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: buf_kB !< Buffer to hold tendencies in the RK4 scheme for the tangent linear model
 
-
+    
   PUBLIC :: ad_step, init_tl_ad_integrator, tl_step
 
 CONTAINS
@@ -53,7 +53,7 @@ CONTAINS
   !-----------------------------------------------------!
 
 
-
+  
 
   !> Routine to perform an integration step (RK4 algorithm) of the adjoint model. The incremented time is returned.
   !> @param y Initial point.

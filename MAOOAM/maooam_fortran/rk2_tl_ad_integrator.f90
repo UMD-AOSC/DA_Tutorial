@@ -4,17 +4,17 @@
 !> Tangent Linear (TL) and Adjoint (AD) model versions of MAOOAM.
 !> Integrators module.
 !
-!> @copyright
+!> @copyright                                                               
 !> 2016 Lesley De Cruz & Jonathan Demaeyer.
-!> See LICENSE.txt for license information.
+!> See LICENSE.txt for license information.                                  
 !
 !---------------------------------------------------------------------------!
-!
-!>  @remark
+!                                                                           
+!>  @remark                                                                 
 !>  This module actually contains the Heun algorithm routines.
 !>  The user can modify it according to its preferred integration scheme.
 !>  For higher-order schemes, additional buffers will probably have to be defined.
-!
+!                                                                           
 !---------------------------------------------------------------------------
 
 
@@ -31,7 +31,7 @@ MODULE tl_ad_integrator
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: buf_f0 !< Buffer to hold tendencies at the initial position of the tangent linear model
   REAL(KIND=8), DIMENSION(:), ALLOCATABLE :: buf_f1 !< Buffer to hold tendencies at the intermediate position of the tangent linear model
 
-
+    
   PUBLIC :: init_tl_ad_integrator, ad_step, tl_step
 
 CONTAINS
@@ -50,7 +50,7 @@ CONTAINS
   ! Adjoint model integrator                            !
   !                                                     !
   !-----------------------------------------------------!
-
+  
   !> Routine to perform an integration step (Heun algorithm) of the adjoint model. The incremented time is returned.
   !> @param y Initial point.
   !> @param ystar Adjoint model at the point ystar.
@@ -62,7 +62,7 @@ CONTAINS
     REAL(KIND=8), INTENT(INOUT) :: t
     REAL(KIND=8), INTENT(IN) :: dt
     REAL(KIND=8), DIMENSION(0:ndim), INTENT(OUT) :: res
-
+    
     CALL ad(t,ystar,y,buf_f0)
     buf_y1 = y+dt*buf_f0
     CALL ad(t+dt,ystar,buf_y1,buf_f1)
@@ -95,5 +95,5 @@ CONTAINS
     t=t+dt
   END SUBROUTINE tl_step
 
-
+  
 END MODULE tl_ad_integrator
