@@ -1,20 +1,7 @@
 # DA Tutorial with MAOOAM
 ## Usage
 ```bash
-cd maooam_fortran && make && cd ../ && cp maooam_fortran/step_maooam.so .
-
-# prepare truth, freerun, and obs
-sh clean.sh
-sh runall_tutorial_1.sh
-
-# execute DA
-sh runall_tutorial_2.sh 3DVar
-sh runall_tutorial_3.sh ETKF
-sh runall_tutorial_3.sh hybrid
-python plot_error.py 3DVar
-python plot_error.py ETKF
-python plot_error.py hybrid
-python module_plot.py
+sh runall.sh
 ```
 
 ## Key points to be edited often
@@ -35,39 +22,13 @@ python module_plot.py
     * **generate_analysis_3dEns.py**
     * **class_da_system.py**
 
-## Todo and Wishlist (feel free to edit me)
-### Todo
-* Limit B to projection of some modes
-    * [X] BV-like mode separation of slower modes
-    * [ ] CLV-based mode separation
-        * CLVs are, in practice, difficult to obtain in real applications because it uses future dynamics. But it worth examined from theoretical perspective.
-    * [X] Calculation of static B
-* [ ] Use of multiple covariances/gains
-* [ ] Test, test, test...
-
-### Wishlist
-* More plots
-    * [X] RMS error and spread (ordinate) vs time (abscissa), separately for each component {atm-psi, atm-theta, ocn-psi, ocn-theta}
-    * [ ] CLVs
-    * [X] B (raw matrix and its eigenvectors)
-* [x] Parallelization of ensemble integration by multiprocessing.pool (**generate_analysis_3dEns.py** line 100)
-    * Tested with branch "parallel". Not substantial speedup.
-* [X] Speedup by using fortran integration
-    * About 100x faster (7a7b78d)
-    * Note that {int_params.nml, modeselection.nml, params.nml} are needed. Take care those doesn't diverge from parameters for python-MAOOAM.
-* [X] Rough estimation of necessary experiment length
-    * Ocean streamfunction has timescale of 1E+5 time units (~ 30 years). Experiments with 1E+6 time units are enough.
-    * With time step of 0.1 time units, 1E+6 time units (1E+7 steps) single integration is about 80 secs after speedup.
-* [X] Ens members should start from initial conditions independent from truth
-
 ## Tested environment
+* gfortran 5.4.0
 * Anaconda3-5.1.0
     * Python 3.6.4
     * numpy 1.14.0
     * matplotlib 2.1.2
     * scipy 1.0.0
-* Part of the program may fail to run with < Python 3.5
-    * subprocess.run in **module_plot.py** is a new feature. You can comment them out and execute mkdir manually.
 * On Windows Subsystem for Linux
 
 ## Original README from https://github.com/UMD-AOSC/DA_Tutorial

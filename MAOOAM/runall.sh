@@ -1,6 +1,6 @@
 set -e
 
-cd maooam_fortran && make && cd ../ && cp maooam_fortran/step_maooam.so .
+cd maooam_fortran && make clean && make && cd ../ && cp maooam_fortran/step_maooam.so .
 
 sh clean.sh
 sh runall_tutorial_1.sh
