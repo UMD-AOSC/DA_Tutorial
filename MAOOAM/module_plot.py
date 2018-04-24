@@ -55,6 +55,7 @@ def plot_eig_bcov(bcov, img_name_eigval, img_name_eigvec):
     cm = plt.imshow(eigvec, cmap="RdBu_r", extent=get_extent_square())
     cm.set_clim(-1, 1)
     plt.colorbar(cm)
+    plt.title("eigenvectors of B")
     plt.xlabel("eigenvector index")
     plt.ylabel("model variable")
     plt.savefig(img_name_eigvec)
@@ -86,8 +87,15 @@ def get_bv_dim(cov):
 def __test_plot_time_colormap():
     nt = 100
     dat = np.random.randn(nt, NDIM)
-    sp.run("mkdir -p img", shell=True, check=True)
-    plot_time_colormap(dat, "img/tmp.png", None, None, "test")
+    plot_time_colormap(dat, "img/tmp.pdf", None, None, "test")
+
+def zero_out_off_diag_blocks(cov):
+    assert cov.shape == (NDIM, NDIM)
+    NATM = 20
+    cov2 = np.copy(cov)
+    cov2[:NATM, NATM:] = 0.0
+    cov2[NATM:, :NATM] = 0.0
+    return cov2
 
 def __sample_read_files():
     vlim_raw = [-0.05, 0.1]
@@ -98,23 +106,22 @@ def __sample_read_files():
     freerun_file = 'x_freerun.pkl'
     freerun = state_vector()
     freerun = freerun.load(freerun_file)
-    sp.run("mkdir -p img", shell=True, check=True)
     plot_time_colormap(freerun.getTrajectory() - nature.getTrajectory(),
-                       "img/error_free_run.png", *vlim_diff, "error free run", "RdBu_r", True)
+                       "img/error_free_run.pdf", *vlim_diff, "error free run", "RdBu_r", True)
     plot_time_colormap(freerun.getTrajectory(),
-                       "img/freerun.png", *vlim_raw, "freerun", "viridis")
+                       "img/freerun.pdf", *vlim_raw, "freerun", "viridis")
     plot_time_colormap(nature.getTrajectory(),
-                       "img/nature.png", *vlim_raw, "nature", "viridis")
-    for method in ["ETKF"]:
+                       "img/nature.pdf", *vlim_raw, "nature", "viridis")
+    for method in ["ETKF", "hybrid", "3DVar"]:
         analysis_file = 'x_analysis_{method}.pkl'.format(method=method)
         das = da_system()
         das = das.load(analysis_file)
         analysis = das.getStateVector()
         plot_time_colormap(analysis.getTrajectory() - nature.getTrajectory(),
-                           "img/error_analysis_%s.png" % method, *vlim_diff,
+                           "img/%s/error_analysis.pdf" % method, *vlim_diff,
                            "error analysis %s" % method, "RdBu_r", True)
         plot_time_colormap(analysis.getTrajectory(),
-                           "img/analysis_%s.png" % method, *vlim_raw,
+                           "img/%s/analysis.pdf" % method, *vlim_raw,
                            "analysis %s" % method, "viridis")
 
 def read_and_plot_bcov():
@@ -122,7 +129,7 @@ def read_and_plot_bcov():
     assert len(Pb_hist.shape) == 3
     assert Pb_hist.shape[1] == Pb_hist.shape[2]
     counter = Pb_hist.shape[0]
-    mean_cov = np.mean(Pb_hist[counter // 2:, :, :], axis=0)
+    mean_cov = np.mean(Pb_hist[counter // 2:, :, :], axis=0)  # discard formar half as spinup
     title = "mean B cov (sample = %d, BV dim = %f)" % (counter, get_bv_dim(mean_cov))
     plot_mean_bcov(mean_cov, "img/bcov.pdf", title, True)
     plot_eig_bcov(mean_cov, "img/bcov_eigval.pdf", "img/bcov_eigvec.pdf")

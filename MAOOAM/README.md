@@ -2,14 +2,19 @@
 ## Usage
 ```bash
 cd maooam_fortran && make && cd ../ && cp maooam_fortran/step_maooam.so .
+
 # prepare truth, freerun, and obs
 sh clean.sh
 sh runall_tutorial_1.sh
-# execute ETKF
+
+# execute DA
+sh runall_tutorial_2.sh 3DVar
 sh runall_tutorial_3.sh ETKF
-# plot (makes directory img/)
-python module_plot.py
+sh runall_tutorial_3.sh hybrid
+python plot_error.py 3DVar
 python plot_error.py ETKF
+python plot_error.py hybrid
+python module_plot.py
 ```
 
 ## Key points to be edited often

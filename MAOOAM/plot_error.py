@@ -16,11 +16,16 @@ def main():
     das = da_system()
     das = das.load(analysis_file)
     analysis = das.getStateVector()
-    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, :], "img/rmse_all.png")
-    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 0:10], "img/rmse_atmos_psi.png")
-    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 10:20], "img/rmse_atmos_temp.png")
-    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 20:28], "img/rmse_ocean_psi.png")
-    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 28:36], "img/rmse_ocean_temp.png")
+    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, :],
+        "img/%s/rmse_all.pdf" % method)
+    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 0:10],
+        "img/%s/rmse_atmos_psi.pdf" % method)
+    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 10:20],
+        "img/%s/rmse_atmos_temp.pdf" % method)
+    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 20:28],
+        "img/%s/rmse_ocean_psi.pdf" % method)
+    plot_rmse_all(nature, freerun, analysis, method, np.s_[:, 28:36],
+        "img/%s/rmse_ocean_temp.pdf" % method)
 
 def plot_rmse_all(nature, freerun, analysis, method, slice, img_name):
     plt.plot(nature.getTimes(),
@@ -29,7 +34,7 @@ def plot_rmse_all(nature, freerun, analysis, method, slice, img_name):
     plt.plot(nature.getTimes(),
              np.linalg.norm(analysis.getTrajectory()[slice] - nature.getTrajectory()[slice],
                             axis=1), label='Analysis ({method})'.format(method=method))
-    if analysis.getEnsembleTrajectory is not None:
+    if analysis.getEnsembleTrajectory() is not None:
         ptb = analysis.getEnsembleTrajectory()[:, :, :] - analysis.getTrajectory()[:, :, np.newaxis]
         edim = ptb.shape[2]
         sprd = (np.sum(ptb ** 2, axis=2) / (edim - 1.0)) ** 0.5
