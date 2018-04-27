@@ -1,0 +1,70 @@
+!------------------------------------------------------------------------------!
+! Namelist file :                                                              !
+! Fundamental physical parameters for the coupled ocean-atmosphere model.      !
+!                                                                              !
+!------------------------------------------------------------------------------!
+! Parameters of the runs of the article:                                       !
+!                                                                              !
+! A Modular Arbitrary-Order Ocean-Atmosphere Model: MAOOAM v1.0,               !
+! De Cruz, L., Demaeyer, J. and Vannitsem, S., Geoscientific Model             !
+! Development Discussions, 2016.                                               !
+! url: http://www.geosci-model-dev-discuss.net/gmd-2016-59/                    !
+! doi: 10.5194/gmd-2016-59                                                     !
+!                                                                              !
+!------------------------------------------------------------------------------!
+
+!  Scale parameters for the ocean and the atmosphere
+&AOSCALE
+  SCALE = 5.D6       !  the characteristic space scale, L*pi
+  F0 = 1.032D-4      !  Coriolis parameter at 45 degrees latitude	
+  N = 1.5D0          !  aspect ratio (n = 2Ly/Lx ; Lx = 2*pi*L/n; Ly = pi*L)
+  RRA = 6370.D3      !  earth radius	
+  PHI0_NPI = 0.25D0  !  latitude exprimed in fraction of pi
+&END
+
+!  Parameters for the ocean
+&OPARAMS
+  GP = 3.1D-2         !  reduced gravity
+  R = 1.D-7           !  frictional coefficient at the bottom of the ocean	
+  H = 136.5           !  depth of the water layer of the ocean
+  D = 1.1D-7          !  the coupling parameter (should be divided by f0 in order to be adimensional)
+&END
+
+!  Parameters for the atmosphere
+&APARAMS
+  K = 0.0145D0         !  atmosphere bottom friction coefficient
+  KP = 0.0290D0        !  atmosphere internal friction coefficient
+  SIG0 = 0.1D0         !  static stability of the atmosphere
+&END
+
+!  Temperature-related parameters for the ocean
+&TOPARAMS
+  GO = 5.46D8          !  Specific heat capacity of the ocean (50m layer)
+  CO = 310.D0        !  Constant short-wave radiation of the ocean
+  TO0 = 301.46D0      !  Stationary solution for the 0-th order ocean temperature
+&END
+
+!  Temperature-related parameters for the atmosphere
+&TAPARAMS
+  GA = 1.D7          !  Specific heat capacity of the atmosphere
+  CA = 103.3333D0        ! Constant short-wave radiation of the atmosphere
+  EPSA = 0.7D0      !  Emissivity coefficient for the grey-body atmosphere
+  TA0 = 289.30D0       !  Stationary solution for the 0-th order atmospheric temperature
+&END
+
+!  Other temperature-related parameters/constants
+&OTPARAMS
+  SC = 1.D0          !  Ratio of surface to atmosphere temperature
+  LAMBDA = 15.06D0     !  Sensible + turbulent heat exchange between ocean and atmosphere
+  RR = 287.D0        !  Gas constant of dry air
+  SB = 5.6D-8        !  Stefan–Boltzmann constant
+&END
+
+
+! End of parameters Namelist
+
+  
+
+
+
+  

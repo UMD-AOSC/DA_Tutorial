@@ -1,0 +1,33 @@
+!------------------------------------------------------------------------------!
+! Namelist file :                                                              !
+! Integration parameters                                                       !
+!                                                                              !
+!------------------------------------------------------------------------------!
+! Parameters of the runs of the article:                                       !
+!                                                                              !
+! The role of the ocean mixed layer on the development of the North Atlantic   !
+! Oscillation: A dynamical system's perspective. Vannitsem, Stephane.          !
+! Geophysical Research Letters, 42(20), 8615-8623, (2015).                     !
+! url: http://onlinelibrary.wiley.com/doi/10.1002/2015GL065974/full            !
+! doi: 10.1002/2015GL065974                                                    ! 
+!                                                                              !
+!------------------------------------------------------------------------------!
+
+!  Time parameters
+&INT_PARAMS
+  T_TRANS = 1.D8       !  transient period (e.g. 1.D7)
+  T_RUN = 3.D8         !  length of trajectory on the attractor (e.g. 5.D8)
+  DT = 1.D-2           !  the time step
+  WRITEOUT = T         !  write out all variables every tw time units
+  TW = 100.D0           !
+&END
+
+
+
+! End of parameters Namelist
+
+  
+
+
+
+  

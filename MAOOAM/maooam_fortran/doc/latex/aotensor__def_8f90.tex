@@ -1,0 +1,37 @@
+\hypertarget{aotensor__def_8f90}{}\section{aotensor\+\_\+def.\+f90 File Reference}
+\label{aotensor__def_8f90}\index{aotensor\+\_\+def.\+f90@{aotensor\+\_\+def.\+f90}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespaceaotensor__def}{aotensor\+\_\+def}
+\begin{DoxyCompactList}\small\item\em The equation tensor for the coupled ocean-\/atmosphere model with temperature which allows for an extensible set of modes in the ocean and in the atmosphere. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+integer function \hyperlink{namespaceaotensor__def_afa05aa849a8cb9e08b36dee6560986b8}{aotensor\+\_\+def\+::psi} (i)
+\begin{DoxyCompactList}\small\item\em Translate the $\psi_{a,i}$ coefficients into effective coordinates. \end{DoxyCompactList}\item 
+integer function \hyperlink{namespaceaotensor__def_a506f7d7bc9671005e5ed9a403bb29394}{aotensor\+\_\+def\+::theta} (i)
+\begin{DoxyCompactList}\small\item\em Translate the $\theta_{a,i}$ coefficients into effective coordinates. \end{DoxyCompactList}\item 
+integer function \hyperlink{namespaceaotensor__def_abdb4d710d4614fef61179c46d8e26b8e}{aotensor\+\_\+def\+::a} (i)
+\begin{DoxyCompactList}\small\item\em Translate the $\psi_{o,i}$ coefficients into effective coordinates. \end{DoxyCompactList}\item 
+integer function \hyperlink{namespaceaotensor__def_aed72341f9a3de19b5e8c21fd27471ce6}{aotensor\+\_\+def\+::t} (i)
+\begin{DoxyCompactList}\small\item\em Translate the $\delta T_{o,i}$ coefficients into effective coordinates. \end{DoxyCompactList}\item 
+integer function \hyperlink{namespaceaotensor__def_a13eb91ac3a121fd77c1cf644021cff5b}{aotensor\+\_\+def\+::kdelta} (i, j)
+\begin{DoxyCompactList}\small\item\em Kronecker delta function. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceaotensor__def_a0da983fc262aa15a3fde0d6138825660}{aotensor\+\_\+def\+::coeff} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine to add element in the \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor} $\mathcal{T}_{i,j,k}$ structure. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceaotensor__def_ac8104c190904681c1fd27eec036114aa}{aotensor\+\_\+def\+::add\+\_\+count} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine to count the elements of the \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor} $\mathcal{T}_{i,j,k}$. Add +1 to count\+\_\+elems(i) for each value that is added to the tensor i-\/th component. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceaotensor__def_a3dfccbce01ca1616c616f855c0cfa45a}{aotensor\+\_\+def\+::compute\+\_\+aotensor} (func)
+\begin{DoxyCompactList}\small\item\em Subroutine to compute the tensor \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor}. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceaotensor__def_ac2d5a88885d06f6dc047bee3a4ab427a}{aotensor\+\_\+def\+::init\+\_\+aotensor}
+\begin{DoxyCompactList}\small\item\em Subroutine to initialise the \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor} tensor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer, dimension(\+:), allocatable \hyperlink{namespaceaotensor__def_aa9e30c84efc5a81409ba9c0286c87eac}{aotensor\+\_\+def\+::count\+\_\+elems}
+\begin{DoxyCompactList}\small\item\em Vector used to count the tensor elements. \end{DoxyCompactList}\item 
+real(kind=8), parameter \hyperlink{namespaceaotensor__def_ab1cf9313fb1def1a17de539cfa922e35}{aotensor\+\_\+def\+::real\+\_\+eps} = 2.\+2204460492503131e-\/16
+\begin{DoxyCompactList}\small\item\em Epsilon to test equality with 0. \end{DoxyCompactList}\item 
+type(coolist), dimension(\+:), allocatable, public \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor\+\_\+def\+::aotensor}
+\begin{DoxyCompactList}\small\item\em $\mathcal{T}_{i,j,k}$ -\/ Tensor representation of the tendencies. \end{DoxyCompactList}\end{DoxyCompactItemize}

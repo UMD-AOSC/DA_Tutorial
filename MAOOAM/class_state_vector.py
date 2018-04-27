@@ -10,6 +10,7 @@ class state_vector:
     self.t = t
     self.name = name
     self.trajectory = np.zeros((self.tdim,self.xdim))
+    self.ensemble_trajectory = None
     self.clim_mean = np.zeros(self.xdim)
     self.clim_std  = np.zeros(self.xdim)
     self.Jhist = []
@@ -55,6 +56,16 @@ class state_vector:
       x_std[i] = np.nanstd(states[:,i])
     self.clim_mean = x_avg
     self.clim_std = x_std
+
+  def getEnsembleTrajectory(self):
+    return self.ensemble_trajectory
+
+  def setEnsembleTrajectory(self, states):
+    assert len(states.shape) == 3
+    assert states.shape[0] == self.tdim
+    assert states.shape[1] == self.xdim
+    edim = states.shape[2]
+    self.ensemble_trajectory = states
 
   def getClimMean(self):
     return self.clim_mean

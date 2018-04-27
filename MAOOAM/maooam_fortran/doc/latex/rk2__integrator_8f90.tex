@@ -1,0 +1,25 @@
+\hypertarget{rk2__integrator_8f90}{}\section{rk2\+\_\+integrator.\+f90 File Reference}
+\label{rk2__integrator_8f90}\index{rk2\+\_\+integrator.\+f90@{rk2\+\_\+integrator.\+f90}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespaceintegrator}{integrator}
+\begin{DoxyCompactList}\small\item\em Module with the integration routines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, public \hyperlink{namespaceintegrator_ab01b1930fc627150051ed5c5465ac533}{integrator\+::init\+\_\+integrator}
+\begin{DoxyCompactList}\small\item\em Routine to initialise the integration buffers. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceintegrator_ae8158ec5bb2be4dca1daadb1a906ba96}{integrator\+::tendencies} (t, y, res)
+\begin{DoxyCompactList}\small\item\em Routine computing the tendencies of the model. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceintegrator_adaf5baacd0ff1905f334ce824cdcd58e}{integrator\+::step} (y, t, dt, res)
+\begin{DoxyCompactList}\small\item\em Routine to perform an integration step (Heun algorithm). The incremented time is returned. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespaceintegrator_ad82fcb5f12f76e9009ccd172f2ffa6b0}{integrator\+::buf\+\_\+y1}
+\begin{DoxyCompactList}\small\item\em Buffer to hold the intermediate position (Heun algorithm) \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespaceintegrator_aefe58ac9a698ca7d0440dcaf6103feea}{integrator\+::buf\+\_\+f0}
+\begin{DoxyCompactList}\small\item\em Buffer to hold tendencies at the initial position. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespaceintegrator_acabd8820aca8c50aac234c5d404493b4}{integrator\+::buf\+\_\+f1}
+\begin{DoxyCompactList}\small\item\em Buffer to hold tendencies at the intermediate position. \end{DoxyCompactList}\end{DoxyCompactItemize}

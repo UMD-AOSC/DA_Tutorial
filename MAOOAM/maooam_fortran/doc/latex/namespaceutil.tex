@@ -1,0 +1,190 @@
+\hypertarget{namespaceutil}{}\section{util Module Reference}
+\label{namespaceutil}\index{util@{util}}
+
+
+Utility module.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+character(len=20) function, public \hyperlink{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}{str} (k)
+\begin{DoxyCompactList}\small\item\em Convert an integer to string. \end{DoxyCompactList}\item 
+character(len=40) function, public \hyperlink{namespaceutil_ac1630658a46867b1f7255eaa51198bf3}{rstr} (x, fm)
+\begin{DoxyCompactList}\small\item\em Convert a real to string with a given format. \end{DoxyCompactList}\item 
+integer function, dimension(size(s)), public \hyperlink{namespaceutil_a1e2cd46baa2070e28949e28c8a3e037e}{isin} (c, s)
+\begin{DoxyCompactList}\small\item\em Determine if a character is in a string and where. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceutil_a3c2dcf05b068a55f0066d2b393e75dc7}{init\+\_\+random\+\_\+seed} ()
+\begin{DoxyCompactList}\small\item\em Random generator initialization routine. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceutil_af8d0a8ec8cb7391ddbf455dc92f2189d}{piksrt} (k, arr, par)
+\begin{DoxyCompactList}\small\item\em Simple card player sorting function. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}{init\+\_\+one} (A)
+\begin{DoxyCompactList}\small\item\em Initialize a square matrix A as a unit matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Utility module. 
+
+\begin{DoxyCopyright}{Copyright}
+2018 Lesley De Cruz \& Jonathan Demaeyer. See \hyperlink{LICENSE_8txt}{L\+I\+C\+E\+N\+S\+E.\+txt} for license information. 
+\end{DoxyCopyright}
+
+
+\subsection{Function/\+Subroutine Documentation}
+\index{util@{util}!init\+\_\+one@{init\+\_\+one}}
+\index{init\+\_\+one@{init\+\_\+one}!util@{util}}
+\subsubsection[{\texorpdfstring{init\+\_\+one(\+A)}{init_one(A)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public util\+::init\+\_\+one (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), dimension(\+:,\+:), intent(inout)}]{A}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}{}\label{namespaceutil_aca7f2465fedb87fef954d8f0c30668c7}
+
+
+Initialize a square matrix A as a unit matrix. 
+
+
+
+Definition at line 137 of file util.\+f90.
+
+
+\begin{DoxyCode}
+137      \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(:,:)},\textcolor{keywordtype}{INTENT(INOUT)} :: a
+138      \textcolor{keywordtype}{INTEGER} :: i,n
+139      n=\textcolor{keyword}{size}(a,1)
+140      a=0.0d0
+141      \textcolor{keywordflow}{DO} i=1,n
+142        a(i,i)=1.0d0
+143 \textcolor{keywordflow}{     END DO}
+144 
+\end{DoxyCode}
+\index{util@{util}!init\+\_\+random\+\_\+seed@{init\+\_\+random\+\_\+seed}}
+\index{init\+\_\+random\+\_\+seed@{init\+\_\+random\+\_\+seed}!util@{util}}
+\subsubsection[{\texorpdfstring{init\+\_\+random\+\_\+seed()}{init_random_seed()}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public util\+::init\+\_\+random\+\_\+seed (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_a3c2dcf05b068a55f0066d2b393e75dc7}{}\label{namespaceutil_a3c2dcf05b068a55f0066d2b393e75dc7}
+
+
+Random generator initialization routine. 
+
+
+
+Definition at line 62 of file util.\+f90.
+
+\index{util@{util}!isin@{isin}}
+\index{isin@{isin}!util@{util}}
+\subsubsection[{\texorpdfstring{isin(c, s)}{isin(c, s)}}]{\setlength{\rightskip}{0pt plus 5cm}integer function, dimension(size(s)), public util\+::isin (
+\begin{DoxyParamCaption}
+\item[{character, intent(in)}]{c, }
+\item[{character, dimension(\+:), intent(in)}]{s}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_a1e2cd46baa2070e28949e28c8a3e037e}{}\label{namespaceutil_a1e2cd46baa2070e28949e28c8a3e037e}
+
+
+Determine if a character is in a string and where. 
+
+\begin{DoxyRemark}{Remarks}
+\+: return positions in a vector if found and 0 vector if not found 
+\end{DoxyRemark}
+
+
+Definition at line 45 of file util.\+f90.
+
+
+\begin{DoxyCode}
+45     \textcolor{keywordtype}{CHARACTER}, \textcolor{keywordtype}{INTENT(IN)} :: c
+46     \textcolor{keywordtype}{CHARACTER}, \textcolor{keywordtype}{DIMENSION(:)}, \textcolor{keywordtype}{INTENT(IN)} :: s
+47     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{DIMENSION(size(s))} :: isin
+48     \textcolor{keywordtype}{INTEGER} :: i,j
+49 
+50     isin=0
+51     j=0
+52     \textcolor{keywordflow}{DO} i=\textcolor{keyword}{size}(s),1,-1
+53        \textcolor{keywordflow}{IF} (c==s(i)) \textcolor{keywordflow}{THEN}
+54           j=j+1
+55           isin(j)=i
+56 \textcolor{keywordflow}{       END IF}
+57 \textcolor{keywordflow}{    END DO}
+\end{DoxyCode}
+\index{util@{util}!piksrt@{piksrt}}
+\index{piksrt@{piksrt}!util@{util}}
+\subsubsection[{\texorpdfstring{piksrt(k, arr, par)}{piksrt(k, arr, par)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public util\+::piksrt (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{k, }
+\item[{integer, dimension(k), intent(inout)}]{arr, }
+\item[{integer, intent(out)}]{par}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_af8d0a8ec8cb7391ddbf455dc92f2189d}{}\label{namespaceutil_af8d0a8ec8cb7391ddbf455dc92f2189d}
+
+
+Simple card player sorting function. 
+
+
+
+Definition at line 116 of file util.\+f90.
+
+
+\begin{DoxyCode}
+116     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: k
+117     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{DIMENSION(k)}, \textcolor{keywordtype}{INTENT(INOUT)} :: arr
+118     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(OUT)} :: par
+119     \textcolor{keywordtype}{INTEGER} :: i,j,a,b
+120 
+121     par=1
+122 
+123     \textcolor{keywordflow}{DO} j=2,k
+124        a=arr(j)
+125        \textcolor{keywordflow}{DO} i=j-1,1,-1
+126           \textcolor{keywordflow}{if}(arr(i).le.a) \textcolor{keywordflow}{EXIT}
+127           arr(i+1)=arr(i)
+128           par=-par
+129 \textcolor{keywordflow}{       END DO}
+130        arr(i+1)=a
+131 \textcolor{keywordflow}{    ENDDO}
+132     \textcolor{keywordflow}{RETURN}
+\end{DoxyCode}
+\index{util@{util}!rstr@{rstr}}
+\index{rstr@{rstr}!util@{util}}
+\subsubsection[{\texorpdfstring{rstr(x, fm)}{rstr(x, fm)}}]{\setlength{\rightskip}{0pt plus 5cm}character(len=40) function, public util\+::rstr (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), intent(in)}]{x, }
+\item[{character(len=20), intent(in)}]{fm}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_ac1630658a46867b1f7255eaa51198bf3}{}\label{namespaceutil_ac1630658a46867b1f7255eaa51198bf3}
+
+
+Convert a real to string with a given format. 
+
+
+
+Definition at line 36 of file util.\+f90.
+
+
+\begin{DoxyCode}
+36     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)} :: x
+37     \textcolor{keywordtype}{CHARACTER(len=20)}, \textcolor{keywordtype}{INTENT(IN)} :: fm
+38     \textcolor{keyword}{WRITE} (rstr, trim(adjustl(fm))) x
+39     rstr = adjustl(rstr)
+\end{DoxyCode}
+\index{util@{util}!str@{str}}
+\index{str@{str}!util@{util}}
+\subsubsection[{\texorpdfstring{str(k)}{str(k)}}]{\setlength{\rightskip}{0pt plus 5cm}character(len=20) function, public util\+::str (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{k}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}{}\label{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}
+
+
+Convert an integer to string. 
+
+
+
+Definition at line 29 of file util.\+f90.
+
+
+\begin{DoxyCode}
+29     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: k
+30     \textcolor{keyword}{WRITE} (\hyperlink{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}{str}, *) k
+31     \hyperlink{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}{str} = adjustl(\hyperlink{namespaceutil_a1df36d0696c9183ceb6bb770f1d88111}{str})
+\end{DoxyCode}

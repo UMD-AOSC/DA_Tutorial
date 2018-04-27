@@ -1,0 +1,74 @@
+\hypertarget{inprod__analytic_8f90}{}\section{inprod\+\_\+analytic.\+f90 File Reference}
+\label{inprod__analytic_8f90}\index{inprod\+\_\+analytic.\+f90@{inprod\+\_\+analytic.\+f90}}
+\subsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \hyperlink{structinprod__analytic_1_1atm__wavenum}{inprod\+\_\+analytic\+::atm\+\_\+wavenum}
+\begin{DoxyCompactList}\small\item\em Atmospheric bloc specification type. \end{DoxyCompactList}\item 
+type \hyperlink{structinprod__analytic_1_1ocean__wavenum}{inprod\+\_\+analytic\+::ocean\+\_\+wavenum}
+\begin{DoxyCompactList}\small\item\em Oceanic bloc specification type. \end{DoxyCompactList}\item 
+type \hyperlink{structinprod__analytic_1_1atm__tensors}{inprod\+\_\+analytic\+::atm\+\_\+tensors}
+\begin{DoxyCompactList}\small\item\em Type holding the atmospheric inner products tensors. \end{DoxyCompactList}\item 
+type \hyperlink{structinprod__analytic_1_1ocean__tensors}{inprod\+\_\+analytic\+::ocean\+\_\+tensors}
+\begin{DoxyCompactList}\small\item\em Type holding the oceanic inner products tensors. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespaceinprod__analytic}{inprod\+\_\+analytic}
+\begin{DoxyCompactList}\small\item\em Inner products between the truncated set of basis functions for the ocean and atmosphere streamfunction fields. These are partly calculated using the analytical expressions from Cehelsky, P., \& Tung, K. K. \+: Theories of multiple equilibria and weather regimes-\/A critical reexamination. Part II\+: Baroclinic two-\/layer models. Journal of the atmospheric sciences, 44(21), 3282-\/3303, 1987. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a65ce3c65ea7e796a09b702d3c0f63fe0}{inprod\+\_\+analytic\+::b1} (Pi, Pj, Pk)
+\begin{DoxyCompactList}\small\item\em Cehelsky \& Tung Helper functions. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_ac3804db9421130d611b222d8b12c1882}{inprod\+\_\+analytic\+::b2} (Pi, Pj, Pk)
+\begin{DoxyCompactList}\small\item\em Cehelsky \& Tung Helper functions. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_ac500ef2ae885d78a4f4558392a92fd0c}{inprod\+\_\+analytic\+::delta} (r)
+\begin{DoxyCompactList}\small\item\em Integer Dirac delta function. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a7e49045b5dd4cf8d0a4eb096570e8f5c}{inprod\+\_\+analytic\+::flambda} (r)
+\begin{DoxyCompactList}\small\item\em \char`\"{}\+Odd or even\char`\"{} function \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a90a2b9840d6c77f13aaadd7e0537800c}{inprod\+\_\+analytic\+::s1} (Pj, Pk, Mj, Hk)
+\begin{DoxyCompactList}\small\item\em Cehelsky \& Tung Helper functions. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a319a35a215ad426474c9a2beb4d85bbb}{inprod\+\_\+analytic\+::s2} (Pj, Pk, Mj, Hk)
+\begin{DoxyCompactList}\small\item\em Cehelsky \& Tung Helper functions. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a671ca8c3aae1db0a453a13e94462baa0}{inprod\+\_\+analytic\+::s3} (Pj, Pk, Hj, Hk)
+\begin{DoxyCompactList}\small\item\em Cehelsky \& Tung Helper functions. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a8dacf930ffdf8fd09da0a77bfd4d3a4b}{inprod\+\_\+analytic\+::s4} (Pj, Pk, Hj, Hk)
+\begin{DoxyCompactList}\small\item\em Cehelsky \& Tung Helper functions. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_afc3e503e1fd9774693f02e0fe87ec63a}{inprod\+\_\+analytic\+::calculate\+\_\+a} (i, j)
+\begin{DoxyCompactList}\small\item\em Eigenvalues of the Laplacian (atmospheric) \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a63625452db6424cf46aa93bb9ce3e2f2}{inprod\+\_\+analytic\+::calculate\+\_\+b} (i, j, k)
+\begin{DoxyCompactList}\small\item\em Streamfunction advection terms (atmospheric) \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_aa242adb49ed57168cfd281c90ddd6490}{inprod\+\_\+analytic\+::calculate\+\_\+c\+\_\+atm} (i, j)
+\begin{DoxyCompactList}\small\item\em Beta term for the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a519a70cc6ad55be09a56df9753e43e61}{inprod\+\_\+analytic\+::calculate\+\_\+d} (i, j)
+\begin{DoxyCompactList}\small\item\em Forcing of the ocean on the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_afa66e718a91ec595e483cb20befce6a6}{inprod\+\_\+analytic\+::calculate\+\_\+g} (i, j, k)
+\begin{DoxyCompactList}\small\item\em Temperature advection terms (atmospheric) \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a5cdb72e3766b95108cef81b2cff503f9}{inprod\+\_\+analytic\+::calculate\+\_\+s} (i, j)
+\begin{DoxyCompactList}\small\item\em Forcing (thermal) of the ocean on the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a084d554f278704061269b6bdf0b85053}{inprod\+\_\+analytic\+::calculate\+\_\+k} (i, j)
+\begin{DoxyCompactList}\small\item\em Forcing of the atmosphere on the ocean. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a745462230d6120d9486aa7cb724322f5}{inprod\+\_\+analytic\+::calculate\+\_\+m} (i, j)
+\begin{DoxyCompactList}\small\item\em Forcing of the ocean fields on the ocean. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_af3507292836d9e87909740e9d8a0f9bc}{inprod\+\_\+analytic\+::calculate\+\_\+n} (i, j)
+\begin{DoxyCompactList}\small\item\em Beta term for the ocean. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_ac8f50f326a84d5b206ed4cf5c86c4301}{inprod\+\_\+analytic\+::calculate\+\_\+o} (i, j, k)
+\begin{DoxyCompactList}\small\item\em Temperature advection term (passive scalar) \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_aaa451a1ceea496bac284d4b71c06b4ee}{inprod\+\_\+analytic\+::calculate\+\_\+c\+\_\+oc} (i, j, k)
+\begin{DoxyCompactList}\small\item\em Streamfunction advection terms (oceanic) \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespaceinprod__analytic_a3ce2bc9a209cef35849d78e829cfbe5a}{inprod\+\_\+analytic\+::calculate\+\_\+w} (i, j)
+\begin{DoxyCompactList}\small\item\em Short-\/wave radiative forcing of the ocean. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespaceinprod__analytic_a7491dd2b8ba26eb10d160eb0bf072e56}{inprod\+\_\+analytic\+::init\+\_\+inprod}
+\begin{DoxyCompactList}\small\item\em Initialisation of the inner product. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+type(atm\+\_\+wavenum), dimension(\+:), allocatable, public \hyperlink{namespaceinprod__analytic_aa6b6ebedac44495720ffe649bc937a56}{inprod\+\_\+analytic\+::awavenum}
+\begin{DoxyCompactList}\small\item\em Atmospheric blocs specification. \end{DoxyCompactList}\item 
+type(ocean\+\_\+wavenum), dimension(\+:), allocatable, public \hyperlink{namespaceinprod__analytic_a7273713c6b1a079e1c653e8b8d2fe089}{inprod\+\_\+analytic\+::owavenum}
+\begin{DoxyCompactList}\small\item\em Oceanic blocs specification. \end{DoxyCompactList}\item 
+type(atm\+\_\+tensors), public \hyperlink{namespaceinprod__analytic_a6f4fe9aa292d78b871e5498e411d1297}{inprod\+\_\+analytic\+::atmos}
+\begin{DoxyCompactList}\small\item\em Atmospheric tensors. \end{DoxyCompactList}\item 
+type(ocean\+\_\+tensors), public \hyperlink{namespaceinprod__analytic_ac691a1258fb0a341e2ba5b4811be1c0b}{inprod\+\_\+analytic\+::ocean}
+\begin{DoxyCompactList}\small\item\em Oceanic tensors. \end{DoxyCompactList}\end{DoxyCompactItemize}

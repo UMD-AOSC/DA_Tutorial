@@ -1,0 +1,25 @@
+\hypertarget{rk2__tl__ad__integrator_8f90}{}\section{rk2\+\_\+tl\+\_\+ad\+\_\+integrator.\+f90 File Reference}
+\label{rk2__tl__ad__integrator_8f90}\index{rk2\+\_\+tl\+\_\+ad\+\_\+integrator.\+f90@{rk2\+\_\+tl\+\_\+ad\+\_\+integrator.\+f90}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacetl__ad__integrator}{tl\+\_\+ad\+\_\+integrator}
+\begin{DoxyCompactList}\small\item\em Tangent Linear (TL) and Adjoint (AD) model versions of M\+A\+O\+O\+AM. Integrators module. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, public \hyperlink{namespacetl__ad__integrator_aeef5ff45fe5f9b73ceb8d72c195dc381}{tl\+\_\+ad\+\_\+integrator\+::init\+\_\+tl\+\_\+ad\+\_\+integrator}
+\begin{DoxyCompactList}\small\item\em Routine to initialise the integration buffers. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__integrator_a708ece5eac01486e65e889d19073fd19}{tl\+\_\+ad\+\_\+integrator\+::ad\+\_\+step} (y, ystar, t, dt, res)
+\begin{DoxyCompactList}\small\item\em Routine to perform an integration step (Heun algorithm) of the adjoint model. The incremented time is returned. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__integrator_ac88b155557d4fc0bae70007fde3aef06}{tl\+\_\+ad\+\_\+integrator\+::tl\+\_\+step} (y, ystar, t, dt, res)
+\begin{DoxyCompactList}\small\item\em Routine to perform an integration step (Heun algorithm) of the tangent linear model. The incremented time is returned. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespacetl__ad__integrator_a54c26282330477995b554805fbacf236}{tl\+\_\+ad\+\_\+integrator\+::buf\+\_\+y1}
+\begin{DoxyCompactList}\small\item\em Buffer to hold the intermediate position (Heun algorithm) of the tangent linear model. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespacetl__ad__integrator_ad0e2f29027e4317cae009ca0c4ad1b5a}{tl\+\_\+ad\+\_\+integrator\+::buf\+\_\+f0}
+\begin{DoxyCompactList}\small\item\em Buffer to hold tendencies at the initial position of the tangent linear model. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable \hyperlink{namespacetl__ad__integrator_ac466cd6f698dc9fed5fc3ab46f30b9a5}{tl\+\_\+ad\+\_\+integrator\+::buf\+\_\+f1}
+\begin{DoxyCompactList}\small\item\em Buffer to hold tendencies at the intermediate position of the tangent linear model. \end{DoxyCompactList}\end{DoxyCompactItemize}

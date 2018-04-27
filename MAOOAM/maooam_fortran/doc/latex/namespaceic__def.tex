@@ -1,0 +1,196 @@
+\hypertarget{namespaceic__def}{}\section{ic\+\_\+def Module Reference}
+\label{namespaceic__def}\index{ic\+\_\+def@{ic\+\_\+def}}
+
+
+Module to load the initial condition.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, public \hyperlink{namespaceic__def_af3d9de16d535e27cf3bacd7f82d68d54}{load\+\_\+ic}
+\begin{DoxyCompactList}\small\item\em Subroutine to load the initial condition if I\+C.\+nml exists. If it does not, then write I\+C.\+nml with 0 as initial condition. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+logical \hyperlink{namespaceic__def_a989b031664e87b1a693a329ecd4f4721}{exists}
+\begin{DoxyCompactList}\small\item\em Boolean to test for file existence. \end{DoxyCompactList}\item 
+real(kind=8), dimension(\+:), allocatable, public \hyperlink{namespaceic__def_abef3b68b2ee81311ed2c796cba3a382f}{ic}
+\begin{DoxyCompactList}\small\item\em Initial condition vector. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Module to load the initial condition. 
+
+\begin{DoxyCopyright}{Copyright}
+2016 Lesley De Cruz, Jonathan Demaeyer \& Sebastian Schubert See \hyperlink{LICENSE_8txt}{L\+I\+C\+E\+N\+S\+E.\+txt} for license information. 
+\end{DoxyCopyright}
+
+
+\subsection{Function/\+Subroutine Documentation}
+\index{ic\+\_\+def@{ic\+\_\+def}!load\+\_\+ic@{load\+\_\+ic}}
+\index{load\+\_\+ic@{load\+\_\+ic}!ic\+\_\+def@{ic\+\_\+def}}
+\subsubsection[{\texorpdfstring{load\+\_\+ic}{load_ic}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public ic\+\_\+def\+::load\+\_\+ic (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceic__def_af3d9de16d535e27cf3bacd7f82d68d54}{}\label{namespaceic__def_af3d9de16d535e27cf3bacd7f82d68d54}
+
+
+Subroutine to load the initial condition if I\+C.\+nml exists. If it does not, then write I\+C.\+nml with 0 as initial condition. 
+
+
+
+Definition at line 32 of file ic\+\_\+def.\+f90.
+
+
+\begin{DoxyCode}
+32     \textcolor{keywordtype}{INTEGER} :: i,allocstat,j
+33     \textcolor{keywordtype}{CHARACTER(len=20)} :: fm
+34     \textcolor{keywordtype}{REAL(KIND=8)} :: size\_of\_random\_noise
+35     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{DIMENSION(:)}, \textcolor{keywordtype}{ALLOCATABLE} :: seed
+36     \textcolor{keywordtype}{CHARACTER(LEN=4)} :: init\_type 
+37     namelist /iclist/ ic
+38     namelist /rand/ init\_type,size\_of\_random\_noise,seed
+39 
+40 
+41     fm(1:6)=\textcolor{stringliteral}{'(F3.1)'}
+42 
+43     \textcolor{keyword}{CALL }random\_seed(size=j)
+44    
+45     \textcolor{keywordflow}{IF} (ndim == 0) stop \textcolor{stringliteral}{"*** Number of dimensions is 0! ***"}
+46     \textcolor{keyword}{ALLOCATE}(ic(0:ndim),seed(j), \hyperlink{namespacestat}{stat}=allocstat)
+47     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+48 
+49     \textcolor{keyword}{INQUIRE}(file=\textcolor{stringliteral}{'./IC.nml'},exist=exists)
+50 
+51     \textcolor{keywordflow}{IF} (exists) \textcolor{keywordflow}{THEN}
+52        \textcolor{keyword}{OPEN}(8, file=\textcolor{stringliteral}{"IC.nml"}, status=\textcolor{stringliteral}{'OLD'}, recl=80, delim=\textcolor{stringliteral}{'APOSTROPHE'})
+53        \textcolor{keyword}{READ}(8,nml=iclist)
+54        \textcolor{keyword}{READ}(8,nml=rand)
+55        \textcolor{keyword}{CLOSE}(8)
+56        \textcolor{keywordflow}{SELECT CASE} (init\_type)
+57          \textcolor{keywordflow}{CASE} (\textcolor{stringliteral}{'seed'})
+58            \textcolor{keyword}{CALL }random\_seed(put=seed)
+59            \textcolor{keyword}{CALL }random\_number(ic)
+60            ic=2*(ic-0.5)
+61            ic=ic*size\_of\_random\_noise*10.d0
+62            ic(0)=1.0d0
+63            \textcolor{keyword}{WRITE}(6,*) \textcolor{stringliteral}{"*** IC.nml namelist written. Starting with 'seeded' random initial condition !***"}
+64          \textcolor{keywordflow}{CASE} (\textcolor{stringliteral}{'rand'})
+65            \textcolor{keyword}{CALL }init\_random\_seed()
+66            \textcolor{keyword}{CALL }random\_seed(get=seed)
+67            \textcolor{keyword}{CALL }random\_number(ic)
+68            ic=2*(ic-0.5)
+69            ic=ic*size\_of\_random\_noise*10.d0
+70            ic(0)=1.0d0
+71            \textcolor{keyword}{WRITE}(6,*) \textcolor{stringliteral}{"*** IC.nml namelist written. Starting with random initial condition !***"}
+72          \textcolor{keywordflow}{CASE} (\textcolor{stringliteral}{'zero'})
+73            \textcolor{keyword}{CALL }init\_random\_seed()
+74            \textcolor{keyword}{CALL }random\_seed(get=seed)
+75            ic=0
+76            ic(0)=1.0d0
+77            \textcolor{keyword}{WRITE}(6,*) \textcolor{stringliteral}{"*** IC.nml namelist written. Starting with initial condition in IC.nml !***"}
+78          \textcolor{keywordflow}{CASE} (\textcolor{stringliteral}{'read'})
+79            \textcolor{keyword}{CALL }init\_random\_seed()
+80            \textcolor{keyword}{CALL }random\_seed(get=seed)
+81            ic(0)=1.0d0
+82            \textcolor{comment}{! except IC(0), nothing has to be done IC has already the right values}
+83            \textcolor{keyword}{WRITE}(6,*) \textcolor{stringliteral}{"*** IC.nml namelist written. Starting with initial condition in IC.nml !***"}
+84 \textcolor{keywordflow}{       END SELECT}
+85     \textcolor{keywordflow}{ELSE}
+86        \textcolor{keyword}{CALL }init\_random\_seed()
+87        \textcolor{keyword}{CALL }random\_seed(get=seed)
+88        ic=0
+89        ic(0)=1.0d0
+90        init\_type=\textcolor{stringliteral}{"zero"}
+91        size\_of\_random\_noise=0.d0
+92        \textcolor{keyword}{WRITE}(6,*) \textcolor{stringliteral}{"*** IC.nml namelist written. Starting with 0 as initial condition !***"}
+93 \textcolor{keywordflow}{    END IF}
+94     \textcolor{keyword}{OPEN}(8, file=\textcolor{stringliteral}{"IC.nml"}, status=\textcolor{stringliteral}{'REPLACE'})
+95     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"!------------------------------------------------------------------------------!"}
+96     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"! Namelist file :                                                              !"}
+97     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"! Initial condition.                                                           !"}
+98     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"!------------------------------------------------------------------------------!"}
+99     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{""}
+100     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"&ICLIST"}
+101     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" ! psi variables"}
+102     \textcolor{keywordflow}{DO} i=1,natm
+103        \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" IC("}//trim(str(i))//\textcolor{stringliteral}{") = "},ic(i),\textcolor{stringliteral}{"   ! typ= "}&
+104             &//awavenum(i)%typ//\textcolor{stringliteral}{", Nx= "}//trim(rstr(awavenum(i)&
+105             &%Nx,fm))//\textcolor{stringliteral}{", Ny= "}//trim(rstr(awavenum(i)%Ny,fm))
+106 \textcolor{keywordflow}{    END DO}
+107     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" ! theta variables"}
+108     \textcolor{keywordflow}{DO} i=1,natm
+109        \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" IC("}//trim(str(i+natm))//\textcolor{stringliteral}{") = "},ic(i+natm),\textcolor{stringliteral}{"   ! typ= "}&
+110             &//awavenum(i)%typ//\textcolor{stringliteral}{", Nx= "}//trim(rstr(awavenum(i)&
+111             &%Nx,fm))//\textcolor{stringliteral}{", Ny= "}//trim(rstr(awavenum(i)%Ny,fm))
+112 \textcolor{keywordflow}{    END DO}
+113 
+114     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" ! A variables"}
+115     \textcolor{keywordflow}{DO} i=1,noc
+116        \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" IC("}//trim(str(i+2*natm))//\textcolor{stringliteral}{") = "},ic(i+2*natm),\textcolor{stringliteral}{"   ! Nx&}
+117 \textcolor{stringliteral}{}\textcolor{stringliteral}{            &= "}//trim(rstr(owavenum(i)%Nx,fm))//\textcolor{stringliteral}{", Ny= "}&
+118             &//trim(rstr(owavenum(i)%Ny,fm))
+119 \textcolor{keywordflow}{    END DO}
+120     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" ! T variables"}
+121     \textcolor{keywordflow}{DO} i=1,noc
+122        \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" IC("}//trim(str(i+noc+2*natm))//\textcolor{stringliteral}{") = "},ic(i+2*natm+noc),\textcolor{stringliteral}{"   &}
+123 \textcolor{stringliteral}{}\textcolor{stringliteral}{            &! Nx= "}//trim(rstr(owavenum(i)%Nx,fm))//\textcolor{stringliteral}{", Ny= "}&
+124             &//trim(rstr(owavenum(i)%Ny,fm))
+125 \textcolor{keywordflow}{    END DO}
+126 
+127     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"&END"}
+128     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{""}
+129     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"!------------------------------------------------------------------------------!"}
+130     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"! Initialisation type.                                                         !"}
+131     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"!------------------------------------------------------------------------------!"}
+132     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"! type = 'read': use IC above (will generate a new seed);"}
+133     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"!        'rand': random state (will generate a new seed);"}
+134     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"!        'zero': zero IC (will generate a new seed);"}
+135     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"!        'seed': use the seed below (generate the same IC)"}
+136     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{""}
+137     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"&RAND"}
+138     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"  init\_type= '"}//init\_type//\textcolor{stringliteral}{"'"} 
+139     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a,d15.7)'}) \textcolor{stringliteral}{"  size\_of\_random\_noise = "},size\_of\_random\_noise
+140     \textcolor{keywordflow}{DO} i=1,j
+141        \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{" seed("}//trim(str(i))//\textcolor{stringliteral}{") = "},seed(i)
+142 \textcolor{keywordflow}{    END DO}
+143     \textcolor{keyword}{WRITE}(8,\textcolor{stringliteral}{'(a)'}) \textcolor{stringliteral}{"&END"}
+144     \textcolor{keyword}{WRITE}(8,*) \textcolor{stringliteral}{""}
+145     \textcolor{keyword}{CLOSE}(8)
+146     
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\index{ic\+\_\+def@{ic\+\_\+def}!exists@{exists}}
+\index{exists@{exists}!ic\+\_\+def@{ic\+\_\+def}}
+\subsubsection[{\texorpdfstring{exists}{exists}}]{\setlength{\rightskip}{0pt plus 5cm}logical ic\+\_\+def\+::exists\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespaceic__def_a989b031664e87b1a693a329ecd4f4721}{}\label{namespaceic__def_a989b031664e87b1a693a329ecd4f4721}
+
+
+Boolean to test for file existence. 
+
+
+
+Definition at line 21 of file ic\+\_\+def.\+f90.
+
+
+\begin{DoxyCode}
+21   \textcolor{keywordtype}{LOGICAL} :: exists\textcolor{comment}{ !< Boolean to test for file existence.}
+\end{DoxyCode}
+\index{ic\+\_\+def@{ic\+\_\+def}!ic@{ic}}
+\index{ic@{ic}!ic\+\_\+def@{ic\+\_\+def}}
+\subsubsection[{\texorpdfstring{ic}{ic}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8), dimension(\+:), allocatable, public ic\+\_\+def\+::ic}\hypertarget{namespaceic__def_abef3b68b2ee81311ed2c796cba3a382f}{}\label{namespaceic__def_abef3b68b2ee81311ed2c796cba3a382f}
+
+
+Initial condition vector. 
+
+
+
+Definition at line 23 of file ic\+\_\+def.\+f90.
+
+
+\begin{DoxyCode}
+23   \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(:)}, \textcolor{keywordtype}{ALLOCATABLE}, \textcolor{keywordtype}{PUBLIC} :: ic\textcolor{comment}{ !< Initial condition vector}
+\end{DoxyCode}

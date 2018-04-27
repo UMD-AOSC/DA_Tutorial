@@ -1,8 +1,0 @@
-python -m site --user-site
-mkdir -p <result>
-
-add to MAOOAM directory:
-touch __init__.py
-
-copy:
-cp <PATH>/MAOOAM/python/params_maooam.py .

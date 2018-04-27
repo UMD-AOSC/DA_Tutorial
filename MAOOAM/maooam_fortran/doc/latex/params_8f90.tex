@@ -1,0 +1,131 @@
+\hypertarget{params_8f90}{}\section{params.\+f90 File Reference}
+\label{params_8f90}\index{params.\+f90@{params.\+f90}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespaceparams}{params}
+\begin{DoxyCompactList}\small\item\em The model parameters module. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, private \hyperlink{namespaceparams_ab21e77dfefda280da4cfdd29117173d5}{params\+::init\+\_\+nml}
+\begin{DoxyCompactList}\small\item\em Read the basic parameters and mode selection from the namelist. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{params\+::init\+\_\+params}
+\begin{DoxyCompactList}\small\item\em Parameters initialisation routine. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8) \hyperlink{namespaceparams_abe66e904e07861ba1ef258ee92184e88}{params\+::n}
+\begin{DoxyCompactList}\small\item\em $n = 2 L_y / L_x$ -\/ Aspect ratio \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7e58166ca3fb2153f781aa623c5c31e6}{params\+::phi0}
+\begin{DoxyCompactList}\small\item\em Latitude in radian. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a192b2aa859cdeb4a0e285bcd0af346f4}{params\+::rra}
+\begin{DoxyCompactList}\small\item\em Earth radius. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a9115211e1d9169ad56a3fa924c5f7ef3}{params\+::sig0}
+\begin{DoxyCompactList}\small\item\em $\sigma_0$ -\/ Non-\/dimensional static stability of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a6f40b299d2e21a177bf86afe5b06f790}{params\+::k}
+\begin{DoxyCompactList}\small\item\em Bottom atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7474ac35238cf6acd2b02e7e6261b41d}{params\+::kp}
+\begin{DoxyCompactList}\small\item\em $k'$ -\/ Internal atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a714367f370ac26b8a281ebd6736407b7}{params\+::r}
+\begin{DoxyCompactList}\small\item\em Frictional coefficient at the bottom of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a612e8c87d1d9514ebe7ab3ac95141be3}{params\+::d}
+\begin{DoxyCompactList}\small\item\em Merchanical coupling parameter between the ocean and the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a83c176b3a593aa6ac77c50d2b5b21032}{params\+::f0}
+\begin{DoxyCompactList}\small\item\em $f_0$ -\/ Coriolis parameter \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a29ba9893360b5685ca584deead6dbc55}{params\+::gp}
+\begin{DoxyCompactList}\small\item\em $g'$Reduced gravity \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a6d9c99d7dfc62518cf51eb98e7f39707}{params\+::h}
+\begin{DoxyCompactList}\small\item\em Depth of the active water layer of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a516e6c305e938087cfe780629c76ef64}{params\+::phi0\+\_\+npi}
+\begin{DoxyCompactList}\small\item\em Latitude exprimed in fraction of pi. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a022da5c60234624dcc3d76382a7382da}{params\+::lambda}
+\begin{DoxyCompactList}\small\item\em $\lambda$ -\/ Sensible + turbulent heat exchange between the ocean and the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a36a35eafddb662c94c227a30cbf85fd4}{params\+::co}
+\begin{DoxyCompactList}\small\item\em $C_a$ -\/ Constant short-\/wave radiation of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a30bd914fd64880f5407ebb055e72b88c}{params\+::go}
+\begin{DoxyCompactList}\small\item\em $\gamma_o$ -\/ Specific heat capacity of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a39788da6872d45cd235d734a6f60ac20}{params\+::ca}
+\begin{DoxyCompactList}\small\item\em $C_a$ -\/ Constant short-\/wave radiation of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ad880ab6d5fab6c7a095b526383e75404}{params\+::to0}
+\begin{DoxyCompactList}\small\item\em $T_o^0$ -\/ Stationary solution for the 0-\/th order ocean temperature. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_af3fdd8c130a667bca95de5ebf9e5f492}{params\+::ta0}
+\begin{DoxyCompactList}\small\item\em $T_a^0$ -\/ Stationary solution for the 0-\/th order atmospheric temperature. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a10c96506a7d395bb9b15734461aef879}{params\+::epsa}
+\begin{DoxyCompactList}\small\item\em $\epsilon_a$ -\/ Emissivity coefficient for the grey-\/body atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a1c769c8719a62f1a72837b7b9daf8024}{params\+::ga}
+\begin{DoxyCompactList}\small\item\em $\gamma_a$ -\/ Specific heat capacity of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ac1c1ed1ab5fcbdbd6a77b8a5c69fc6e5}{params\+::rr}
+\begin{DoxyCompactList}\small\item\em $R$ -\/ Gas constant of dry air \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7803126847c2e1b2b4aced941ec9257b}{params\+::scale}
+\begin{DoxyCompactList}\small\item\em $L_y = L \, \pi$ -\/ The characteristic space scale. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aaed8cf35d6e94ec5a9aeab80125e470f}{params\+::pi}
+\begin{DoxyCompactList}\small\item\em $\pi$ \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a3082530044275cbd794604b81a7e6be0}{params\+::lr}
+\begin{DoxyCompactList}\small\item\em $L_R$ -\/ Rossby deformation radius \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_afb5953f2f72e02fa67d474979127e79d}{params\+::g}
+\begin{DoxyCompactList}\small\item\em $\gamma$ \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ae93d91e6b6dbca141006f84d1c467921}{params\+::rp}
+\begin{DoxyCompactList}\small\item\em $r'$ -\/ Frictional coefficient at the bottom of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aee7fb664acd19367183ac09fdfe5ebe0}{params\+::dp}
+\begin{DoxyCompactList}\small\item\em $d'$ -\/ Non-\/dimensional mechanical coupling parameter between the ocean and the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ae9bae2195091caeb7918dcbc3e57f109}{params\+::kd}
+\begin{DoxyCompactList}\small\item\em $k_d$ -\/ Non-\/dimensional bottom atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a764d9607a4fdabf5e51f36e90fd7e568}{params\+::kdp}
+\begin{DoxyCompactList}\small\item\em $k'_d$ -\/ Non-\/dimensional internal atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a89b8bfb0d5a9275b0301c8ebe1a92da7}{params\+::cpo}
+\begin{DoxyCompactList}\small\item\em $C'_a$ -\/ Non-\/dimensional constant short-\/wave radiation of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aa668795ed0785dc42a43980c82ba058e}{params\+::lpo}
+\begin{DoxyCompactList}\small\item\em $\lambda'_o$ -\/ Non-\/dimensional sensible + turbulent heat exchange from ocean to atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a5194d820b8962ee2b99a455a2892a2e2}{params\+::cpa}
+\begin{DoxyCompactList}\small\item\em $C'_a$ -\/ Non-\/dimensional constant short-\/wave radiation of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_abc64b12ee840e1d848729ea868221117}{params\+::lpa}
+\begin{DoxyCompactList}\small\item\em $\lambda'_a$ -\/ Non-\/dimensional sensible + turbulent heat exchange from atmosphere to ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a630ac570afd5c9c7030ca416f3a860a4}{params\+::sbpo}
+\begin{DoxyCompactList}\small\item\em $\sigma'_{B,o}$ -\/ Long wave radiation lost by ocean to atmosphere \& space. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_abf0cb93f1f5b90e3cfd2c70d88c92d38}{params\+::sbpa}
+\begin{DoxyCompactList}\small\item\em $\sigma'_{B,a}$ -\/ Long wave radiation from atmosphere absorbed by ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ae29ef1b81e159c7bff47aa8303710583}{params\+::lsbpo}
+\begin{DoxyCompactList}\small\item\em $S'_{B,o}$ -\/ Long wave radiation from ocean absorbed by atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a2422205ab99f9886746672ee91b775a8}{params\+::lsbpa}
+\begin{DoxyCompactList}\small\item\em $S'_{B,a}$ -\/ Long wave radiation lost by atmosphere to space \& ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aa2b032a17c85d2069ca59212ad8309a1}{params\+::l}
+\begin{DoxyCompactList}\small\item\em $L$ -\/ Domain length scale \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a35c130eb539b9df8c52cc02427913cc0}{params\+::sc}
+\begin{DoxyCompactList}\small\item\em Ratio of surface to atmosphere temperature. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7e4a380117958612bc5cf4cac910b483}{params\+::sb}
+\begin{DoxyCompactList}\small\item\em Stefan–\+Boltzmann constant. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a9ffe87bb8aaab8a0d4f8d5f644b98785}{params\+::betp}
+\begin{DoxyCompactList}\small\item\em $\beta'$ -\/ Non-\/dimensional beta parameter \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a8421c6937257007fb96366980677061c}{params\+::nua} =0.D0
+\begin{DoxyCompactList}\small\item\em Dissipation in the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a49937b0c51e9f89ac9b2f332d387af2f}{params\+::nuo} =0.D0
+\begin{DoxyCompactList}\small\item\em Dissipation in the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a3a0962facf5be13872568dd81f95453c}{params\+::nuap}
+\begin{DoxyCompactList}\small\item\em Non-\/dimensional dissipation in the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a4802663c55680d2c51142f63636abd2e}{params\+::nuop}
+\begin{DoxyCompactList}\small\item\em Non-\/dimensional dissipation in the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aabf0943afa2272a8bbbd58c49ad0db38}{params\+::t\+\_\+trans}
+\begin{DoxyCompactList}\small\item\em Transient time period. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a923cab407956c82921069b7ec0e69eb9}{params\+::t\+\_\+run}
+\begin{DoxyCompactList}\small\item\em Effective intergration time (length of the generated trajectory) \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a2d658dc74d6a45a2e71b06bde97df084}{params\+::dt}
+\begin{DoxyCompactList}\small\item\em Integration time step. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a0955c0296092bb15d2dcd120d72ad479}{params\+::tw}
+\begin{DoxyCompactList}\small\item\em Write all variables every tw time units. \end{DoxyCompactList}\item 
+logical \hyperlink{namespaceparams_affc7b423a975c0e92b62e67ed04edea5}{params\+::writeout}
+\begin{DoxyCompactList}\small\item\em Write to file boolean. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_a54123b5a947703d21d0c882dec6780ac}{params\+::nboc}
+\begin{DoxyCompactList}\small\item\em Number of atmospheric blocks. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_aa5dc201b0a59d8bb25a5dc52d2ed3cac}{params\+::nbatm}
+\begin{DoxyCompactList}\small\item\em Number of oceanic blocks. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_a4f46551b6a8ad183d2dced1da3dc5fed}{params\+::natm} =0
+\begin{DoxyCompactList}\small\item\em Number of atmospheric basis functions. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_acdb6ef89bcada9ba7b6b6bba575b60f4}{params\+::noc} =0
+\begin{DoxyCompactList}\small\item\em Number of oceanic basis functions. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_a2323fe1773f086e20c14f266351c482b}{params\+::ndim}
+\begin{DoxyCompactList}\small\item\em Number of variables (dimension of the model) \end{DoxyCompactList}\item 
+integer, dimension(\+:,\+:), allocatable \hyperlink{namespaceparams_a5e25e072992d5908eea5308243b7ec63}{params\+::oms}
+\begin{DoxyCompactList}\small\item\em Ocean mode selection array. \end{DoxyCompactList}\item 
+integer, dimension(\+:,\+:), allocatable \hyperlink{namespaceparams_aa95299f1a9c54693b85e049004369089}{params\+::ams}
+\begin{DoxyCompactList}\small\item\em Atmospheric mode selection array. \end{DoxyCompactList}\end{DoxyCompactItemize}

@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pkl
+*.npy
+*.html
+tags
+.make/
+*.png
+*.pdf
+*.so
+*.o
+*.mod
+*.dat
+*.out

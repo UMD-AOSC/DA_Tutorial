@@ -82,17 +82,20 @@ method = das.getMethod()
 xa = das.x0
 xa_history = np.zeros_like(x_nature)
 xa_history[:] = np.nan
+Xens_a_history = np.empty((maxit, xdim, edim))
 KH_history = []
 KH_idx = []
-for i in range(0,maxit-acyc_step,acyc_step):
- 
+n_cyc_step = int(np.ceil((maxit - acyc_step) / acyc_step))
+Pb_hist = np.empty((n_cyc_step, xdim, xdim))
+for j, i in enumerate(range(0,maxit-acyc_step,acyc_step)):
+
   #----------------------------------------------
   # Run forecast model for this analysis cycle:
   #----------------------------------------------
-# t = np.arange(t_nature[i],t_nature[i+acyc_step]+dt,dt)
+  # t = np.arange(t_nature[i],t_nature[i+acyc_step]+dt,dt)
   t = np.linspace(t_nature[i],t_nature[i+acyc_step], acyc_step+1, endpoint=True)
-# print('t = ', t)
-# print('t_nature[i+acyc_step] = ', t_nature[i+acyc_step])
+  # print('t = ', t)
+  # print('t_nature[i+acyc_step] = ', t_nature[i+acyc_step])
 
   # Run the model ensemble forecast
   Xf = np.zeros_like(Xa)
@@ -100,13 +103,18 @@ for i in range(0,maxit-acyc_step,acyc_step):
   # Preferably, run this loop in parallel:
   for k in range(das.edim):
     # Run model run for ensemble member k
-    xf_4d_k =  model.run(Xa[:,k].A1,t) 
+    assert len(t) == acyc_step + 1
+    xf_4d_k =  model.run(Xa[:,k].A1,t)
     # Get last timestep of the forecast
     Xf[:,k] = np.transpose(np.matrix(xf_4d_k[-1,:]))
     # Compute forecast ensemble mean
     xf_4d = xf_4d + xf_4d_k
-  xf_4d = xf_4d / das.edim 
 
+    Xens_a_history[i:i+acyc_step, :, k] = xf_4d_k[:acyc_step, :]
+
+  xf_4d = xf_4d / das.edim
+  Xf_ptb = Xf - np.mean(Xf, axis=1)
+  Pb_hist[j, :, :] = Xf_ptb @ Xf_ptb.T / (das.edim - 1.0)
   #----------------------------------------------
   # Get the observations for this analysis cycle
   #----------------------------------------------
@@ -117,26 +125,29 @@ for i in range(0,maxit-acyc_step,acyc_step):
   # Compute analysis
   #----------------------------------------------
   Xa, KH = das.compute_analysis(Xf,yo)
+  Xens_a_history[i+acyc_step, :, :] = Xa[:, :]
   xa = np.mean(Xa,axis=1).T
-# print('xa = ')
-# print(xa)
 
-# print('x_nature[i+acyc_step,:] = ')
-# print(x_nature[i+acyc_step,:,])
+  # print('xa = ')
+  # print(xa)
+
+  # print('x_nature[i+acyc_step,:] = ')
+  # print(x_nature[i+acyc_step,:,])
 
   # Fill in the missing timesteps with the forecast from the previous analysis IC's
   xa_history[i:i+acyc_step,:] = xf_4d[0:acyc_step,:]
   # Archive the analysis
   xa_history[i+acyc_step,:] = xa
 
-# print('xa_history[i:i+acyc_step+1,:] = ', xa_history[i:i+acyc_step+1,:])
+
+  # print('xa_history[i:i+acyc_step+1,:] = ', xa_history[i:i+acyc_step+1,:])
 
   # Archive the KH matrix
   KH_history.append(deepcopy(KH))
   KH_idx.append(i+acyc_step)
- 
+
 das.setKH(KH_history,KH_idx)
- 
+
 print('xa_history[-10:,:] = ')
 print(xa_history[-10:,:])
 
@@ -145,7 +156,10 @@ Xa = Xa - np.matlib.repmat(xm, 1, das.edim)
 print('Last background error covariance matrix Xa*Xa.T = ')
 print((1/(das.edim-1))*np.dot(Xa,np.transpose(Xa)))
 
+np.save("Pb_hist.npy", Pb_hist)
+
 sv.setTrajectory(xa_history)
+sv.setEnsembleTrajectory(Xens_a_history)
 sv.setName(name)
 das.setStateVector(sv)
 

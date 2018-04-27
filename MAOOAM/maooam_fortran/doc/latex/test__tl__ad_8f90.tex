@@ -1,0 +1,113 @@
+\hypertarget{test__tl__ad_8f90}{}\section{test\+\_\+tl\+\_\+ad.\+f90 File Reference}
+\label{test__tl__ad_8f90}\index{test\+\_\+tl\+\_\+ad.\+f90@{test\+\_\+tl\+\_\+ad.\+f90}}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+program \hyperlink{test__tl__ad_8f90_ac0e7dd6c4fed814b0be0eb81bb0f109c}{test\+\_\+tl\+\_\+ad}
+\begin{DoxyCompactList}\small\item\em Tests for the Tangent Linear (TL) and Adjoint (AD) model versions of M\+A\+O\+O\+AM. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{test__tl__ad_8f90_a8cfee6d9953a1b3bf6603964b0da7aab}{gasdev} (idum)
+\item 
+real(kind=8) function \hyperlink{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}{ran2} (idum)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function/\+Subroutine Documentation}
+\index{test\+\_\+tl\+\_\+ad.\+f90@{test\+\_\+tl\+\_\+ad.\+f90}!gasdev@{gasdev}}
+\index{gasdev@{gasdev}!test\+\_\+tl\+\_\+ad.\+f90@{test\+\_\+tl\+\_\+ad.\+f90}}
+\subsubsection[{\texorpdfstring{gasdev(idum)}{gasdev(idum)}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) function gasdev (
+\begin{DoxyParamCaption}
+\item[{integer}]{idum}
+\end{DoxyParamCaption}
+)}\hypertarget{test__tl__ad_8f90_a8cfee6d9953a1b3bf6603964b0da7aab}{}\label{test__tl__ad_8f90_a8cfee6d9953a1b3bf6603964b0da7aab}
+
+
+Definition at line 149 of file test\+\_\+tl\+\_\+ad.\+f90.
+
+
+\begin{DoxyCode}
+149   \textcolor{keywordtype}{INTEGER} :: idum
+150   \textcolor{keywordtype}{REAL(KIND=8)} ::  \hyperlink{test__tl__ad_8f90_a8cfee6d9953a1b3bf6603964b0da7aab}{gasdev},\hyperlink{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}{ran2}
+151   \textcolor{comment}{!    USES ran2}
+152   \textcolor{keywordtype}{INTEGER} :: iset
+153   \textcolor{keywordtype}{REAL(KIND=8)} :: fac,gset,rsq,v1,v2
+154   \textcolor{keywordtype}{SAVE} iset,gset
+155   \textcolor{keyword}{DATA} iset/0/
+156   \textcolor{keywordflow}{if} (idum.lt.0) iset=0
+157   \textcolor{keywordflow}{if} (iset.eq.0) \textcolor{keywordflow}{then}
+158 1    v1=2.d0*\hyperlink{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}{ran2}(idum)-1.
+159      v2=2.d0*\hyperlink{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}{ran2}(idum)-1.
+160      rsq=v1**2+v2**2
+161      \textcolor{keywordflow}{if} (rsq.ge.1.d0.or.rsq.eq.0.d0) \textcolor{keywordflow}{goto} 1
+162      fac=sqrt(-2.*log(rsq)/rsq)
+163      gset=v1*fac
+164      \hyperlink{test__tl__ad_8f90_a8cfee6d9953a1b3bf6603964b0da7aab}{gasdev}=v2*fac
+165      iset=1
+166   \textcolor{keywordflow}{else}
+167      \hyperlink{test__tl__ad_8f90_a8cfee6d9953a1b3bf6603964b0da7aab}{gasdev}=gset
+168      iset=0
+169 \textcolor{keywordflow}{  endif}
+170   \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\index{test\+\_\+tl\+\_\+ad.\+f90@{test\+\_\+tl\+\_\+ad.\+f90}!ran2@{ran2}}
+\index{ran2@{ran2}!test\+\_\+tl\+\_\+ad.\+f90@{test\+\_\+tl\+\_\+ad.\+f90}}
+\subsubsection[{\texorpdfstring{ran2(idum)}{ran2(idum)}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) function ran2 (
+\begin{DoxyParamCaption}
+\item[{integer}]{idum}
+\end{DoxyParamCaption}
+)}\hypertarget{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}{}\label{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}
+
+
+Definition at line 174 of file test\+\_\+tl\+\_\+ad.\+f90.
+
+
+\begin{DoxyCode}
+174   \textcolor{keywordtype}{INTEGER} :: idum,im1,im2,imm1,ia1,ia2,iq1,iq2,ir1,ir2,ntab,ndiv
+175   \textcolor{keywordtype}{REAL(KIND=8)} :: \hyperlink{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}{ran2},am,eps,rnmx
+176   parameter(im1=2147483563,im2=2147483399,am=1.d0/im1,imm1=im1-1&
+177        &,ia1=40014,ia2=40692,iq1=53668,iq2=52774,ir1=12211,ir2&
+178        &=3791,ntab=32,ndiv=1+imm1/ntab,eps=1.2d-7,rnmx=1.d0-eps)
+179   \textcolor{keywordtype}{INTEGER} :: idum2,j,k,iv(ntab),iy
+180   \textcolor{keywordtype}{SAVE} iv,iy,idum2
+181   \textcolor{keyword}{DATA} idum2/123456789/, iv/ntab*0/, iy/0/
+182   \textcolor{keywordflow}{if} (idum.le.0) \textcolor{keywordflow}{then}
+183      idum=max(-idum,1)
+184      idum2=idum
+185      \textcolor{keywordflow}{do} j=ntab+8,1,-1
+186         k=idum/iq1
+187         idum=ia1*(idum-k*iq1)-k*ir1
+188         \textcolor{keywordflow}{if} (idum.lt.0) idum=idum+im1
+189         \textcolor{keywordflow}{if} (j.le.ntab) iv(j)=idum
+190 \textcolor{keywordflow}{     enddo}
+191      iy=iv(1)
+192 \textcolor{keywordflow}{  endif}
+193   k=idum/iq1
+194   idum=ia1*(idum-k*iq1)-k*ir1
+195   \textcolor{keywordflow}{if} (idum.lt.0) idum=idum+im1
+196   k=idum2/iq2
+197   idum2=ia2*(idum2-k*iq2)-k*ir2
+198   \textcolor{keywordflow}{if} (idum2.lt.0) idum2=idum2+im2
+199   j=1+iy/ndiv
+200   iy=iv(j)-idum2
+201   iv(j)=idum
+202   \textcolor{keywordflow}{if} (iy.lt.1) iy=iy+imm1
+203   \hyperlink{test__tl__ad_8f90_a7eaaf9b701707c0fb887b3cfd024336f}{ran2}=min(am*iy,rnmx)
+204   \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\index{test\+\_\+tl\+\_\+ad.\+f90@{test\+\_\+tl\+\_\+ad.\+f90}!test\+\_\+tl\+\_\+ad@{test\+\_\+tl\+\_\+ad}}
+\index{test\+\_\+tl\+\_\+ad@{test\+\_\+tl\+\_\+ad}!test\+\_\+tl\+\_\+ad.\+f90@{test\+\_\+tl\+\_\+ad.\+f90}}
+\subsubsection[{\texorpdfstring{test\+\_\+tl\+\_\+ad}{test_tl_ad}}]{\setlength{\rightskip}{0pt plus 5cm}program test\+\_\+tl\+\_\+ad (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{test__tl__ad_8f90_ac0e7dd6c4fed814b0be0eb81bb0f109c}{}\label{test__tl__ad_8f90_ac0e7dd6c4fed814b0be0eb81bb0f109c}
+
+
+Tests for the Tangent Linear (TL) and Adjoint (AD) model versions of M\+A\+O\+O\+AM. 
+
+\begin{DoxyCopyright}{Copyright}
+2016 Lesley De Cruz \& Jonathan Demaeyer. See \hyperlink{LICENSE_8txt}{L\+I\+C\+E\+N\+S\+E.\+txt} for license information. 
+\end{DoxyCopyright}
+
+
+Definition at line 14 of file test\+\_\+tl\+\_\+ad.\+f90.
+

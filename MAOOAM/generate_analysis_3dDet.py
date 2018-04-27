@@ -92,10 +92,6 @@ for i in range(0,maxit-acyc_step,acyc_step):
   # Compute analysis
   #----------------------------------------------
   xa, KH = das.compute_analysis(xf,yo)
-# print('xa = ')
-# print(xa)
-# print('KH = ')
-# print(KH)
 
   # Fill in the missing timesteps with the forecast from the previous analysis IC's
   xa_history[i:i+acyc_step,:] = xf_4d[0:acyc_step,:]

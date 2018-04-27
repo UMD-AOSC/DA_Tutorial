@@ -1,0 +1,1144 @@
+\hypertarget{namespaceparams}{}\section{params Module Reference}
+\label{namespaceparams}\index{params@{params}}
+
+
+The model parameters module.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, private \hyperlink{namespaceparams_ab21e77dfefda280da4cfdd29117173d5}{init\+\_\+nml}
+\begin{DoxyCompactList}\small\item\em Read the basic parameters and mode selection from the namelist. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{init\+\_\+params}
+\begin{DoxyCompactList}\small\item\em Parameters initialisation routine. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8) \hyperlink{namespaceparams_abe66e904e07861ba1ef258ee92184e88}{n}
+\begin{DoxyCompactList}\small\item\em $n = 2 L_y / L_x$ -\/ Aspect ratio \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7e58166ca3fb2153f781aa623c5c31e6}{phi0}
+\begin{DoxyCompactList}\small\item\em Latitude in radian. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a192b2aa859cdeb4a0e285bcd0af346f4}{rra}
+\begin{DoxyCompactList}\small\item\em Earth radius. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a9115211e1d9169ad56a3fa924c5f7ef3}{sig0}
+\begin{DoxyCompactList}\small\item\em $\sigma_0$ -\/ Non-\/dimensional static stability of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a6f40b299d2e21a177bf86afe5b06f790}{k}
+\begin{DoxyCompactList}\small\item\em Bottom atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7474ac35238cf6acd2b02e7e6261b41d}{kp}
+\begin{DoxyCompactList}\small\item\em $k'$ -\/ Internal atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a714367f370ac26b8a281ebd6736407b7}{r}
+\begin{DoxyCompactList}\small\item\em Frictional coefficient at the bottom of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a612e8c87d1d9514ebe7ab3ac95141be3}{d}
+\begin{DoxyCompactList}\small\item\em Merchanical coupling parameter between the ocean and the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a83c176b3a593aa6ac77c50d2b5b21032}{f0}
+\begin{DoxyCompactList}\small\item\em $f_0$ -\/ Coriolis parameter \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a29ba9893360b5685ca584deead6dbc55}{gp}
+\begin{DoxyCompactList}\small\item\em $g'$Reduced gravity \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a6d9c99d7dfc62518cf51eb98e7f39707}{h}
+\begin{DoxyCompactList}\small\item\em Depth of the active water layer of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a516e6c305e938087cfe780629c76ef64}{phi0\+\_\+npi}
+\begin{DoxyCompactList}\small\item\em Latitude exprimed in fraction of pi. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a022da5c60234624dcc3d76382a7382da}{lambda}
+\begin{DoxyCompactList}\small\item\em $\lambda$ -\/ Sensible + turbulent heat exchange between the ocean and the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a36a35eafddb662c94c227a30cbf85fd4}{co}
+\begin{DoxyCompactList}\small\item\em $C_a$ -\/ Constant short-\/wave radiation of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a30bd914fd64880f5407ebb055e72b88c}{go}
+\begin{DoxyCompactList}\small\item\em $\gamma_o$ -\/ Specific heat capacity of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a39788da6872d45cd235d734a6f60ac20}{ca}
+\begin{DoxyCompactList}\small\item\em $C_a$ -\/ Constant short-\/wave radiation of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ad880ab6d5fab6c7a095b526383e75404}{to0}
+\begin{DoxyCompactList}\small\item\em $T_o^0$ -\/ Stationary solution for the 0-\/th order ocean temperature. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_af3fdd8c130a667bca95de5ebf9e5f492}{ta0}
+\begin{DoxyCompactList}\small\item\em $T_a^0$ -\/ Stationary solution for the 0-\/th order atmospheric temperature. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a10c96506a7d395bb9b15734461aef879}{epsa}
+\begin{DoxyCompactList}\small\item\em $\epsilon_a$ -\/ Emissivity coefficient for the grey-\/body atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a1c769c8719a62f1a72837b7b9daf8024}{ga}
+\begin{DoxyCompactList}\small\item\em $\gamma_a$ -\/ Specific heat capacity of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ac1c1ed1ab5fcbdbd6a77b8a5c69fc6e5}{rr}
+\begin{DoxyCompactList}\small\item\em $R$ -\/ Gas constant of dry air \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7803126847c2e1b2b4aced941ec9257b}{scale}
+\begin{DoxyCompactList}\small\item\em $L_y = L \, \pi$ -\/ The characteristic space scale. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aaed8cf35d6e94ec5a9aeab80125e470f}{pi}
+\begin{DoxyCompactList}\small\item\em $\pi$ \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a3082530044275cbd794604b81a7e6be0}{lr}
+\begin{DoxyCompactList}\small\item\em $L_R$ -\/ Rossby deformation radius \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_afb5953f2f72e02fa67d474979127e79d}{g}
+\begin{DoxyCompactList}\small\item\em $\gamma$ \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ae93d91e6b6dbca141006f84d1c467921}{rp}
+\begin{DoxyCompactList}\small\item\em $r'$ -\/ Frictional coefficient at the bottom of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aee7fb664acd19367183ac09fdfe5ebe0}{dp}
+\begin{DoxyCompactList}\small\item\em $d'$ -\/ Non-\/dimensional mechanical coupling parameter between the ocean and the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ae9bae2195091caeb7918dcbc3e57f109}{kd}
+\begin{DoxyCompactList}\small\item\em $k_d$ -\/ Non-\/dimensional bottom atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a764d9607a4fdabf5e51f36e90fd7e568}{kdp}
+\begin{DoxyCompactList}\small\item\em $k'_d$ -\/ Non-\/dimensional internal atmospheric friction coefficient. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a89b8bfb0d5a9275b0301c8ebe1a92da7}{cpo}
+\begin{DoxyCompactList}\small\item\em $C'_a$ -\/ Non-\/dimensional constant short-\/wave radiation of the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aa668795ed0785dc42a43980c82ba058e}{lpo}
+\begin{DoxyCompactList}\small\item\em $\lambda'_o$ -\/ Non-\/dimensional sensible + turbulent heat exchange from ocean to atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a5194d820b8962ee2b99a455a2892a2e2}{cpa}
+\begin{DoxyCompactList}\small\item\em $C'_a$ -\/ Non-\/dimensional constant short-\/wave radiation of the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_abc64b12ee840e1d848729ea868221117}{lpa}
+\begin{DoxyCompactList}\small\item\em $\lambda'_a$ -\/ Non-\/dimensional sensible + turbulent heat exchange from atmosphere to ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a630ac570afd5c9c7030ca416f3a860a4}{sbpo}
+\begin{DoxyCompactList}\small\item\em $\sigma'_{B,o}$ -\/ Long wave radiation lost by ocean to atmosphere \& space. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_abf0cb93f1f5b90e3cfd2c70d88c92d38}{sbpa}
+\begin{DoxyCompactList}\small\item\em $\sigma'_{B,a}$ -\/ Long wave radiation from atmosphere absorbed by ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_ae29ef1b81e159c7bff47aa8303710583}{lsbpo}
+\begin{DoxyCompactList}\small\item\em $S'_{B,o}$ -\/ Long wave radiation from ocean absorbed by atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a2422205ab99f9886746672ee91b775a8}{lsbpa}
+\begin{DoxyCompactList}\small\item\em $S'_{B,a}$ -\/ Long wave radiation lost by atmosphere to space \& ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aa2b032a17c85d2069ca59212ad8309a1}{l}
+\begin{DoxyCompactList}\small\item\em $L$ -\/ Domain length scale \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a35c130eb539b9df8c52cc02427913cc0}{sc}
+\begin{DoxyCompactList}\small\item\em Ratio of surface to atmosphere temperature. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a7e4a380117958612bc5cf4cac910b483}{sb}
+\begin{DoxyCompactList}\small\item\em Stefan–\+Boltzmann constant. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a9ffe87bb8aaab8a0d4f8d5f644b98785}{betp}
+\begin{DoxyCompactList}\small\item\em $\beta'$ -\/ Non-\/dimensional beta parameter \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a8421c6937257007fb96366980677061c}{nua} =0.D0
+\begin{DoxyCompactList}\small\item\em Dissipation in the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a49937b0c51e9f89ac9b2f332d387af2f}{nuo} =0.D0
+\begin{DoxyCompactList}\small\item\em Dissipation in the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a3a0962facf5be13872568dd81f95453c}{nuap}
+\begin{DoxyCompactList}\small\item\em Non-\/dimensional dissipation in the atmosphere. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a4802663c55680d2c51142f63636abd2e}{nuop}
+\begin{DoxyCompactList}\small\item\em Non-\/dimensional dissipation in the ocean. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_aabf0943afa2272a8bbbd58c49ad0db38}{t\+\_\+trans}
+\begin{DoxyCompactList}\small\item\em Transient time period. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a923cab407956c82921069b7ec0e69eb9}{t\+\_\+run}
+\begin{DoxyCompactList}\small\item\em Effective intergration time (length of the generated trajectory) \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a2d658dc74d6a45a2e71b06bde97df084}{dt}
+\begin{DoxyCompactList}\small\item\em Integration time step. \end{DoxyCompactList}\item 
+real(kind=8) \hyperlink{namespaceparams_a0955c0296092bb15d2dcd120d72ad479}{tw}
+\begin{DoxyCompactList}\small\item\em Write all variables every tw time units. \end{DoxyCompactList}\item 
+logical \hyperlink{namespaceparams_affc7b423a975c0e92b62e67ed04edea5}{writeout}
+\begin{DoxyCompactList}\small\item\em Write to file boolean. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_a54123b5a947703d21d0c882dec6780ac}{nboc}
+\begin{DoxyCompactList}\small\item\em Number of atmospheric blocks. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_aa5dc201b0a59d8bb25a5dc52d2ed3cac}{nbatm}
+\begin{DoxyCompactList}\small\item\em Number of oceanic blocks. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_a4f46551b6a8ad183d2dced1da3dc5fed}{natm} =0
+\begin{DoxyCompactList}\small\item\em Number of atmospheric basis functions. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_acdb6ef89bcada9ba7b6b6bba575b60f4}{noc} =0
+\begin{DoxyCompactList}\small\item\em Number of oceanic basis functions. \end{DoxyCompactList}\item 
+integer \hyperlink{namespaceparams_a2323fe1773f086e20c14f266351c482b}{ndim}
+\begin{DoxyCompactList}\small\item\em Number of variables (dimension of the model) \end{DoxyCompactList}\item 
+integer, dimension(\+:,\+:), allocatable \hyperlink{namespaceparams_a5e25e072992d5908eea5308243b7ec63}{oms}
+\begin{DoxyCompactList}\small\item\em Ocean mode selection array. \end{DoxyCompactList}\item 
+integer, dimension(\+:,\+:), allocatable \hyperlink{namespaceparams_aa95299f1a9c54693b85e049004369089}{ams}
+\begin{DoxyCompactList}\small\item\em Atmospheric mode selection array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The model parameters module. 
+
+\begin{DoxyCopyright}{Copyright}
+2015 Lesley De Cruz \& Jonathan Demaeyer. See \hyperlink{LICENSE_8txt}{L\+I\+C\+E\+N\+S\+E.\+txt} for license information. 
+\end{DoxyCopyright}
+\begin{DoxyRemark}{Remarks}
+Once the \hyperlink{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{init\+\_\+params()} subroutine is called, the parameters are loaded globally in the main program and its subroutines and function 
+\end{DoxyRemark}
+
+
+\subsection{Function/\+Subroutine Documentation}
+\index{params@{params}!init\+\_\+nml@{init\+\_\+nml}}
+\index{init\+\_\+nml@{init\+\_\+nml}!params@{params}}
+\subsubsection[{\texorpdfstring{init\+\_\+nml}{init_nml}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, private params\+::init\+\_\+nml (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespaceparams_ab21e77dfefda280da4cfdd29117173d5}{}\label{namespaceparams_ab21e77dfefda280da4cfdd29117173d5}
+
+
+Read the basic parameters and mode selection from the namelist. 
+
+
+
+Definition at line 97 of file params.\+f90.
+
+
+\begin{DoxyCode}
+97     \textcolor{keywordtype}{INTEGER} :: allocstat
+98 
+99     namelist /aoscale/  scale,f0,n,rra,phi0\_npi
+100     namelist /oparams/  gp,r,h,d,nuo
+101     namelist /aparams/  k,kp,sig0,nua
+102     namelist /toparams/ go,co,to0
+103     namelist /taparams/ ga,ca,epsa,ta0
+104     namelist /otparams/ sc,lambda,rr,sb
+105 
+106     namelist /modeselection/ oms,ams
+107     namelist /numblocs/ nboc,nbatm
+108 
+109     namelist /int\_params/ t\_trans,t\_run,dt,tw,writeout
+110 
+111     \textcolor{keyword}{OPEN}(8, file=\textcolor{stringliteral}{"params.nml"}, status=\textcolor{stringliteral}{'OLD'}, recl=80, delim=\textcolor{stringliteral}{'APOSTROPHE'})
+112 
+113     \textcolor{keyword}{READ}(8,nml=aoscale)
+114     \textcolor{keyword}{READ}(8,nml=oparams)
+115     \textcolor{keyword}{READ}(8,nml=aparams)
+116     \textcolor{keyword}{READ}(8,nml=toparams)
+117     \textcolor{keyword}{READ}(8,nml=taparams)
+118     \textcolor{keyword}{READ}(8,nml=otparams)
+119 
+120     \textcolor{keyword}{CLOSE}(8)
+121 
+122     \textcolor{keyword}{OPEN}(8, file=\textcolor{stringliteral}{"modeselection.nml"}, status=\textcolor{stringliteral}{'OLD'}, recl=80, delim=\textcolor{stringliteral}{'APOSTROPHE'})
+123     \textcolor{keyword}{READ}(8,nml=numblocs)
+124 
+125     \textcolor{keyword}{ALLOCATE}(oms(nboc,2),ams(nbatm,2), \hyperlink{namespacestat}{stat}=allocstat)
+126     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+127 
+128     \textcolor{keyword}{READ}(8,nml=modeselection)
+129     \textcolor{keyword}{CLOSE}(8)
+130 
+131     \textcolor{keyword}{OPEN}(8, file=\textcolor{stringliteral}{"int\_params.nml"}, status=\textcolor{stringliteral}{'OLD'}, recl=80, delim=\textcolor{stringliteral}{'APOSTROPHE'})
+132     \textcolor{keyword}{READ}(8,nml=int\_params)
+133 
+\end{DoxyCode}
+\index{params@{params}!init\+\_\+params@{init\+\_\+params}}
+\index{init\+\_\+params@{init\+\_\+params}!params@{params}}
+\subsubsection[{\texorpdfstring{init\+\_\+params}{init_params}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine params\+::init\+\_\+params (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{}\label{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}
+
+
+Parameters initialisation routine. 
+
+
+
+Definition at line 138 of file params.\+f90.
+
+
+\begin{DoxyCode}
+138     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{DIMENSION(2)} :: s
+139     \textcolor{keywordtype}{INTEGER} :: i
+140     \textcolor{keyword}{CALL }init\_nml
+141 
+142     \textcolor{comment}{!---------------------------------------------------------!}
+143     \textcolor{comment}{!                                                         !}
+144     \textcolor{comment}{! Computation of the dimension of the atmospheric         !}
+145     \textcolor{comment}{! and oceanic components                                  !}
+146     \textcolor{comment}{!                                                         !}
+147     \textcolor{comment}{!---------------------------------------------------------!}
+148 
+149     natm=0
+150     \textcolor{keywordflow}{DO} i=1,nbatm
+151        \textcolor{keywordflow}{IF} (ams(i,1)==1) \textcolor{keywordflow}{THEN}
+152           natm=natm+3
+153        \textcolor{keywordflow}{ELSE}
+154           natm=natm+2
+155 \textcolor{keywordflow}{       ENDIF}
+156 \textcolor{keywordflow}{    ENDDO}
+157     s=shape(oms)
+158     noc=s(1)
+159 
+160     ndim=2*natm+2*noc
+161 
+162     \textcolor{comment}{!---------------------------------------------------------!}
+163     \textcolor{comment}{!                                                         !}
+164     \textcolor{comment}{! Some general parameters (Domain, beta, gamma, coupling) !}
+165     \textcolor{comment}{!                                                         !}
+166     \textcolor{comment}{!---------------------------------------------------------!}
+167 
+168     pi=dacos(-1.d0)
+169     l=scale/pi
+170     phi0=phi0\_npi*pi
+171     lr=sqrt(gp*h)/f0
+172     g=-l**2/lr**2
+173     betp=l/rra*cos(phi0)/sin(phi0)
+174     rp=r/f0
+175     dp=d/f0
+176     kd=k*2
+177     kdp=kp
+178 
+179     \textcolor{comment}{!-----------------------------------------------------!}
+180     \textcolor{comment}{!                                                     !}
+181     \textcolor{comment}{! DERIVED QUANTITIES                                  !}
+182     \textcolor{comment}{!                                                     !}
+183     \textcolor{comment}{!-----------------------------------------------------!}
+184 
+185     cpo=co/(go*f0) * rr/(f0**2*l**2)
+186     lpo=lambda/(go*f0)
+187     cpa=ca/(ga*f0) * rr/(f0**2*l**2)/2 \textcolor{comment}{! Cpa acts on psi1-psi3, not on theta}
+188     lpa=lambda/(ga*f0)
+189     sbpo=4*sb*to0**3/(go*f0) \textcolor{comment}{! long wave radiation lost by ocean to atmosphere space}
+190     sbpa=8*epsa*sb*ta0**3/(go*f0) \textcolor{comment}{! long wave radiation from atmosphere absorbed by ocean}
+191     lsbpo=2*epsa*sb*to0**3/(ga*f0) \textcolor{comment}{! long wave radiation from ocean absorbed by atmosphere}
+192     lsbpa=8*epsa*sb*ta0**3/(ga*f0) \textcolor{comment}{! long wave radiation lost by atmosphere to space & ocea}
+193     nuap=nua/(f0*l**2)
+194     nuop=nuo/(f0*l**2)
+195 
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\index{params@{params}!ams@{ams}}
+\index{ams@{ams}!params@{params}}
+\subsubsection[{\texorpdfstring{ams}{ams}}]{\setlength{\rightskip}{0pt plus 5cm}integer, dimension(\+:,\+:), allocatable params\+::ams}\hypertarget{namespaceparams_aa95299f1a9c54693b85e049004369089}{}\label{namespaceparams_aa95299f1a9c54693b85e049004369089}
+
+
+Atmospheric mode selection array. 
+
+
+
+Definition at line 87 of file params.\+f90.
+
+
+\begin{DoxyCode}
+87   \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{DIMENSION(:,:)}, \textcolor{keywordtype}{ALLOCATABLE} :: ams\textcolor{comment}{   !< Atmospheric mode selection array}
+\end{DoxyCode}
+\index{params@{params}!betp@{betp}}
+\index{betp@{betp}!params@{params}}
+\subsubsection[{\texorpdfstring{betp}{betp}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::betp}\hypertarget{namespaceparams_a9ffe87bb8aaab8a0d4f8d5f644b98785}{}\label{namespaceparams_a9ffe87bb8aaab8a0d4f8d5f644b98785}
+
+
+$\beta'$ -\/ Non-\/dimensional beta parameter 
+
+
+
+Definition at line 67 of file params.\+f90.
+
+
+\begin{DoxyCode}
+67   \textcolor{keywordtype}{REAL(KIND=8)} :: betp\textcolor{comment}{      !< \(\backslash\)f$\(\backslash\)beta'\(\backslash\)f$ - Non-dimensional beta parameter}
+\end{DoxyCode}
+\index{params@{params}!ca@{ca}}
+\index{ca@{ca}!params@{params}}
+\subsubsection[{\texorpdfstring{ca}{ca}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::ca}\hypertarget{namespaceparams_a39788da6872d45cd235d734a6f60ac20}{}\label{namespaceparams_a39788da6872d45cd235d734a6f60ac20}
+
+
+$C_a$ -\/ Constant short-\/wave radiation of the atmosphere. 
+
+
+
+Definition at line 40 of file params.\+f90.
+
+
+\begin{DoxyCode}
+40   \textcolor{keywordtype}{REAL(KIND=8)} :: ca\textcolor{comment}{        !< \(\backslash\)f$C\_a\(\backslash\)f$ - Constant short-wave radiation of the atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!co@{co}}
+\index{co@{co}!params@{params}}
+\subsubsection[{\texorpdfstring{co}{co}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::co}\hypertarget{namespaceparams_a36a35eafddb662c94c227a30cbf85fd4}{}\label{namespaceparams_a36a35eafddb662c94c227a30cbf85fd4}
+
+
+$C_a$ -\/ Constant short-\/wave radiation of the ocean. 
+
+
+
+Definition at line 38 of file params.\+f90.
+
+
+\begin{DoxyCode}
+38   \textcolor{keywordtype}{REAL(KIND=8)} :: co\textcolor{comment}{        !< \(\backslash\)f$C\_a\(\backslash\)f$ - Constant short-wave radiation of the ocean.}
+\end{DoxyCode}
+\index{params@{params}!cpa@{cpa}}
+\index{cpa@{cpa}!params@{params}}
+\subsubsection[{\texorpdfstring{cpa}{cpa}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::cpa}\hypertarget{namespaceparams_a5194d820b8962ee2b99a455a2892a2e2}{}\label{namespaceparams_a5194d820b8962ee2b99a455a2892a2e2}
+
+
+$C'_a$ -\/ Non-\/dimensional constant short-\/wave radiation of the atmosphere. 
+
+\begin{DoxyRemark}{Remarks}
+Cpa acts on psi1-\/psi3, not on theta. 
+\end{DoxyRemark}
+
+
+Definition at line 58 of file params.\+f90.
+
+
+\begin{DoxyCode}
+58   \textcolor{keywordtype}{REAL(KIND=8)} :: cpa\textcolor{comment}{       !< \(\backslash\)f$C'\_a\(\backslash\)f$ - Non-dimensional constant short-wave radiation of the
+       atmosphere. @remark Cpa acts on psi1-psi3, not on theta.}
+\end{DoxyCode}
+\index{params@{params}!cpo@{cpo}}
+\index{cpo@{cpo}!params@{params}}
+\subsubsection[{\texorpdfstring{cpo}{cpo}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::cpo}\hypertarget{namespaceparams_a89b8bfb0d5a9275b0301c8ebe1a92da7}{}\label{namespaceparams_a89b8bfb0d5a9275b0301c8ebe1a92da7}
+
+
+$C'_a$ -\/ Non-\/dimensional constant short-\/wave radiation of the ocean. 
+
+
+
+Definition at line 56 of file params.\+f90.
+
+
+\begin{DoxyCode}
+56   \textcolor{keywordtype}{REAL(KIND=8)} :: cpo\textcolor{comment}{       !< \(\backslash\)f$C'\_a\(\backslash\)f$ - Non-dimensional constant short-wave radiation of the ocean.}
+\end{DoxyCode}
+\index{params@{params}!d@{d}}
+\index{d@{d}!params@{params}}
+\subsubsection[{\texorpdfstring{d}{d}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::d}\hypertarget{namespaceparams_a612e8c87d1d9514ebe7ab3ac95141be3}{}\label{namespaceparams_a612e8c87d1d9514ebe7ab3ac95141be3}
+
+
+Merchanical coupling parameter between the ocean and the atmosphere. 
+
+
+
+Definition at line 31 of file params.\+f90.
+
+
+\begin{DoxyCode}
+31   \textcolor{keywordtype}{REAL(KIND=8)} :: d\textcolor{comment}{         !< Merchanical coupling parameter between the ocean and the atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!dp@{dp}}
+\index{dp@{dp}!params@{params}}
+\subsubsection[{\texorpdfstring{dp}{dp}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::dp}\hypertarget{namespaceparams_aee7fb664acd19367183ac09fdfe5ebe0}{}\label{namespaceparams_aee7fb664acd19367183ac09fdfe5ebe0}
+
+
+$d'$ -\/ Non-\/dimensional mechanical coupling parameter between the ocean and the atmosphere. 
+
+
+
+Definition at line 52 of file params.\+f90.
+
+
+\begin{DoxyCode}
+52   \textcolor{keywordtype}{REAL(KIND=8)} :: dp\textcolor{comment}{        !< \(\backslash\)f$d'\(\backslash\)f$ - Non-dimensional mechanical coupling parameter between the ocean
+       and the atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!dt@{dt}}
+\index{dt@{dt}!params@{params}}
+\subsubsection[{\texorpdfstring{dt}{dt}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::dt}\hypertarget{namespaceparams_a2d658dc74d6a45a2e71b06bde97df084}{}\label{namespaceparams_a2d658dc74d6a45a2e71b06bde97df084}
+
+
+Integration time step. 
+
+
+
+Definition at line 77 of file params.\+f90.
+
+
+\begin{DoxyCode}
+77   \textcolor{keywordtype}{REAL(KIND=8)} :: dt\textcolor{comment}{        !< Integration time step}
+\end{DoxyCode}
+\index{params@{params}!epsa@{epsa}}
+\index{epsa@{epsa}!params@{params}}
+\subsubsection[{\texorpdfstring{epsa}{epsa}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::epsa}\hypertarget{namespaceparams_a10c96506a7d395bb9b15734461aef879}{}\label{namespaceparams_a10c96506a7d395bb9b15734461aef879}
+
+
+$\epsilon_a$ -\/ Emissivity coefficient for the grey-\/body atmosphere. 
+
+
+
+Definition at line 43 of file params.\+f90.
+
+
+\begin{DoxyCode}
+43   \textcolor{keywordtype}{REAL(KIND=8)} :: epsa\textcolor{comment}{      !< \(\backslash\)f$\(\backslash\)epsilon\_a\(\backslash\)f$ - Emissivity coefficient for the grey-body atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!f0@{f0}}
+\index{f0@{f0}!params@{params}}
+\subsubsection[{\texorpdfstring{f0}{f0}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::f0}\hypertarget{namespaceparams_a83c176b3a593aa6ac77c50d2b5b21032}{}\label{namespaceparams_a83c176b3a593aa6ac77c50d2b5b21032}
+
+
+$f_0$ -\/ Coriolis parameter 
+
+
+
+Definition at line 32 of file params.\+f90.
+
+
+\begin{DoxyCode}
+32   \textcolor{keywordtype}{REAL(KIND=8)} :: f0\textcolor{comment}{        !< \(\backslash\)f$f\_0\(\backslash\)f$ - Coriolis parameter}
+\end{DoxyCode}
+\index{params@{params}!g@{g}}
+\index{g@{g}!params@{params}}
+\subsubsection[{\texorpdfstring{g}{g}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::g}\hypertarget{namespaceparams_afb5953f2f72e02fa67d474979127e79d}{}\label{namespaceparams_afb5953f2f72e02fa67d474979127e79d}
+
+
+$\gamma$ 
+
+
+
+Definition at line 50 of file params.\+f90.
+
+
+\begin{DoxyCode}
+50   \textcolor{keywordtype}{REAL(KIND=8)} :: g\textcolor{comment}{         !< \(\backslash\)f$\(\backslash\)gamma\(\backslash\)f$}
+\end{DoxyCode}
+\index{params@{params}!ga@{ga}}
+\index{ga@{ga}!params@{params}}
+\subsubsection[{\texorpdfstring{ga}{ga}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::ga}\hypertarget{namespaceparams_a1c769c8719a62f1a72837b7b9daf8024}{}\label{namespaceparams_a1c769c8719a62f1a72837b7b9daf8024}
+
+
+$\gamma_a$ -\/ Specific heat capacity of the atmosphere. 
+
+
+
+Definition at line 44 of file params.\+f90.
+
+
+\begin{DoxyCode}
+44   \textcolor{keywordtype}{REAL(KIND=8)} :: ga\textcolor{comment}{        !< \(\backslash\)f$\(\backslash\)gamma\_a\(\backslash\)f$ - Specific heat capacity of the atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!go@{go}}
+\index{go@{go}!params@{params}}
+\subsubsection[{\texorpdfstring{go}{go}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::go}\hypertarget{namespaceparams_a30bd914fd64880f5407ebb055e72b88c}{}\label{namespaceparams_a30bd914fd64880f5407ebb055e72b88c}
+
+
+$\gamma_o$ -\/ Specific heat capacity of the ocean. 
+
+
+
+Definition at line 39 of file params.\+f90.
+
+
+\begin{DoxyCode}
+39   \textcolor{keywordtype}{REAL(KIND=8)} :: go\textcolor{comment}{        !< \(\backslash\)f$\(\backslash\)gamma\_o\(\backslash\)f$ - Specific heat capacity of the ocean.}
+\end{DoxyCode}
+\index{params@{params}!gp@{gp}}
+\index{gp@{gp}!params@{params}}
+\subsubsection[{\texorpdfstring{gp}{gp}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::gp}\hypertarget{namespaceparams_a29ba9893360b5685ca584deead6dbc55}{}\label{namespaceparams_a29ba9893360b5685ca584deead6dbc55}
+
+
+$g'$Reduced gravity 
+
+
+
+Definition at line 33 of file params.\+f90.
+
+
+\begin{DoxyCode}
+33   \textcolor{keywordtype}{REAL(KIND=8)} :: gp\textcolor{comment}{        !< \(\backslash\)f$g'\(\backslash\)f$Reduced gravity}
+\end{DoxyCode}
+\index{params@{params}!h@{h}}
+\index{h@{h}!params@{params}}
+\subsubsection[{\texorpdfstring{h}{h}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::h}\hypertarget{namespaceparams_a6d9c99d7dfc62518cf51eb98e7f39707}{}\label{namespaceparams_a6d9c99d7dfc62518cf51eb98e7f39707}
+
+
+Depth of the active water layer of the ocean. 
+
+
+
+Definition at line 34 of file params.\+f90.
+
+
+\begin{DoxyCode}
+34   \textcolor{keywordtype}{REAL(KIND=8)} :: h\textcolor{comment}{         !< Depth of the active water layer of the ocean.}
+\end{DoxyCode}
+\index{params@{params}!k@{k}}
+\index{k@{k}!params@{params}}
+\subsubsection[{\texorpdfstring{k}{k}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::k}\hypertarget{namespaceparams_a6f40b299d2e21a177bf86afe5b06f790}{}\label{namespaceparams_a6f40b299d2e21a177bf86afe5b06f790}
+
+
+Bottom atmospheric friction coefficient. 
+
+
+
+Definition at line 28 of file params.\+f90.
+
+
+\begin{DoxyCode}
+28   \textcolor{keywordtype}{REAL(KIND=8)} :: k\textcolor{comment}{         !< Bottom atmospheric friction coefficient.}
+\end{DoxyCode}
+\index{params@{params}!kd@{kd}}
+\index{kd@{kd}!params@{params}}
+\subsubsection[{\texorpdfstring{kd}{kd}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::kd}\hypertarget{namespaceparams_ae9bae2195091caeb7918dcbc3e57f109}{}\label{namespaceparams_ae9bae2195091caeb7918dcbc3e57f109}
+
+
+$k_d$ -\/ Non-\/dimensional bottom atmospheric friction coefficient. 
+
+
+
+Definition at line 53 of file params.\+f90.
+
+
+\begin{DoxyCode}
+53   \textcolor{keywordtype}{REAL(KIND=8)} :: kd\textcolor{comment}{        !< \(\backslash\)f$k\_d\(\backslash\)f$ - Non-dimensional bottom atmospheric friction coefficient.}
+\end{DoxyCode}
+\index{params@{params}!kdp@{kdp}}
+\index{kdp@{kdp}!params@{params}}
+\subsubsection[{\texorpdfstring{kdp}{kdp}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::kdp}\hypertarget{namespaceparams_a764d9607a4fdabf5e51f36e90fd7e568}{}\label{namespaceparams_a764d9607a4fdabf5e51f36e90fd7e568}
+
+
+$k'_d$ -\/ Non-\/dimensional internal atmospheric friction coefficient. 
+
+
+
+Definition at line 54 of file params.\+f90.
+
+
+\begin{DoxyCode}
+54   \textcolor{keywordtype}{REAL(KIND=8)} :: kdp\textcolor{comment}{       !< \(\backslash\)f$k'\_d\(\backslash\)f$ - Non-dimensional internal atmospheric friction coefficient.}
+\end{DoxyCode}
+\index{params@{params}!kp@{kp}}
+\index{kp@{kp}!params@{params}}
+\subsubsection[{\texorpdfstring{kp}{kp}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::kp}\hypertarget{namespaceparams_a7474ac35238cf6acd2b02e7e6261b41d}{}\label{namespaceparams_a7474ac35238cf6acd2b02e7e6261b41d}
+
+
+$k'$ -\/ Internal atmospheric friction coefficient. 
+
+
+
+Definition at line 29 of file params.\+f90.
+
+
+\begin{DoxyCode}
+29   \textcolor{keywordtype}{REAL(KIND=8)} :: kp\textcolor{comment}{        !< \(\backslash\)f$k'\(\backslash\)f$ - Internal atmospheric friction coefficient.}
+\end{DoxyCode}
+\index{params@{params}!l@{l}}
+\index{l@{l}!params@{params}}
+\subsubsection[{\texorpdfstring{l}{l}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::l}\hypertarget{namespaceparams_aa2b032a17c85d2069ca59212ad8309a1}{}\label{namespaceparams_aa2b032a17c85d2069ca59212ad8309a1}
+
+
+$L$ -\/ Domain length scale 
+
+
+
+Definition at line 64 of file params.\+f90.
+
+
+\begin{DoxyCode}
+64   \textcolor{keywordtype}{REAL(KIND=8)} :: l\textcolor{comment}{         !< \(\backslash\)f$L\(\backslash\)f$ - Domain length scale}
+\end{DoxyCode}
+\index{params@{params}!lambda@{lambda}}
+\index{lambda@{lambda}!params@{params}}
+\subsubsection[{\texorpdfstring{lambda}{lambda}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::lambda}\hypertarget{namespaceparams_a022da5c60234624dcc3d76382a7382da}{}\label{namespaceparams_a022da5c60234624dcc3d76382a7382da}
+
+
+$\lambda$ -\/ Sensible + turbulent heat exchange between the ocean and the atmosphere. 
+
+
+
+Definition at line 37 of file params.\+f90.
+
+
+\begin{DoxyCode}
+37   \textcolor{keywordtype}{REAL(KIND=8)} :: lambda\textcolor{comment}{    !< \(\backslash\)f$\(\backslash\)lambda\(\backslash\)f$ - Sensible + turbulent heat exchange between the ocean and the
+       atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!lpa@{lpa}}
+\index{lpa@{lpa}!params@{params}}
+\subsubsection[{\texorpdfstring{lpa}{lpa}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::lpa}\hypertarget{namespaceparams_abc64b12ee840e1d848729ea868221117}{}\label{namespaceparams_abc64b12ee840e1d848729ea868221117}
+
+
+$\lambda'_a$ -\/ Non-\/dimensional sensible + turbulent heat exchange from atmosphere to ocean. 
+
+
+
+Definition at line 59 of file params.\+f90.
+
+
+\begin{DoxyCode}
+59   \textcolor{keywordtype}{REAL(KIND=8)} :: lpa\textcolor{comment}{       !< \(\backslash\)f$\(\backslash\)lambda'\_a\(\backslash\)f$ - Non-dimensional sensible + turbulent heat exchange from
+       atmosphere to ocean.}
+\end{DoxyCode}
+\index{params@{params}!lpo@{lpo}}
+\index{lpo@{lpo}!params@{params}}
+\subsubsection[{\texorpdfstring{lpo}{lpo}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::lpo}\hypertarget{namespaceparams_aa668795ed0785dc42a43980c82ba058e}{}\label{namespaceparams_aa668795ed0785dc42a43980c82ba058e}
+
+
+$\lambda'_o$ -\/ Non-\/dimensional sensible + turbulent heat exchange from ocean to atmosphere. 
+
+
+
+Definition at line 57 of file params.\+f90.
+
+
+\begin{DoxyCode}
+57   \textcolor{keywordtype}{REAL(KIND=8)} :: lpo\textcolor{comment}{       !< \(\backslash\)f$\(\backslash\)lambda'\_o\(\backslash\)f$ - Non-dimensional sensible + turbulent heat exchange from
+       ocean to atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!lr@{lr}}
+\index{lr@{lr}!params@{params}}
+\subsubsection[{\texorpdfstring{lr}{lr}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::lr}\hypertarget{namespaceparams_a3082530044275cbd794604b81a7e6be0}{}\label{namespaceparams_a3082530044275cbd794604b81a7e6be0}
+
+
+$L_R$ -\/ Rossby deformation radius 
+
+
+
+Definition at line 49 of file params.\+f90.
+
+
+\begin{DoxyCode}
+49   \textcolor{keywordtype}{REAL(KIND=8)} :: lr\textcolor{comment}{        !< \(\backslash\)f$L\_R\(\backslash\)f$ - Rossby deformation radius}
+\end{DoxyCode}
+\index{params@{params}!lsbpa@{lsbpa}}
+\index{lsbpa@{lsbpa}!params@{params}}
+\subsubsection[{\texorpdfstring{lsbpa}{lsbpa}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::lsbpa}\hypertarget{namespaceparams_a2422205ab99f9886746672ee91b775a8}{}\label{namespaceparams_a2422205ab99f9886746672ee91b775a8}
+
+
+$S'_{B,a}$ -\/ Long wave radiation lost by atmosphere to space \& ocean. 
+
+
+
+Definition at line 63 of file params.\+f90.
+
+
+\begin{DoxyCode}
+63   \textcolor{keywordtype}{REAL(KIND=8)} :: lsbpa\textcolor{comment}{     !< \(\backslash\)f$S'\_\{B,a\}\(\backslash\)f$ - Long wave radiation lost by atmosphere to space & ocean.}
+\end{DoxyCode}
+\index{params@{params}!lsbpo@{lsbpo}}
+\index{lsbpo@{lsbpo}!params@{params}}
+\subsubsection[{\texorpdfstring{lsbpo}{lsbpo}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::lsbpo}\hypertarget{namespaceparams_ae29ef1b81e159c7bff47aa8303710583}{}\label{namespaceparams_ae29ef1b81e159c7bff47aa8303710583}
+
+
+$S'_{B,o}$ -\/ Long wave radiation from ocean absorbed by atmosphere. 
+
+
+
+Definition at line 62 of file params.\+f90.
+
+
+\begin{DoxyCode}
+62   \textcolor{keywordtype}{REAL(KIND=8)} :: lsbpo\textcolor{comment}{     !< \(\backslash\)f$S'\_\{B,o\}\(\backslash\)f$ - Long wave radiation from ocean absorbed by atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!n@{n}}
+\index{n@{n}!params@{params}}
+\subsubsection[{\texorpdfstring{n}{n}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::n}\hypertarget{namespaceparams_abe66e904e07861ba1ef258ee92184e88}{}\label{namespaceparams_abe66e904e07861ba1ef258ee92184e88}
+
+
+$n = 2 L_y / L_x$ -\/ Aspect ratio 
+
+
+
+Definition at line 24 of file params.\+f90.
+
+
+\begin{DoxyCode}
+24   \textcolor{keywordtype}{REAL(KIND=8)} :: n\textcolor{comment}{         !< \(\backslash\)f$n = 2 L\_y / L\_x\(\backslash\)f$ - Aspect ratio}
+\end{DoxyCode}
+\index{params@{params}!natm@{natm}}
+\index{natm@{natm}!params@{params}}
+\subsubsection[{\texorpdfstring{natm}{natm}}]{\setlength{\rightskip}{0pt plus 5cm}integer params\+::natm =0}\hypertarget{namespaceparams_a4f46551b6a8ad183d2dced1da3dc5fed}{}\label{namespaceparams_a4f46551b6a8ad183d2dced1da3dc5fed}
+
+
+Number of atmospheric basis functions. 
+
+
+
+Definition at line 83 of file params.\+f90.
+
+
+\begin{DoxyCode}
+83   \textcolor{keywordtype}{INTEGER} :: natm=0\textcolor{comment}{ !< Number of atmospheric basis functions}
+\end{DoxyCode}
+\index{params@{params}!nbatm@{nbatm}}
+\index{nbatm@{nbatm}!params@{params}}
+\subsubsection[{\texorpdfstring{nbatm}{nbatm}}]{\setlength{\rightskip}{0pt plus 5cm}integer params\+::nbatm}\hypertarget{namespaceparams_aa5dc201b0a59d8bb25a5dc52d2ed3cac}{}\label{namespaceparams_aa5dc201b0a59d8bb25a5dc52d2ed3cac}
+
+
+Number of oceanic blocks. 
+
+
+
+Definition at line 82 of file params.\+f90.
+
+
+\begin{DoxyCode}
+82   \textcolor{keywordtype}{INTEGER} :: nbatm\textcolor{comment}{  !< Number of oceanic blocks}
+\end{DoxyCode}
+\index{params@{params}!nboc@{nboc}}
+\index{nboc@{nboc}!params@{params}}
+\subsubsection[{\texorpdfstring{nboc}{nboc}}]{\setlength{\rightskip}{0pt plus 5cm}integer params\+::nboc}\hypertarget{namespaceparams_a54123b5a947703d21d0c882dec6780ac}{}\label{namespaceparams_a54123b5a947703d21d0c882dec6780ac}
+
+
+Number of atmospheric blocks. 
+
+
+
+Definition at line 81 of file params.\+f90.
+
+
+\begin{DoxyCode}
+81   \textcolor{keywordtype}{INTEGER} :: nboc\textcolor{comment}{   !< Number of atmospheric blocks}
+\end{DoxyCode}
+\index{params@{params}!ndim@{ndim}}
+\index{ndim@{ndim}!params@{params}}
+\subsubsection[{\texorpdfstring{ndim}{ndim}}]{\setlength{\rightskip}{0pt plus 5cm}integer params\+::ndim}\hypertarget{namespaceparams_a2323fe1773f086e20c14f266351c482b}{}\label{namespaceparams_a2323fe1773f086e20c14f266351c482b}
+
+
+Number of variables (dimension of the model) 
+
+
+
+Definition at line 85 of file params.\+f90.
+
+
+\begin{DoxyCode}
+85   \textcolor{keywordtype}{INTEGER} :: ndim\textcolor{comment}{   !< Number of variables (dimension of the model)}
+\end{DoxyCode}
+\index{params@{params}!noc@{noc}}
+\index{noc@{noc}!params@{params}}
+\subsubsection[{\texorpdfstring{noc}{noc}}]{\setlength{\rightskip}{0pt plus 5cm}integer params\+::noc =0}\hypertarget{namespaceparams_acdb6ef89bcada9ba7b6b6bba575b60f4}{}\label{namespaceparams_acdb6ef89bcada9ba7b6b6bba575b60f4}
+
+
+Number of oceanic basis functions. 
+
+
+
+Definition at line 84 of file params.\+f90.
+
+
+\begin{DoxyCode}
+84   \textcolor{keywordtype}{INTEGER} :: noc=0\textcolor{comment}{  !< Number of oceanic basis functions}
+\end{DoxyCode}
+\index{params@{params}!nua@{nua}}
+\index{nua@{nua}!params@{params}}
+\subsubsection[{\texorpdfstring{nua}{nua}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::nua =0.D0}\hypertarget{namespaceparams_a8421c6937257007fb96366980677061c}{}\label{namespaceparams_a8421c6937257007fb96366980677061c}
+
+
+Dissipation in the atmosphere. 
+
+
+
+Definition at line 69 of file params.\+f90.
+
+
+\begin{DoxyCode}
+69   \textcolor{keywordtype}{REAL(KIND=8)} :: nua=0.d0  \textcolor{comment}{!< Dissipation in the atmosphere}
+\end{DoxyCode}
+\index{params@{params}!nuap@{nuap}}
+\index{nuap@{nuap}!params@{params}}
+\subsubsection[{\texorpdfstring{nuap}{nuap}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::nuap}\hypertarget{namespaceparams_a3a0962facf5be13872568dd81f95453c}{}\label{namespaceparams_a3a0962facf5be13872568dd81f95453c}
+
+
+Non-\/dimensional dissipation in the atmosphere. 
+
+
+
+Definition at line 72 of file params.\+f90.
+
+
+\begin{DoxyCode}
+72   \textcolor{keywordtype}{REAL(KIND=8)} :: nuap\textcolor{comment}{      !< Non-dimensional dissipation in the atmosphere}
+\end{DoxyCode}
+\index{params@{params}!nuo@{nuo}}
+\index{nuo@{nuo}!params@{params}}
+\subsubsection[{\texorpdfstring{nuo}{nuo}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::nuo =0.D0}\hypertarget{namespaceparams_a49937b0c51e9f89ac9b2f332d387af2f}{}\label{namespaceparams_a49937b0c51e9f89ac9b2f332d387af2f}
+
+
+Dissipation in the ocean. 
+
+
+
+Definition at line 70 of file params.\+f90.
+
+
+\begin{DoxyCode}
+70   \textcolor{keywordtype}{REAL(KIND=8)} :: nuo=0.d0  \textcolor{comment}{!< Dissipation in the ocean}
+\end{DoxyCode}
+\index{params@{params}!nuop@{nuop}}
+\index{nuop@{nuop}!params@{params}}
+\subsubsection[{\texorpdfstring{nuop}{nuop}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::nuop}\hypertarget{namespaceparams_a4802663c55680d2c51142f63636abd2e}{}\label{namespaceparams_a4802663c55680d2c51142f63636abd2e}
+
+
+Non-\/dimensional dissipation in the ocean. 
+
+
+
+Definition at line 73 of file params.\+f90.
+
+
+\begin{DoxyCode}
+73   \textcolor{keywordtype}{REAL(KIND=8)} :: nuop\textcolor{comment}{      !< Non-dimensional dissipation in the ocean}
+\end{DoxyCode}
+\index{params@{params}!oms@{oms}}
+\index{oms@{oms}!params@{params}}
+\subsubsection[{\texorpdfstring{oms}{oms}}]{\setlength{\rightskip}{0pt plus 5cm}integer, dimension(\+:,\+:), allocatable params\+::oms}\hypertarget{namespaceparams_a5e25e072992d5908eea5308243b7ec63}{}\label{namespaceparams_a5e25e072992d5908eea5308243b7ec63}
+
+
+Ocean mode selection array. 
+
+
+
+Definition at line 86 of file params.\+f90.
+
+
+\begin{DoxyCode}
+86   \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{DIMENSION(:,:)}, \textcolor{keywordtype}{ALLOCATABLE} :: oms\textcolor{comment}{   !< Ocean mode selection array}
+\end{DoxyCode}
+\index{params@{params}!phi0@{phi0}}
+\index{phi0@{phi0}!params@{params}}
+\subsubsection[{\texorpdfstring{phi0}{phi0}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::phi0}\hypertarget{namespaceparams_a7e58166ca3fb2153f781aa623c5c31e6}{}\label{namespaceparams_a7e58166ca3fb2153f781aa623c5c31e6}
+
+
+Latitude in radian. 
+
+
+
+Definition at line 25 of file params.\+f90.
+
+
+\begin{DoxyCode}
+25   \textcolor{keywordtype}{REAL(KIND=8)} :: phi0\textcolor{comment}{      !< Latitude in radian}
+\end{DoxyCode}
+\index{params@{params}!phi0\+\_\+npi@{phi0\+\_\+npi}}
+\index{phi0\+\_\+npi@{phi0\+\_\+npi}!params@{params}}
+\subsubsection[{\texorpdfstring{phi0\+\_\+npi}{phi0_npi}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::phi0\+\_\+npi}\hypertarget{namespaceparams_a516e6c305e938087cfe780629c76ef64}{}\label{namespaceparams_a516e6c305e938087cfe780629c76ef64}
+
+
+Latitude exprimed in fraction of pi. 
+
+
+
+Definition at line 35 of file params.\+f90.
+
+
+\begin{DoxyCode}
+35   \textcolor{keywordtype}{REAL(KIND=8)} :: phi0\_npi\textcolor{comment}{  !< Latitude exprimed in fraction of pi.}
+\end{DoxyCode}
+\index{params@{params}!pi@{pi}}
+\index{pi@{pi}!params@{params}}
+\subsubsection[{\texorpdfstring{pi}{pi}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::pi}\hypertarget{namespaceparams_aaed8cf35d6e94ec5a9aeab80125e470f}{}\label{namespaceparams_aaed8cf35d6e94ec5a9aeab80125e470f}
+
+
+$\pi$ 
+
+
+
+Definition at line 48 of file params.\+f90.
+
+
+\begin{DoxyCode}
+48   \textcolor{keywordtype}{REAL(KIND=8)} :: pi\textcolor{comment}{        !< \(\backslash\)f$\(\backslash\)pi\(\backslash\)f$}
+\end{DoxyCode}
+\index{params@{params}!r@{r}}
+\index{r@{r}!params@{params}}
+\subsubsection[{\texorpdfstring{r}{r}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::r}\hypertarget{namespaceparams_a714367f370ac26b8a281ebd6736407b7}{}\label{namespaceparams_a714367f370ac26b8a281ebd6736407b7}
+
+
+Frictional coefficient at the bottom of the ocean. 
+
+
+
+Definition at line 30 of file params.\+f90.
+
+
+\begin{DoxyCode}
+30   \textcolor{keywordtype}{REAL(KIND=8)} :: r\textcolor{comment}{         !< Frictional coefficient at the bottom of the ocean.}
+\end{DoxyCode}
+\index{params@{params}!rp@{rp}}
+\index{rp@{rp}!params@{params}}
+\subsubsection[{\texorpdfstring{rp}{rp}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::rp}\hypertarget{namespaceparams_ae93d91e6b6dbca141006f84d1c467921}{}\label{namespaceparams_ae93d91e6b6dbca141006f84d1c467921}
+
+
+$r'$ -\/ Frictional coefficient at the bottom of the ocean. 
+
+
+
+Definition at line 51 of file params.\+f90.
+
+
+\begin{DoxyCode}
+51   \textcolor{keywordtype}{REAL(KIND=8)} :: rp\textcolor{comment}{        !< \(\backslash\)f$r'\(\backslash\)f$ - Frictional coefficient at the bottom of the ocean.}
+\end{DoxyCode}
+\index{params@{params}!rr@{rr}}
+\index{rr@{rr}!params@{params}}
+\subsubsection[{\texorpdfstring{rr}{rr}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::rr}\hypertarget{namespaceparams_ac1c1ed1ab5fcbdbd6a77b8a5c69fc6e5}{}\label{namespaceparams_ac1c1ed1ab5fcbdbd6a77b8a5c69fc6e5}
+
+
+$R$ -\/ Gas constant of dry air 
+
+
+
+Definition at line 45 of file params.\+f90.
+
+
+\begin{DoxyCode}
+45   \textcolor{keywordtype}{REAL(KIND=8)} :: rr\textcolor{comment}{        !< \(\backslash\)f$R\(\backslash\)f$ - Gas constant of dry air}
+\end{DoxyCode}
+\index{params@{params}!rra@{rra}}
+\index{rra@{rra}!params@{params}}
+\subsubsection[{\texorpdfstring{rra}{rra}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::rra}\hypertarget{namespaceparams_a192b2aa859cdeb4a0e285bcd0af346f4}{}\label{namespaceparams_a192b2aa859cdeb4a0e285bcd0af346f4}
+
+
+Earth radius. 
+
+
+
+Definition at line 26 of file params.\+f90.
+
+
+\begin{DoxyCode}
+26   \textcolor{keywordtype}{REAL(KIND=8)} :: rra\textcolor{comment}{       !< Earth radius}
+\end{DoxyCode}
+\index{params@{params}!sb@{sb}}
+\index{sb@{sb}!params@{params}}
+\subsubsection[{\texorpdfstring{sb}{sb}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::sb}\hypertarget{namespaceparams_a7e4a380117958612bc5cf4cac910b483}{}\label{namespaceparams_a7e4a380117958612bc5cf4cac910b483}
+
+
+Stefan–\+Boltzmann constant. 
+
+
+
+Definition at line 66 of file params.\+f90.
+
+
+\begin{DoxyCode}
+66   \textcolor{keywordtype}{REAL(KIND=8)} :: sb\textcolor{comment}{        !< Stefan–Boltzmann constant}
+\end{DoxyCode}
+\index{params@{params}!sbpa@{sbpa}}
+\index{sbpa@{sbpa}!params@{params}}
+\subsubsection[{\texorpdfstring{sbpa}{sbpa}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::sbpa}\hypertarget{namespaceparams_abf0cb93f1f5b90e3cfd2c70d88c92d38}{}\label{namespaceparams_abf0cb93f1f5b90e3cfd2c70d88c92d38}
+
+
+$\sigma'_{B,a}$ -\/ Long wave radiation from atmosphere absorbed by ocean. 
+
+
+
+Definition at line 61 of file params.\+f90.
+
+
+\begin{DoxyCode}
+61   \textcolor{keywordtype}{REAL(KIND=8)} :: sbpa\textcolor{comment}{      !< \(\backslash\)f$\(\backslash\)sigma'\_\{B,a\}\(\backslash\)f$ - Long wave radiation from atmosphere absorbed by ocean.}
+\end{DoxyCode}
+\index{params@{params}!sbpo@{sbpo}}
+\index{sbpo@{sbpo}!params@{params}}
+\subsubsection[{\texorpdfstring{sbpo}{sbpo}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::sbpo}\hypertarget{namespaceparams_a630ac570afd5c9c7030ca416f3a860a4}{}\label{namespaceparams_a630ac570afd5c9c7030ca416f3a860a4}
+
+
+$\sigma'_{B,o}$ -\/ Long wave radiation lost by ocean to atmosphere \& space. 
+
+
+
+Definition at line 60 of file params.\+f90.
+
+
+\begin{DoxyCode}
+60   \textcolor{keywordtype}{REAL(KIND=8)} :: sbpo\textcolor{comment}{      !< \(\backslash\)f$\(\backslash\)sigma'\_\{B,o\}\(\backslash\)f$ - Long wave radiation lost by ocean to atmosphere &
+       space.}
+\end{DoxyCode}
+\index{params@{params}!sc@{sc}}
+\index{sc@{sc}!params@{params}}
+\subsubsection[{\texorpdfstring{sc}{sc}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::sc}\hypertarget{namespaceparams_a35c130eb539b9df8c52cc02427913cc0}{}\label{namespaceparams_a35c130eb539b9df8c52cc02427913cc0}
+
+
+Ratio of surface to atmosphere temperature. 
+
+
+
+Definition at line 65 of file params.\+f90.
+
+
+\begin{DoxyCode}
+65   \textcolor{keywordtype}{REAL(KIND=8)} :: sc\textcolor{comment}{        !< Ratio of surface to atmosphere temperature.}
+\end{DoxyCode}
+\index{params@{params}!scale@{scale}}
+\index{scale@{scale}!params@{params}}
+\subsubsection[{\texorpdfstring{scale}{scale}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::scale}\hypertarget{namespaceparams_a7803126847c2e1b2b4aced941ec9257b}{}\label{namespaceparams_a7803126847c2e1b2b4aced941ec9257b}
+
+
+$L_y = L \, \pi$ -\/ The characteristic space scale. 
+
+
+
+Definition at line 47 of file params.\+f90.
+
+
+\begin{DoxyCode}
+47   \textcolor{keywordtype}{REAL(KIND=8)} :: scale\textcolor{comment}{     !< \(\backslash\)f$L\_y = L \(\backslash\), \(\backslash\)pi\(\backslash\)f$ - The characteristic space scale.}
+\end{DoxyCode}
+\index{params@{params}!sig0@{sig0}}
+\index{sig0@{sig0}!params@{params}}
+\subsubsection[{\texorpdfstring{sig0}{sig0}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::sig0}\hypertarget{namespaceparams_a9115211e1d9169ad56a3fa924c5f7ef3}{}\label{namespaceparams_a9115211e1d9169ad56a3fa924c5f7ef3}
+
+
+$\sigma_0$ -\/ Non-\/dimensional static stability of the atmosphere. 
+
+
+
+Definition at line 27 of file params.\+f90.
+
+
+\begin{DoxyCode}
+27   \textcolor{keywordtype}{REAL(KIND=8)} :: sig0\textcolor{comment}{      !< \(\backslash\)f$\(\backslash\)sigma\_0\(\backslash\)f$ - Non-dimensional static stability of the atmosphere.}
+\end{DoxyCode}
+\index{params@{params}!t\+\_\+run@{t\+\_\+run}}
+\index{t\+\_\+run@{t\+\_\+run}!params@{params}}
+\subsubsection[{\texorpdfstring{t\+\_\+run}{t_run}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::t\+\_\+run}\hypertarget{namespaceparams_a923cab407956c82921069b7ec0e69eb9}{}\label{namespaceparams_a923cab407956c82921069b7ec0e69eb9}
+
+
+Effective intergration time (length of the generated trajectory) 
+
+
+
+Definition at line 76 of file params.\+f90.
+
+
+\begin{DoxyCode}
+76   \textcolor{keywordtype}{REAL(KIND=8)} :: t\_run\textcolor{comment}{     !< Effective intergration time (length of the generated trajectory)}
+\end{DoxyCode}
+\index{params@{params}!t\+\_\+trans@{t\+\_\+trans}}
+\index{t\+\_\+trans@{t\+\_\+trans}!params@{params}}
+\subsubsection[{\texorpdfstring{t\+\_\+trans}{t_trans}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::t\+\_\+trans}\hypertarget{namespaceparams_aabf0943afa2272a8bbbd58c49ad0db38}{}\label{namespaceparams_aabf0943afa2272a8bbbd58c49ad0db38}
+
+
+Transient time period. 
+
+
+
+Definition at line 75 of file params.\+f90.
+
+
+\begin{DoxyCode}
+75   \textcolor{keywordtype}{REAL(KIND=8)} :: t\_trans\textcolor{comment}{   !< Transient time period}
+\end{DoxyCode}
+\index{params@{params}!ta0@{ta0}}
+\index{ta0@{ta0}!params@{params}}
+\subsubsection[{\texorpdfstring{ta0}{ta0}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::ta0}\hypertarget{namespaceparams_af3fdd8c130a667bca95de5ebf9e5f492}{}\label{namespaceparams_af3fdd8c130a667bca95de5ebf9e5f492}
+
+
+$T_a^0$ -\/ Stationary solution for the 0-\/th order atmospheric temperature. 
+
+
+
+Definition at line 42 of file params.\+f90.
+
+
+\begin{DoxyCode}
+42   \textcolor{keywordtype}{REAL(KIND=8)} :: ta0\textcolor{comment}{       !< \(\backslash\)f$T\_a^0\(\backslash\)f$ -  Stationary solution for the 0-th order atmospheric
+       temperature.}
+\end{DoxyCode}
+\index{params@{params}!to0@{to0}}
+\index{to0@{to0}!params@{params}}
+\subsubsection[{\texorpdfstring{to0}{to0}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::to0}\hypertarget{namespaceparams_ad880ab6d5fab6c7a095b526383e75404}{}\label{namespaceparams_ad880ab6d5fab6c7a095b526383e75404}
+
+
+$T_o^0$ -\/ Stationary solution for the 0-\/th order ocean temperature. 
+
+
+
+Definition at line 41 of file params.\+f90.
+
+
+\begin{DoxyCode}
+41   \textcolor{keywordtype}{REAL(KIND=8)} :: to0\textcolor{comment}{       !< \(\backslash\)f$T\_o^0\(\backslash\)f$ -  Stationary solution for the 0-th order ocean temperature.}
+\end{DoxyCode}
+\index{params@{params}!tw@{tw}}
+\index{tw@{tw}!params@{params}}
+\subsubsection[{\texorpdfstring{tw}{tw}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) params\+::tw}\hypertarget{namespaceparams_a0955c0296092bb15d2dcd120d72ad479}{}\label{namespaceparams_a0955c0296092bb15d2dcd120d72ad479}
+
+
+Write all variables every tw time units. 
+
+
+
+Definition at line 78 of file params.\+f90.
+
+
+\begin{DoxyCode}
+78   \textcolor{keywordtype}{REAL(KIND=8)} :: tw\textcolor{comment}{        !< Write all variables every tw time units}
+\end{DoxyCode}
+\index{params@{params}!writeout@{writeout}}
+\index{writeout@{writeout}!params@{params}}
+\subsubsection[{\texorpdfstring{writeout}{writeout}}]{\setlength{\rightskip}{0pt plus 5cm}logical params\+::writeout}\hypertarget{namespaceparams_affc7b423a975c0e92b62e67ed04edea5}{}\label{namespaceparams_affc7b423a975c0e92b62e67ed04edea5}
+
+
+Write to file boolean. 
+
+
+
+Definition at line 79 of file params.\+f90.
+
+
+\begin{DoxyCode}
+79   \textcolor{keywordtype}{LOGICAL} :: writeout\textcolor{comment}{       !< Write to file boolean}
+\end{DoxyCode}

@@ -1,0 +1,48 @@
+\hypertarget{tensor_8f90}{}\section{tensor.\+f90 File Reference}
+\label{tensor_8f90}\index{tensor.\+f90@{tensor.\+f90}}
+\subsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \hyperlink{structtensor_1_1coolist__elem}{tensor\+::coolist\+\_\+elem}
+\begin{DoxyCompactList}\small\item\em Coordinate list element type. Elementary elements of the sparse tensors. \end{DoxyCompactList}\item 
+type \hyperlink{structtensor_1_1coolist}{tensor\+::coolist}
+\begin{DoxyCompactList}\small\item\em Coordinate list. Type used to represent the sparse tensor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacetensor}{tensor}
+\begin{DoxyCompactList}\small\item\em Tensor utility module. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine, public \hyperlink{namespacetensor_a14f95c256cdf137ca0767ddb3c87deea}{tensor\+::copy\+\_\+coo} (src, dst)
+\begin{DoxyCompactList}\small\item\em Routine to copy a coolist. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_a75d1a9ca8b39e9ad4b151a7b4b45c70f}{tensor\+::mat\+\_\+to\+\_\+coo} (src, dst)
+\begin{DoxyCompactList}\small\item\em Routine to convert a matrix to a tensor. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_a11054027a386918658f8948231af53b1}{tensor\+::sparse\+\_\+mul3} (coolist\+\_\+ijk, arr\+\_\+j, arr\+\_\+k, res)
+\begin{DoxyCompactList}\small\item\em Sparse multiplication of a tensor with two vectors\+: ${\displaystyle \sum_{j,k=0}^{ndim}} \mathcal{T}_{i,j,k} \, a_j \,b_k$. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_add2a6aa993cd8a23be60d1643b5c7942}{tensor\+::jsparse\+\_\+mul} (coolist\+\_\+ijk, arr\+\_\+j, jcoo\+\_\+ij)
+\begin{DoxyCompactList}\small\item\em Sparse multiplication of two tensors to determine the Jacobian\+: \[J_{i,j} = {\displaystyle \sum_{k=0}^{ndim}} \left( \mathcal{T}_{i,j,k} + \mathcal{T}_{i,k,j} \right) \, a_k.\] It\textquotesingle{}s implemented slightly differently\+: for every $\mathcal{T}_{i,j,k}$, we add to $J_{i,j}$ as follows\+: \[J_{i,j} = J_{i,j} + \mathcal{T}_{i,j,k} \, a_k \\ J_{i,k} = J_{i,k} + \mathcal{T}_{i,j,k} \, a_j\] This version return a coolist (sparse tensor). \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_a4135cf70df5030070922ff199c79cc03}{tensor\+::jsparse\+\_\+mul\+\_\+mat} (coolist\+\_\+ijk, arr\+\_\+j, jcoo\+\_\+ij)
+\begin{DoxyCompactList}\small\item\em Sparse multiplication of two tensors to determine the Jacobian\+: \[J_{i,j} = {\displaystyle \sum_{k=0}^{ndim}} \left( \mathcal{T}_{i,j,k} + \mathcal{T}_{i,k,j} \right) \, a_k.\] It\textquotesingle{}s implemented slightly differently\+: for every $\mathcal{T}_{i,j,k}$, we add to $J_{i,j}$ as follows\+: \[J_{i,j} = J_{i,j} + \mathcal{T}_{i,j,k} \, a_k \\ J_{i,k} = J_{i,k} + \mathcal{T}_{i,j,k} \, a_j\] This version return a matrix. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_a70230d57c615d9548905bc023f5fc01d}{tensor\+::sparse\+\_\+mul2} (coolist\+\_\+ij, arr\+\_\+j, res)
+\begin{DoxyCompactList}\small\item\em Sparse multiplication of a 2d sparse tensor with a vector\+: ${\displaystyle \sum_{j=0}^{ndim}} \mathcal{T}_{i,j,k} \, a_j $. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_a364522b80ab0f4785c331eb74fa1ba04}{tensor\+::simplify} (tensor)
+\begin{DoxyCompactList}\small\item\em Routine to simplify a coolist (sparse tensor). For each index $i$, it upper triangularize the matrix \[\mathcal{T}_{i,j,k} \qquad 0 \leq j,k \leq ndim.\]. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_a7f144457b3535357ab582fc3ff0da3a0}{tensor\+::add\+\_\+elem} (t, i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine to add element to a coolist. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_ac86b7b23b35e64127e04b31d7cfc7ae9}{tensor\+::add\+\_\+check} (t, i, j, k, v, dst)
+\begin{DoxyCompactList}\small\item\em Subroutine to add element to a coolist and check for overflow. Once the t buffer tensor is full, add it to the destination buffer. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_aad7cd55f3a4cec4676cc7ca34b05f1a8}{tensor\+::add\+\_\+to\+\_\+tensor} (src, dst)
+\begin{DoxyCompactList}\small\item\em Routine to add a rank-\/3 tensor to another one. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_a1fbaf180beb7fe8ab83ade2f576db80f}{tensor\+::print\+\_\+tensor} (t, s)
+\begin{DoxyCompactList}\small\item\em Routine to print a rank 3 tensor coolist. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_ab9cef88cb38333ed2c063cdf08f28060}{tensor\+::write\+\_\+tensor\+\_\+to\+\_\+file} (s, t)
+\begin{DoxyCompactList}\small\item\em Load a rank-\/4 tensor coolist from a file definition. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetensor_ac4c6ebce7aee73aebac2514e45f7cc78}{tensor\+::load\+\_\+tensor\+\_\+from\+\_\+file} (s, t)
+\begin{DoxyCompactList}\small\item\em Load a rank-\/4 tensor coolist from a file definition. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8), parameter \hyperlink{namespacetensor_a2a2ab182d86107e62533c3f0043652cc}{tensor\+::real\+\_\+eps} = 2.\+2204460492503131e-\/16
+\begin{DoxyCompactList}\small\item\em Parameter to test the equality with zero. \end{DoxyCompactList}\end{DoxyCompactItemize}

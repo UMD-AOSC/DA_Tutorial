@@ -1,0 +1,34 @@
+!------------------------------------------------------------------------------!
+! Namelist file :                                                              !
+! Integration parameters                                                       !
+!                                                                              !
+!------------------------------------------------------------------------------!
+! Parameters of the runs of the article:                                       !
+!                                                                              !
+! Statistical and dynamical properties of covariant lyapunov vectors           !
+! in a coupled atmosphere-ocean model—multiscale effects,                      !
+! geometric degeneracy, and error dynamics. Vannitsem, S., and Lucarini, V.,   ! 
+! Journal of Physics A: Mathematical and Theoretical, 49(22), 224001, 2016.    !
+! url: http://iopscience.iop.org/article/10.1088/1751-8113/49/22/224001/       !
+! doi: 10.1088/1751-8113/49/22/224001                                          !
+!                                                                              !
+!------------------------------------------------------------------------------!
+
+!  Time parameters
+&INT_PARAMS
+  T_TRANS = 1.D8       !  transient period (e.g. 1.D7)
+  T_RUN = 3.D8         !  length of trajectory on the attractor (e.g. 5.D8)
+  DT = 1.D-2           !  the time step
+  WRITEOUT = T         !  write out all variables every tw time units
+  TW = 100.D0           !
+&END
+
+
+
+! End of parameters Namelist
+
+  
+
+
+
+  

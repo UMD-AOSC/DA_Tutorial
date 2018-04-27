@@ -1,0 +1,157 @@
+\subsection*{About}
+
+(c) 2013-\/2016 Lesley De Cruz and Jonathan Demaeyer
+
+See \href{../LICENSE.txt}{\tt L\+I\+C\+E\+N\+S\+E.\+txt} for license information.
+
+This software is provided as supplementary material with\+:
+
+
+\begin{DoxyItemize}
+\item De Cruz, L., Demaeyer, J. and Vannitsem, S.\+: The Modular Arbitrary-\/\+Order Ocean-\/\+Atmosphere Model\+: M\+A\+O\+O\+AM v1.\+0, Geosci. Model Dev., 9, 2793-\/2808, \href{http://dx.doi.org/10.5194/gmd-9-2793-2016}{\tt doi\+:10.\+5194/gmd-\/9-\/2793-\/2016}, 2016.
+\end{DoxyItemize}
+
+{\bfseries Please cite this article if you use (a part of) this software for a publication.}
+
+The authors would appreciate it if you could also send a reprint of your paper to \href{mailto:lesley.decruz@meteo.be}{\tt lesley.\+decruz@meteo.\+be}, \href{mailto:jonathan.demaeyer@meteo.be}{\tt jonathan.\+demaeyer@meteo.\+be} and \href{mailto:svn@meteo.be}{\tt svn@meteo.\+be}.
+
+Consult the M\+A\+O\+O\+AM \href{http://www.github.com/Climdyn/MAOOAM}{\tt code repository} for updates, and \href{http://climdyn.meteo.be}{\tt our website} for additional resources.
+
+A pdf version of this manual is available \href{../latex/Reference_manual.pdf}{\tt here}. 
+
+
+
+\subsection*{Installation}
+
+The program can be installed with Makefile. We provide configuration files for two compilers \+: gfortran and ifort.
+
+By default, gfortran is selected. To select one or the other, simply modify the Makefile accordingly or pass the C\+O\+M\+P\+I\+L\+ER flag to {\ttfamily make}. If gfortran is selected, the code should be compiled with gfortran 4.\+7+ (allows for allocatable arrays in namelists). If ifort is selected, the code has been tested with the version 14.\+0.\+2 and we do not guarantee compatibility with older compiler version.
+
+To install, unpack the archive in a folder or clone with git\+:
+
+
+\begin{DoxyCode}
+1 git clone https://github.com/Climdyn/MAOOAM.git
+2 cd MAOOAM
+\end{DoxyCode}
+
+
+and run\+:
+
+
+\begin{DoxyCode}
+1 make
+\end{DoxyCode}
+ By default, the inner products of the basis functions, used to compute the coefficients of the O\+D\+Es, are not stored in memory. If you want to enable the storage in memory of these inner products, run make with the following flag\+:
+
+
+\begin{DoxyCode}
+1 make RES=store
+\end{DoxyCode}
+
+
+Depending on the chosen resolution, storing the inner products may result in a huge memory usage and is not recommended unless you need them for a specific purpose.
+
+Remark\+: The command \char`\"{}make clean\char`\"{} removes the compiled files.
+
+For Windows users, a minimalistic G\+NU development environment (including gfortran and make) is available at \href{http://www.mingw.org}{\tt www.\+mingw.\+org} . 
+
+
+
+\subsection*{Description of the files}
+
+The model tendencies are represented through a tensor called aotensor which includes all the coefficients. This tensor is computed once at the program initialization.
+
+
+\begin{DoxyItemize}
+\item \hyperlink{maooam_8f90}{maooam.\+f90} \+: Main program.
+\item \hyperlink{aotensor__def_8f90}{aotensor\+\_\+def.\+f90} \+: Tensor aotensor computation module.
+\item I\+C\+\_\+def.\+f90 \+: A module which loads the user specified initial condition.
+\item \hyperlink{inprod__analytic_8f90}{inprod\+\_\+analytic.\+f90} \+: Inner products computation module.
+\item \hyperlink{rk2__integrator_8f90}{rk2\+\_\+integrator.\+f90} \+: A module which contains the Heun integrator for the model equations.
+\item \hyperlink{rk4__integrator_8f90}{rk4\+\_\+integrator.\+f90} \+: A module which contains the R\+K4 integrator for the model equations.
+\item Makefile \+: The Makefile.
+\item \hyperlink{params_8f90}{params.\+f90} \+: The model parameters module.
+\item \hyperlink{tl__ad__tensor_8f90}{tl\+\_\+ad\+\_\+tensor.\+f90} \+: Tangent Linear (TL) and Adjoint (AD) model tensors definition module
+\item \hyperlink{rk2__tl__ad__integrator_8f90}{rk2\+\_\+tl\+\_\+ad\+\_\+integrator.\+f90} \+: Heun Tangent Linear (TL) and Adjoint (AD) model integrators module
+\item \hyperlink{rk4__tl__ad__integrator_8f90}{rk4\+\_\+tl\+\_\+ad\+\_\+integrator.\+f90} \+: R\+K4 Tangent Linear (TL) and Adjoint (AD) model integrators module
+\item \hyperlink{test__tl__ad_8f90}{test\+\_\+tl\+\_\+ad.\+f90} \+: Tests for the Tangent Linear (TL) and Adjoint (AD) model versions
+\item R\+E\+A\+D\+M\+E.\+md \+: A read me file.
+\item \hyperlink{LICENSE_8txt}{L\+I\+C\+E\+N\+S\+E.\+txt} \+: The license text of the program.
+\item \hyperlink{util_8f90}{util.\+f90} \+: A module with various useful functions.
+\item \hyperlink{tensor_8f90}{tensor.\+f90} \+: Tensor utility module.
+\item \hyperlink{stat_8f90}{stat.\+f90} \+: A module for statistic accumulation.
+\item params.\+nml \+: A namelist to specify the model parameters.
+\item int\+\_\+params.\+nml \+: A namelist to specify the integration parameters.
+\item modeselection.\+nml \+: A namelist to specify which spectral decomposition will be used.
+\end{DoxyItemize}
+
+
+
+
+
+\subsection*{Usage}
+
+The user first has to fill the params.\+nml and int\+\_\+params.\+nml namelist files according to their needs. Indeed, model and integration parameters can be specified respectively in the params.\+nml and int\+\_\+params.\+nml namelist files. Some examples related to already published article are available in the params folder.
+
+The modeselection.\+nml namelist can then be filled \+:
+\begin{DoxyItemize}
+\item N\+B\+OC and N\+B\+A\+TM specify the number of blocks that will be used in respectively the ocean and the atmosphere. Each block corresponds to a given x and y wavenumber.
+\item The O\+MS and A\+MS arrays are integer arrays which specify which wavenumbers of the spectral decomposition will be used in respectively the ocean and the atmosphere. Their shapes are O\+M\+S(\+N\+B\+O\+C,2) and A\+M\+S(\+N\+B\+A\+T\+M,2).
+\item The first dimension specifies the number attributed by the user to the block and the second dimension specifies the x and the y wavenumbers.
+\item The V\+D\+DG model, described in Vannitsem et al. (2015) is given as an example in the archive.
+\item Note that the variables of the model are numbered according to the chosen order of the blocks.
+\end{DoxyItemize}
+
+The Makefile allows to change the integrator being used for the time evolution. The user should modify it according to its need. By default a R\+K2 scheme is selected.
+
+Finally, the I\+C.\+nml file specifying the initial condition should be defined. To obtain an example of this configuration file corresponding to the model you have previously defined, simply delete the current I\+C.\+nml file (if it exists) and run the program \+: \begin{DoxyVerb}./maooam
+\end{DoxyVerb}
+
+
+It will generate a new one and start with the 0 initial condition. If you want another initial condition, stop the program, fill the newly generated file and restart \+: \begin{DoxyVerb}./maooam
+\end{DoxyVerb}
+
+
+It will generate two files \+:
+\begin{DoxyItemize}
+\item evol\+\_\+field.\+dat \+: the recorded time evolution of the variables.
+\item mean\+\_\+field.\+dat \+: the mean field (the climatology)
+\end{DoxyItemize}
+
+The tangent linear and adjoint models of M\+A\+O\+O\+AM are provided in the \hyperlink{namespacetl__ad__tensor}{tl\+\_\+ad\+\_\+tensor}, rk2\+\_\+tl\+\_\+ad\+\_\+integrator and rk4\+\_\+tl\+\_\+ad\+\_\+integrator modules. It is documented \href{./md_doc_tl_ad_doc.html}{\tt here}.
+
+
+
+
+
+\subsection*{Implementation notes}
+
+As the system of differential equations is at most bilinear in $y_j$ ( $j=1..n$), $\boldsymbol{y}$ being the array of variables, it can be expressed as a tensor contraction \+:
+
+\[ \frac{d y_i}{dt} = \sum_{j,k=0}^{ndim} \, \mathcal{T}_{i,j,k} \, y_k \; y_j \]
+
+with $y_0 = 1$.
+
+The tensor \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor\+\_\+def\+::aotensor} is the tensor $\mathcal{T}$ that encodes the differential equations is composed so that\+:
+
+
+\begin{DoxyItemize}
+\item $\mathcal{T}_{i,j,k}$ contains the contribution of $dy_i/dt$ proportional to $ y_j \, y_k$.
+\item Furthermore, $y_0$ is always equal to 1, so that $\mathcal{T}_{i,0,0}$ is the constant contribution to $dy_i/dt$
+\item $\mathcal{T}_{i,j,0} + \mathcal{T}_{i,0,j}$ is the contribution to $dy_i/dt$ which is linear in $y_j$.
+\end{DoxyItemize}
+
+Ideally, the tensor \hyperlink{namespaceaotensor__def_a0dc43bc9294a18f2fe57b67489f1702f}{aotensor\+\_\+def\+::aotensor} is composed as an upper triangular matrix (in the last two coordinates).
+
+The tensor for this model is composed in the \hyperlink{namespaceaotensor__def}{aotensor\+\_\+def} module and uses the inner products defined in the \hyperlink{namespaceinprod__analytic}{inprod\+\_\+analytic} module.
+
+
+
+
+
+\subsection*{Final Remarks}
+
+The authors would like to thank Kris for help with the lua2fortran project. It has greatly reduced the amount of (error-\/prone) work.
+
+No animals were harmed during the coding process. 

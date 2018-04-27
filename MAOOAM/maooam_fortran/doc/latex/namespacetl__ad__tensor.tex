@@ -1,0 +1,695 @@
+\hypertarget{namespacetl__ad__tensor}{}\section{tl\+\_\+ad\+\_\+tensor Module Reference}
+\label{namespacetl__ad__tensor}\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+
+
+Tangent Linear (TL) and Adjoint (AD) model versions of M\+A\+O\+O\+AM. Tensors definition module.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\hyperlink{structtensor_1_1coolist}{coolist}) function, dimension(ndim) \hyperlink{namespacetl__ad__tensor_af4dbec99377125d7df10d89524ba91b2}{jacobian} (ystar)
+\begin{DoxyCompactList}\small\item\em Compute the Jacobian of M\+A\+O\+O\+AM in point ystar. \end{DoxyCompactList}\item 
+real(kind=8) function, dimension(ndim, ndim), public \hyperlink{namespacetl__ad__tensor_a2782a5116e8bb677b2d5e9637b509cf3}{jacobian\+\_\+mat} (ystar)
+\begin{DoxyCompactList}\small\item\em Compute the Jacobian of M\+A\+O\+O\+AM in point ystar. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a8a94fe84e907fc8835f798eddcff38e8}{init\+\_\+tltensor}
+\begin{DoxyCompactList}\small\item\em Routine to initialize the TL tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a8b1027b49025fbeacd8fbd5d2127bebc}{compute\+\_\+tltensor} (func)
+\begin{DoxyCompactList}\small\item\em Routine to compute the TL tensor from the original M\+A\+O\+O\+AM one. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a3d69845cace6faef04342c297b0c2a09}{tl\+\_\+add\+\_\+count} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine used to count the number of TL tensor entries. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a0e37e78de771af0205bd80a30c911a68}{tl\+\_\+coeff} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine used to compute the TL tensor entries. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a199cc07a7172f6cf662f9a5bd6f3d45c}{init\+\_\+adtensor}
+\begin{DoxyCompactList}\small\item\em Routine to initialize the AD tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a9437eafe79ee3b0b89cd67af4956fba0}{compute\+\_\+adtensor} (func)
+\begin{DoxyCompactList}\small\item\em Subroutine to compute the AD tensor from the original M\+A\+O\+O\+AM one. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a0ba0f9d4f9182a49209483749b6d5e10}{ad\+\_\+add\+\_\+count} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Subroutine used to count the number of AD tensor entries. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a177e8f1ebac5de029f565ef7624926f2}{ad\+\_\+coeff} (i, j, k, v)
+\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a3b666898a684bf3f2e932f38616fc920}{init\+\_\+adtensor\+\_\+ref}
+\begin{DoxyCompactList}\small\item\em Alternate method to initialize the AD tensor from the TL tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a154e946ce2d6720a48a675ba92a7f350}{compute\+\_\+adtensor\+\_\+ref} (func)
+\begin{DoxyCompactList}\small\item\em Alternate subroutine to compute the AD tensor from the TL one. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_a3c0b4e0e1f18a0f85b874542b76cfa8a}{ad\+\_\+add\+\_\+count\+\_\+ref} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Alternate subroutine used to count the number of AD tensor entries from the TL tensor. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacetl__ad__tensor_aef0157a16688323e3c855ef451d6948f}{ad\+\_\+coeff\+\_\+ref} (i, j, k, v)
+\begin{DoxyCompactList}\small\item\em Alternate subroutine used to compute the AD tensor entries from the TL tensor. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_af4683da4f4149b809eb66c3223266ffd}{ad} (t, ystar, deltay, buf)
+\begin{DoxyCompactList}\small\item\em Tendencies for the AD of M\+A\+O\+O\+AM in point ystar for perturbation deltay. \end{DoxyCompactList}\item 
+subroutine, public \hyperlink{namespacetl__ad__tensor_a2a6bcaa9d4e82c35f6bfb2fdb9016dd9}{tl} (t, ystar, deltay, buf)
+\begin{DoxyCompactList}\small\item\em Tendencies for the TL of M\+A\+O\+O\+AM in point ystar for perturbation deltay. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=8), parameter \hyperlink{namespacetl__ad__tensor_a05a4b79ccb098a47a400e175e12c1c6c}{real\+\_\+eps} = 2.\+2204460492503131e-\/16
+\begin{DoxyCompactList}\small\item\em Epsilon to test equality with 0. \end{DoxyCompactList}\item 
+integer, dimension(\+:), allocatable \hyperlink{namespacetl__ad__tensor_a8836f34c3a96c44c487c7910ab8c7507}{count\+\_\+elems}
+\begin{DoxyCompactList}\small\item\em Vector used to count the tensor elements. \end{DoxyCompactList}\item 
+type(\hyperlink{structtensor_1_1coolist}{coolist}), dimension(\+:), allocatable, public \hyperlink{namespacetl__ad__tensor_a6180cfcc4d4ad119ef93266ea955903c}{tltensor}
+\begin{DoxyCompactList}\small\item\em Tensor representation of the Tangent Linear tendencies. \end{DoxyCompactList}\item 
+type(\hyperlink{structtensor_1_1coolist}{coolist}), dimension(\+:), allocatable, public \hyperlink{namespacetl__ad__tensor_af0a4e6cdc6d653fa808eedaa7ce331de}{adtensor}
+\begin{DoxyCompactList}\small\item\em Tensor representation of the Adjoint tendencies. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Tangent Linear (TL) and Adjoint (AD) model versions of M\+A\+O\+O\+AM. Tensors definition module. 
+
+\begin{DoxyCopyright}{Copyright}
+2016 Lesley De Cruz \& Jonathan Demaeyer. See \hyperlink{LICENSE_8txt}{L\+I\+C\+E\+N\+S\+E.\+txt} for license information. 
+\end{DoxyCopyright}
+\begin{DoxyRemark}{Remarks}
+The routines of this module should be called only after \hyperlink{namespaceparams_aa5d1f7f88b00cf3705691de2f6f92a08}{params\+::init\+\_\+params()} and \hyperlink{namespaceaotensor__def_ac2d5a88885d06f6dc047bee3a4ab427a}{aotensor\+\_\+def\+::init\+\_\+aotensor()} have been called ! 
+\end{DoxyRemark}
+
+
+\subsection{Function/\+Subroutine Documentation}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!ad@{ad}}
+\index{ad@{ad}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{ad(t, ystar, deltay, buf)}{ad(t, ystar, deltay, buf)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public tl\+\_\+ad\+\_\+tensor\+::ad (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), intent(in)}]{t, }
+\item[{real(kind=8), dimension(0\+:ndim), intent(in)}]{ystar, }
+\item[{real(kind=8), dimension(0\+:ndim), intent(in)}]{deltay, }
+\item[{real(kind=8), dimension(0\+:ndim), intent(out)}]{buf}
+\end{DoxyParamCaption}
+)}\hypertarget{namespacetl__ad__tensor_af4683da4f4149b809eb66c3223266ffd}{}\label{namespacetl__ad__tensor_af4683da4f4149b809eb66c3223266ffd}
+
+
+Tendencies for the AD of M\+A\+O\+O\+AM in point ystar for perturbation deltay. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & time \\
+\hline
+{\em ystar} & vector with the variables (current point in trajectory) \\
+\hline
+{\em deltay} & vector with the perturbation of the variables at time t \\
+\hline
+{\em buf} & vector (buffer) to store derivatives. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 384 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+384     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)} :: t
+385     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(0:ndim)}, \textcolor{keywordtype}{INTENT(IN)} :: ystar,deltay
+386     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(0:ndim)}, \textcolor{keywordtype}{INTENT(OUT)} :: buf
+387     \textcolor{keyword}{CALL }sparse\_mul3(adtensor,deltay,ystar,buf)
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!ad\+\_\+add\+\_\+count@{ad\+\_\+add\+\_\+count}}
+\index{ad\+\_\+add\+\_\+count@{ad\+\_\+add\+\_\+count}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{ad\+\_\+add\+\_\+count(i, j, k, v)}{ad_add_count(i, j, k, v)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+add\+\_\+count (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real(kind=8), intent(in)}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a0ba0f9d4f9182a49209483749b6d5e10}{}\label{namespacetl__ad__tensor_a0ba0f9d4f9182a49209483749b6d5e10}
+
+
+Subroutine used to count the number of AD tensor entries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & tensor $i$ index \\
+\hline
+{\em j} & tensor $j$ index \\
+\hline
+{\em k} & tensor $k$ index \\
+\hline
+{\em v} & value that will be added \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 243 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+243     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: i,j,k
+244     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)}  :: v
+245     \textcolor{keywordflow}{IF} ((abs(v) .ge. real\_eps).AND.(i /= 0)) \textcolor{keywordflow}{THEN}
+246        \textcolor{keywordflow}{IF} (k /= 0) count\_elems(k)=count\_elems(k)+1
+247        \textcolor{keywordflow}{IF} (j /= 0) count\_elems(j)=count\_elems(j)+1
+248 \textcolor{keywordflow}{    ENDIF}
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!ad\+\_\+add\+\_\+count\+\_\+ref@{ad\+\_\+add\+\_\+count\+\_\+ref}}
+\index{ad\+\_\+add\+\_\+count\+\_\+ref@{ad\+\_\+add\+\_\+count\+\_\+ref}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{ad\+\_\+add\+\_\+count\+\_\+ref(i, j, k, v)}{ad_add_count_ref(i, j, k, v)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+add\+\_\+count\+\_\+ref (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real(kind=8), intent(in)}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a3c0b4e0e1f18a0f85b874542b76cfa8a}{}\label{namespacetl__ad__tensor_a3c0b4e0e1f18a0f85b874542b76cfa8a}
+
+
+Alternate subroutine used to count the number of AD tensor entries from the TL tensor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & tensor $i$ index \\
+\hline
+{\em j} & tensor $j$ index \\
+\hline
+{\em k} & tensor $k$ index \\
+\hline
+{\em v} & value that will be added \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 346 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+346     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: i,j,k
+347     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)}  :: v
+348     \textcolor{keywordflow}{IF} ((abs(v) .ge. real\_eps).AND.(j /= 0)) count\_elems(j)=count\_elems(j)+1
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!ad\+\_\+coeff@{ad\+\_\+coeff}}
+\index{ad\+\_\+coeff@{ad\+\_\+coeff}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{ad\+\_\+coeff(i, j, k, v)}{ad_coeff(i, j, k, v)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+coeff (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real(kind=8), intent(in)}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a177e8f1ebac5de029f565ef7624926f2}{}\label{namespacetl__ad__tensor_a177e8f1ebac5de029f565ef7624926f2}
+
+\begin{DoxyParams}{Parameters}
+{\em i} & tensor $i$ index \\
+\hline
+{\em j} & tensor $j$ index \\
+\hline
+{\em k} & tensor $k$ index \\
+\hline
+{\em v} & value to add \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 257 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+257     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: i,j,k
+258     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)} :: v
+259     \textcolor{keywordtype}{INTEGER} :: n
+260     \textcolor{keywordflow}{IF} (.NOT. \textcolor{keyword}{ALLOCATED}(adtensor)) stop \textcolor{stringliteral}{"*** ad\_coeff routine : tensor not yet allocated ***"}
+261     \textcolor{keywordflow}{IF} ((abs(v) .ge. real\_eps).AND.(i /=0)) \textcolor{keywordflow}{THEN}
+262        \textcolor{keywordflow}{IF} (k /=0) \textcolor{keywordflow}{THEN}
+263           \textcolor{keywordflow}{IF} (.NOT. \textcolor{keyword}{ALLOCATED}(adtensor(k)%elems)) stop \textcolor{stringliteral}{"*** ad\_coeff routine : tensor not yet allocated
+       ***"}
+264           n=(adtensor(k)%nelems)+1
+265           adtensor(k)%elems(n)%j=i
+266           adtensor(k)%elems(n)%k=j
+267           adtensor(k)%elems(n)%v=v
+268           adtensor(k)%nelems=n
+269 \textcolor{keywordflow}{       END IF}
+270        \textcolor{keywordflow}{IF} (j /=0) \textcolor{keywordflow}{THEN}
+271           \textcolor{keywordflow}{IF} (.NOT. \textcolor{keyword}{ALLOCATED}(adtensor(j)%elems)) stop \textcolor{stringliteral}{"*** ad\_coeff routine : tensor not yet allocated
+       ***"}
+272           n=(adtensor(j)%nelems)+1
+273           adtensor(j)%elems(n)%j=i
+274           adtensor(j)%elems(n)%k=k
+275           adtensor(j)%elems(n)%v=v
+276           adtensor(j)%nelems=n
+277 \textcolor{keywordflow}{       END IF}
+278 \textcolor{keywordflow}{    END IF}
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!ad\+\_\+coeff\+\_\+ref@{ad\+\_\+coeff\+\_\+ref}}
+\index{ad\+\_\+coeff\+\_\+ref@{ad\+\_\+coeff\+\_\+ref}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{ad\+\_\+coeff\+\_\+ref(i, j, k, v)}{ad_coeff_ref(i, j, k, v)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::ad\+\_\+coeff\+\_\+ref (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real(kind=8), intent(in)}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_aef0157a16688323e3c855ef451d6948f}{}\label{namespacetl__ad__tensor_aef0157a16688323e3c855ef451d6948f}
+
+
+Alternate subroutine used to compute the AD tensor entries from the TL tensor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & tensor $i$ index \\
+\hline
+{\em j} & tensor $j$ index \\
+\hline
+{\em k} & tensor $k$ index \\
+\hline
+{\em v} & value to add \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 358 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+358     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: i,j,k
+359     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)} :: v
+360     \textcolor{keywordtype}{INTEGER} :: n
+361     \textcolor{keywordflow}{IF} (.NOT. \textcolor{keyword}{ALLOCATED}(adtensor)) stop \textcolor{stringliteral}{"*** ad\_coeff\_ref routine : tensor not yet allocated ***"}
+362     \textcolor{keywordflow}{IF} ((abs(v) .ge. real\_eps).AND.(j /=0)) \textcolor{keywordflow}{THEN}
+363        \textcolor{keywordflow}{IF} (.NOT. \textcolor{keyword}{ALLOCATED}(adtensor(j)%elems)) stop \textcolor{stringliteral}{"*** ad\_coeff\_ref routine : tensor not yet allocated
+       ***"}
+364        n=(adtensor(j)%nelems)+1
+365        adtensor(j)%elems(n)%j=i
+366        adtensor(j)%elems(n)%k=k
+367        adtensor(j)%elems(n)%v=v
+368        adtensor(j)%nelems=n
+369 \textcolor{keywordflow}{    END IF}
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!compute\+\_\+adtensor@{compute\+\_\+adtensor}}
+\index{compute\+\_\+adtensor@{compute\+\_\+adtensor}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{compute\+\_\+adtensor(func)}{compute_adtensor(func)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::compute\+\_\+adtensor (
+\begin{DoxyParamCaption}
+\item[{external}]{func}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a9437eafe79ee3b0b89cd67af4956fba0}{}\label{namespacetl__ad__tensor_a9437eafe79ee3b0b89cd67af4956fba0}
+
+
+Subroutine to compute the AD tensor from the original M\+A\+O\+O\+AM one. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & subroutine used to do the computation \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 217 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!compute\+\_\+adtensor\+\_\+ref@{compute\+\_\+adtensor\+\_\+ref}}
+\index{compute\+\_\+adtensor\+\_\+ref@{compute\+\_\+adtensor\+\_\+ref}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{compute\+\_\+adtensor\+\_\+ref(func)}{compute_adtensor_ref(func)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::compute\+\_\+adtensor\+\_\+ref (
+\begin{DoxyParamCaption}
+\item[{external}]{func}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a154e946ce2d6720a48a675ba92a7f350}{}\label{namespacetl__ad__tensor_a154e946ce2d6720a48a675ba92a7f350}
+
+
+Alternate subroutine to compute the AD tensor from the TL one. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & subroutine used to do the computation \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 318 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!compute\+\_\+tltensor@{compute\+\_\+tltensor}}
+\index{compute\+\_\+tltensor@{compute\+\_\+tltensor}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{compute\+\_\+tltensor(func)}{compute_tltensor(func)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::compute\+\_\+tltensor (
+\begin{DoxyParamCaption}
+\item[{external}]{func}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a8b1027b49025fbeacd8fbd5d2127bebc}{}\label{namespacetl__ad__tensor_a8b1027b49025fbeacd8fbd5d2127bebc}
+
+
+Routine to compute the TL tensor from the original M\+A\+O\+O\+AM one. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & subroutine used to do the computation \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 121 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!init\+\_\+adtensor@{init\+\_\+adtensor}}
+\index{init\+\_\+adtensor@{init\+\_\+adtensor}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{init\+\_\+adtensor}{init_adtensor}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public tl\+\_\+ad\+\_\+tensor\+::init\+\_\+adtensor (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespacetl__ad__tensor_a199cc07a7172f6cf662f9a5bd6f3d45c}{}\label{namespacetl__ad__tensor_a199cc07a7172f6cf662f9a5bd6f3d45c}
+
+
+Routine to initialize the AD tensor. 
+
+
+
+Definition at line 193 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+193     \textcolor{keywordtype}{INTEGER} :: i
+194     \textcolor{keywordtype}{INTEGER} :: allocstat 
+195     \textcolor{keyword}{ALLOCATE}(adtensor(ndim),count\_elems(ndim), \hyperlink{namespacestat}{stat}=allocstat)
+196     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+197     count\_elems=0
+198     \textcolor{keyword}{CALL }compute\_adtensor(ad\_add\_count)
+199 
+200     \textcolor{keywordflow}{DO} i=1,ndim
+201        \textcolor{keyword}{ALLOCATE}(adtensor(i)%elems(count\_elems(i)), \hyperlink{namespacestat}{stat}=allocstat)
+202        \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+203 \textcolor{keywordflow}{    END DO}
+204 
+205     \textcolor{keyword}{DEALLOCATE}(count\_elems, \hyperlink{namespacestat}{stat}=allocstat)
+206     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Deallocation problem ! ***"}
+207     
+208     \textcolor{keyword}{CALL }compute\_adtensor(ad\_coeff)
+209 
+210     \textcolor{keyword}{CALL }simplify(adtensor)
+211 
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!init\+\_\+adtensor\+\_\+ref@{init\+\_\+adtensor\+\_\+ref}}
+\index{init\+\_\+adtensor\+\_\+ref@{init\+\_\+adtensor\+\_\+ref}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{init\+\_\+adtensor\+\_\+ref}{init_adtensor_ref}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public tl\+\_\+ad\+\_\+tensor\+::init\+\_\+adtensor\+\_\+ref (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespacetl__ad__tensor_a3b666898a684bf3f2e932f38616fc920}{}\label{namespacetl__ad__tensor_a3b666898a684bf3f2e932f38616fc920}
+
+
+Alternate method to initialize the AD tensor from the TL tensor. 
+
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{namespacetl__ad__tensor_a6180cfcc4d4ad119ef93266ea955903c}{tltensor} must be initialised before using this method. 
+\end{DoxyRemark}
+
+
+Definition at line 294 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+294     \textcolor{keywordtype}{INTEGER} :: i
+295     \textcolor{keywordtype}{INTEGER} :: allocstat 
+296     \textcolor{keyword}{ALLOCATE}(adtensor(ndim),count\_elems(ndim), \hyperlink{namespacestat}{stat}=allocstat)
+297     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+298     count\_elems=0
+299     \textcolor{keyword}{CALL }compute\_adtensor\_ref(ad\_add\_count\_ref)
+300 
+301     \textcolor{keywordflow}{DO} i=1,ndim
+302        \textcolor{keyword}{ALLOCATE}(adtensor(i)%elems(count\_elems(i)), \hyperlink{namespacestat}{stat}=allocstat)
+303        \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+304 \textcolor{keywordflow}{    END DO}
+305 
+306     \textcolor{keyword}{DEALLOCATE}(count\_elems, \hyperlink{namespacestat}{stat}=allocstat)
+307     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Deallocation problem ! ***"}
+308     
+309     \textcolor{keyword}{CALL }compute\_adtensor\_ref(ad\_coeff\_ref)
+310 
+311     \textcolor{keyword}{CALL }simplify(adtensor)
+312 
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!init\+\_\+tltensor@{init\+\_\+tltensor}}
+\index{init\+\_\+tltensor@{init\+\_\+tltensor}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{init\+\_\+tltensor}{init_tltensor}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public tl\+\_\+ad\+\_\+tensor\+::init\+\_\+tltensor (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespacetl__ad__tensor_a8a94fe84e907fc8835f798eddcff38e8}{}\label{namespacetl__ad__tensor_a8a94fe84e907fc8835f798eddcff38e8}
+
+
+Routine to initialize the TL tensor. 
+
+
+
+Definition at line 97 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+97     \textcolor{keywordtype}{INTEGER} :: i
+98     \textcolor{keywordtype}{INTEGER} :: allocstat 
+99     \textcolor{keyword}{ALLOCATE}(tltensor(ndim),count\_elems(ndim), \hyperlink{namespacestat}{stat}=allocstat)
+100     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+101     count\_elems=0
+102     \textcolor{keyword}{CALL }compute\_tltensor(tl\_add\_count)
+103 
+104     \textcolor{keywordflow}{DO} i=1,ndim
+105        \textcolor{keyword}{ALLOCATE}(tltensor(i)%elems(count\_elems(i)), \hyperlink{namespacestat}{stat}=allocstat)
+106        \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Not enough memory ! ***"}
+107 \textcolor{keywordflow}{    END DO}
+108 
+109     \textcolor{keyword}{DEALLOCATE}(count\_elems, \hyperlink{namespacestat}{stat}=allocstat)
+110     \textcolor{keywordflow}{IF} (allocstat /= 0) stop \textcolor{stringliteral}{"*** Deallocation problem ! ***"}
+111     
+112     \textcolor{keyword}{CALL }compute\_tltensor(tl\_coeff)
+113 
+114     \textcolor{keyword}{CALL }simplify(tltensor)
+115 
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!jacobian@{jacobian}}
+\index{jacobian@{jacobian}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{jacobian(ystar)}{jacobian(ystar)}}]{\setlength{\rightskip}{0pt plus 5cm}type({\bf coolist}) function, dimension(ndim) tl\+\_\+ad\+\_\+tensor\+::jacobian (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), dimension(0\+:ndim), intent(in)}]{ystar}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_af4dbec99377125d7df10d89524ba91b2}{}\label{namespacetl__ad__tensor_af4dbec99377125d7df10d89524ba91b2}
+
+
+Compute the Jacobian of M\+A\+O\+O\+AM in point ystar. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ystar} & array with variables in which the jacobian should be evaluated. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Jacobian in coolist-\/form (table of tuples \{i,j,0,value\}) 
+\end{DoxyReturn}
+
+
+Definition at line 75 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+75     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(0:ndim)}, \textcolor{keywordtype}{INTENT(IN)} :: ystar
+76     \textcolor{keywordtype}{TYPE}(coolist), \textcolor{keywordtype}{DIMENSION(ndim)} :: jacobian
+77     \textcolor{keyword}{CALL }jsparse\_mul(aotensor,ystar,jacobian)
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!jacobian\+\_\+mat@{jacobian\+\_\+mat}}
+\index{jacobian\+\_\+mat@{jacobian\+\_\+mat}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{jacobian\+\_\+mat(ystar)}{jacobian_mat(ystar)}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8) function, dimension(ndim,ndim), public tl\+\_\+ad\+\_\+tensor\+::jacobian\+\_\+mat (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), dimension(0\+:ndim), intent(in)}]{ystar}
+\end{DoxyParamCaption}
+)}\hypertarget{namespacetl__ad__tensor_a2782a5116e8bb677b2d5e9637b509cf3}{}\label{namespacetl__ad__tensor_a2782a5116e8bb677b2d5e9637b509cf3}
+
+
+Compute the Jacobian of M\+A\+O\+O\+AM in point ystar. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ystar} & array with variables in which the jacobian should be evaluated. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Jacobian in matrix form 
+\end{DoxyReturn}
+
+
+Definition at line 84 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+84     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(0:ndim)}, \textcolor{keywordtype}{INTENT(IN)} :: ystar
+85     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(ndim,ndim)} :: jacobian\_mat
+86     \textcolor{keyword}{CALL }jsparse\_mul\_mat(aotensor,ystar,jacobian\_mat)
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!tl@{tl}}
+\index{tl@{tl}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{tl(t, ystar, deltay, buf)}{tl(t, ystar, deltay, buf)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine, public tl\+\_\+ad\+\_\+tensor\+::tl (
+\begin{DoxyParamCaption}
+\item[{real(kind=8), intent(in)}]{t, }
+\item[{real(kind=8), dimension(0\+:ndim), intent(in)}]{ystar, }
+\item[{real(kind=8), dimension(0\+:ndim), intent(in)}]{deltay, }
+\item[{real(kind=8), dimension(0\+:ndim), intent(out)}]{buf}
+\end{DoxyParamCaption}
+)}\hypertarget{namespacetl__ad__tensor_a2a6bcaa9d4e82c35f6bfb2fdb9016dd9}{}\label{namespacetl__ad__tensor_a2a6bcaa9d4e82c35f6bfb2fdb9016dd9}
+
+
+Tendencies for the TL of M\+A\+O\+O\+AM in point ystar for perturbation deltay. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & time \\
+\hline
+{\em ystar} & vector with the variables (current point in trajectory) \\
+\hline
+{\em deltay} & vector with the perturbation of the variables at time t \\
+\hline
+{\em buf} & vector (buffer) to store derivatives. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 396 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+396     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)} :: t
+397     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(0:ndim)}, \textcolor{keywordtype}{INTENT(IN)} :: ystar,deltay
+398     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{DIMENSION(0:ndim)}, \textcolor{keywordtype}{INTENT(OUT)} :: buf
+399     \textcolor{keyword}{CALL }sparse\_mul3(tltensor,deltay,ystar,buf)
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!tl\+\_\+add\+\_\+count@{tl\+\_\+add\+\_\+count}}
+\index{tl\+\_\+add\+\_\+count@{tl\+\_\+add\+\_\+count}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{tl\+\_\+add\+\_\+count(i, j, k, v)}{tl_add_count(i, j, k, v)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::tl\+\_\+add\+\_\+count (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real(kind=8), intent(in)}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a3d69845cace6faef04342c297b0c2a09}{}\label{namespacetl__ad__tensor_a3d69845cace6faef04342c297b0c2a09}
+
+
+Subroutine used to count the number of TL tensor entries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & tensor $i$ index \\
+\hline
+{\em j} & tensor $j$ index \\
+\hline
+{\em k} & tensor $k$ index \\
+\hline
+{\em v} & value that will be added \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 147 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+147     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: i,j,k
+148     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)}  :: v
+149     \textcolor{keywordflow}{IF} (abs(v) .ge. real\_eps) \textcolor{keywordflow}{THEN}
+150        \textcolor{keywordflow}{IF} (j /= 0) count\_elems(i)=count\_elems(i)+1
+151        \textcolor{keywordflow}{IF} (k /= 0) count\_elems(i)=count\_elems(i)+1
+152 \textcolor{keywordflow}{    ENDIF}
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!tl\+\_\+coeff@{tl\+\_\+coeff}}
+\index{tl\+\_\+coeff@{tl\+\_\+coeff}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{tl\+\_\+coeff(i, j, k, v)}{tl_coeff(i, j, k, v)}}]{\setlength{\rightskip}{0pt plus 5cm}subroutine tl\+\_\+ad\+\_\+tensor\+::tl\+\_\+coeff (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real(kind=8), intent(in)}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a0e37e78de771af0205bd80a30c911a68}{}\label{namespacetl__ad__tensor_a0e37e78de771af0205bd80a30c911a68}
+
+
+Subroutine used to compute the TL tensor entries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & tensor $i$ index \\
+\hline
+{\em j} & tensor $j$ index \\
+\hline
+{\em k} & tensor $k$ index \\
+\hline
+{\em v} & value to add \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 161 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+161     \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{INTENT(IN)} :: i,j,k
+162     \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{INTENT(IN)} :: v
+163     \textcolor{keywordtype}{INTEGER} :: n
+164     \textcolor{keywordflow}{IF} (.NOT. \textcolor{keyword}{ALLOCATED}(tltensor)) stop \textcolor{stringliteral}{"*** tl\_coeff routine : tensor not yet allocated ***"}
+165     \textcolor{keywordflow}{IF} (.NOT. \textcolor{keyword}{ALLOCATED}(tltensor(i)%elems)) stop \textcolor{stringliteral}{"*** tl\_coeff routine : tensor not yet allocated ***"}
+166     \textcolor{keywordflow}{IF} (abs(v) .ge. real\_eps) \textcolor{keywordflow}{THEN}
+167        \textcolor{keywordflow}{IF} (j /=0) \textcolor{keywordflow}{THEN}
+168           n=(tltensor(i)%nelems)+1
+169           tltensor(i)%elems(n)%j=j
+170           tltensor(i)%elems(n)%k=k
+171           tltensor(i)%elems(n)%v=v
+172           tltensor(i)%nelems=n
+173 \textcolor{keywordflow}{       END IF}
+174        \textcolor{keywordflow}{IF} (k /=0) \textcolor{keywordflow}{THEN}
+175           n=(tltensor(i)%nelems)+1
+176           tltensor(i)%elems(n)%j=k
+177           tltensor(i)%elems(n)%k=j
+178           tltensor(i)%elems(n)%v=v
+179           tltensor(i)%nelems=n
+180 \textcolor{keywordflow}{       END IF}
+181 \textcolor{keywordflow}{    END IF}
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!adtensor@{adtensor}}
+\index{adtensor@{adtensor}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{adtensor}{adtensor}}]{\setlength{\rightskip}{0pt plus 5cm}type({\bf coolist}), dimension(\+:), allocatable, public tl\+\_\+ad\+\_\+tensor\+::adtensor}\hypertarget{namespacetl__ad__tensor_af0a4e6cdc6d653fa808eedaa7ce331de}{}\label{namespacetl__ad__tensor_af0a4e6cdc6d653fa808eedaa7ce331de}
+
+
+Tensor representation of the Adjoint tendencies. 
+
+
+
+Definition at line 44 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+44   \textcolor{keywordtype}{TYPE}(coolist), \textcolor{keywordtype}{DIMENSION(:)}, \textcolor{keywordtype}{ALLOCATABLE}, \textcolor{keywordtype}{PUBLIC} :: adtensor
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!count\+\_\+elems@{count\+\_\+elems}}
+\index{count\+\_\+elems@{count\+\_\+elems}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{count\+\_\+elems}{count_elems}}]{\setlength{\rightskip}{0pt plus 5cm}integer, dimension(\+:), allocatable tl\+\_\+ad\+\_\+tensor\+::count\+\_\+elems\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a8836f34c3a96c44c487c7910ab8c7507}{}\label{namespacetl__ad__tensor_a8836f34c3a96c44c487c7910ab8c7507}
+
+
+Vector used to count the tensor elements. 
+
+
+
+Definition at line 38 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+38   \textcolor{keywordtype}{INTEGER}, \textcolor{keywordtype}{DIMENSION(:)}, \textcolor{keywordtype}{ALLOCATABLE} :: count\_elems
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!real\+\_\+eps@{real\+\_\+eps}}
+\index{real\+\_\+eps@{real\+\_\+eps}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{real\+\_\+eps}{real_eps}}]{\setlength{\rightskip}{0pt plus 5cm}real(kind=8), parameter tl\+\_\+ad\+\_\+tensor\+::real\+\_\+eps = 2.\+2204460492503131e-\/16\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{namespacetl__ad__tensor_a05a4b79ccb098a47a400e175e12c1c6c}{}\label{namespacetl__ad__tensor_a05a4b79ccb098a47a400e175e12c1c6c}
+
+
+Epsilon to test equality with 0. 
+
+
+
+Definition at line 35 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+35   \textcolor{keywordtype}{REAL(KIND=8)}, \textcolor{keywordtype}{PARAMETER} :: real\_eps = 2.2204460492503131e-16
+\end{DoxyCode}
+\index{tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}!tltensor@{tltensor}}
+\index{tltensor@{tltensor}!tl\+\_\+ad\+\_\+tensor@{tl\+\_\+ad\+\_\+tensor}}
+\subsubsection[{\texorpdfstring{tltensor}{tltensor}}]{\setlength{\rightskip}{0pt plus 5cm}type({\bf coolist}), dimension(\+:), allocatable, public tl\+\_\+ad\+\_\+tensor\+::tltensor}\hypertarget{namespacetl__ad__tensor_a6180cfcc4d4ad119ef93266ea955903c}{}\label{namespacetl__ad__tensor_a6180cfcc4d4ad119ef93266ea955903c}
+
+
+Tensor representation of the Tangent Linear tendencies. 
+
+
+
+Definition at line 41 of file tl\+\_\+ad\+\_\+tensor.\+f90.
+
+
+\begin{DoxyCode}
+41   \textcolor{keywordtype}{TYPE}(coolist), \textcolor{keywordtype}{DIMENSION(:)}, \textcolor{keywordtype}{ALLOCATABLE}, \textcolor{keywordtype}{PUBLIC} :: tltensor
+\end{DoxyCode}

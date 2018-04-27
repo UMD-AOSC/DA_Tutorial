@@ -3,6 +3,8 @@ from class_maooam import maooam
 from class_state_vector import state_vector
 from class_obs_data import obs_data
 from class_da_system import da_system
+from module_obs_network import get_h_full_coverage
+from module_constants import get_x_std
 from sys import argv
 
 #-----------------------------------------------------------------------
@@ -76,7 +78,8 @@ das.t0 = das.t[0]
 #-----------------------------------------------------------------------
 das.edim = 20 #np.int(1*xdim)
 das.ens_bias_init = 0
-das.ens_sigma_init = 0.1
+das.ens_sigma_init = 0.01
+das.x0 += np.random.randn(xdim) * das.ens_sigma_init  # truth is like an ensemble member
 
 #-----------------------------------------------------------------------
 # Initialize 4D-Var parameters
@@ -91,22 +94,24 @@ das.outer_loops = 3
 I = np.identity(xdim)
 
 # Set background error covariance
-sigma_b = 1.0
+sigma_b = 0.03
 B = I * sigma_b**2
 #B = [[ 0.03562653,  0.03319132, -0.02400967],
 #     [ 0.03319132,  0.05441897,  0.00074236],
 #     [-0.02400967,  0.00074236,  0.03891405]]
 
 # Set observation error covariance
-sigma_r = 1.0
-R = I * sigma_r**2
+sigma_r = 0.1  # this should match with generate_observations.py
+R = I * (sigma_r ** 2)
 
 # Set the linear observation operator matrix as the identity by default 
-H = I
+# H = I
+H = get_h_full_coverage()
 
 # Set constant matrix for nudging
-const = 1.0
-C = I * const
+const = 0.00003
+# C = I * const
+C = np.linalg.inv(H) * const
 
 das.setB(B)
 das.setR(R)
@@ -129,7 +134,7 @@ print(das.getH())
 # Initialize the timesteps
 #-----------------------------------------------------------------------
 t_nature = sv.getTimes()
-acyc_step = 10                             # (how frequently to perform an analysis)
+acyc_step = 10                           # (how frequently to perform an analysis)
 dtau = (t_nature[acyc_step] - t_nature[0])
 fcst_step = acyc_step                      # (may need to change for 4D DA methods)
 fcst_dt = dtau / fcst_step

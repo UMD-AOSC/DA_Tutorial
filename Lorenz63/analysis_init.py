@@ -73,7 +73,7 @@ das.t0 = das.t[0]
 #-----------------------------------------------------------------------
 # Initialize the ensemble
 #-----------------------------------------------------------------------
-das.edim = 3 #np.int(1*xdim)
+das.edim = 10 #np.int(1*xdim)
 das.ens_bias_init = 0
 das.ens_sigma_init = 0.1
 
@@ -128,7 +128,7 @@ print(das.getH())
 # Initialize the timesteps
 #-----------------------------------------------------------------------
 t_nature = sv.getTimes()
-acyc_step = 10                             # (how frequently to perform an analysis)
+acyc_step = 1                            # (how frequently to perform an analysis)
 dtau = (t_nature[acyc_step] - t_nature[0])
 fcst_step = acyc_step                      # (may need to change for 4D DA methods)
 fcst_dt = dtau / fcst_step

@@ -1,0 +1,32 @@
+!------------------------------------------------------------------------------!
+! Namelist file :                                                              !
+! Integration parameters                                                       !
+!                                                                              !
+!------------------------------------------------------------------------------!
+! Parameters of the runs of the article:                                       !
+!                                                                              !
+! A Modular Arbitrary-Order Ocean-Atmosphere Model: MAOOAM v1.0,               !
+! De Cruz, L., Demaeyer, J. and Vannitsem, S., Geoscientific Model             !
+! Development Discussions, 2016.                                               !
+! url: http://www.geosci-model-dev-discuss.net/gmd-2016-59/                    !
+! doi: 10.5194/gmd-2016-59                                                     !
+!                                                                              !
+!------------------------------------------------------------------------------!
+
+!  Time parameters
+&INT_PARAMS
+  T_TRANS = 1.D8       !  transient period (e.g. 1.D7)
+  T_RUN = 3.D8         !  length of trajectory on the attractor (e.g. 5.D8)
+  DT = 1.D-2           !  the time step
+  WRITEOUT = T         !  write out all variables every tw time units
+  TW = 100.D0           !
+&END
+
+
+! End of parameters Namelist
+
+  
+
+
+
+  

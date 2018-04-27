@@ -1,0 +1,31 @@
+!------------------------------------------------------------------------------!
+! Namelist file :                                                              !
+! Mode selection file.                                                         !
+!------------------------------------------------------------------------------!
+
+!  Number of blocs
+&NUMBLOCS
+  NBOC = 8         !  Number of oceanic blocs
+  NBATM = 4        !  Number of atmospheric blocs
+&END
+
+!  Mode selection parameters
+&MODESELECTION
+  ! Oceanic blocs
+  ! ( x block number accounts for half-integer wavenumber e.g 1 => 1/2 , 2 => 1, etc...) 
+  OMS(1,:) = 1,1
+  OMS(2,:) = 1,2
+  OMS(3,:) = 1,3
+  OMS(4,:) = 1,4
+  OMS(5,:) = 2,1
+  OMS(6,:) = 2,2
+  OMS(7,:) = 2,3
+  OMS(8,:) = 2,4
+  ! Atmospheric blocs
+  AMS(1,:) = 1,1
+  AMS(2,:) = 1,2
+  AMS(3,:) = 2,1
+  AMS(4,:) = 2,2
+&END
+
+! End of mode selection Namelist
