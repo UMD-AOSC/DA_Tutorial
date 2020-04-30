@@ -20,4 +20,11 @@ https://github.com/Climdyn/MAOOAM). This is an example of a coupled data assimil
 and 1-layer ocean), in which multiple scales must be addressed simultaneously. The code has been developed for and by the class of
 AOSC658E at the University of Maryland to study CDA.
 
-~Professor Stephen G. Penny, University of Maryland College Park
+~Professor Stephen G. Penny
+Currently: 
+Research Scientist
+NOAA Physical Sciences Laboratory (PSL) at the NOAA Earth Systems Research Laboratories (ESRL) in Boulder, CO, USA
+and
+Cooperative Institute for Research in Environmental Sciences at the University of Colorado Boulder
+
+(Formerly: Professor, University of Maryland College Park)
