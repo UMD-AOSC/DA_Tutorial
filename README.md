@@ -20,7 +20,7 @@ https://github.com/Climdyn/MAOOAM). This is an example of a coupled data assimil
 and 1-layer ocean), in which multiple scales must be addressed simultaneously. The code has been developed for and by the class of
 AOSC658E at the University of Maryland to study CDA.
 
-~Professor Stephen G. Penny
+~Stephen G. Penny
 
 Currently: 
 
