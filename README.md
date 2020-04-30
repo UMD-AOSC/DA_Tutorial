@@ -21,10 +21,15 @@ and 1-layer ocean), in which multiple scales must be addressed simultaneously. T
 AOSC658E at the University of Maryland to study CDA.
 
 ~Professor Stephen G. Penny
+
 Currently: 
+
 Research Scientist
+
 NOAA Physical Sciences Laboratory (PSL) at the NOAA Earth Systems Research Laboratories (ESRL) in Boulder, CO, USA
+
 and
+
 Cooperative Institute for Research in Environmental Sciences at the University of Colorado Boulder
 
 (Formerly: Professor, University of Maryland College Park)
