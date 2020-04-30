@@ -24,9 +24,9 @@ AOSC658E at the University of Maryland to study CDA.
 
 Currently: 
 
-Research Scientist
-NOAA Physical Sciences Laboratory (PSL) at the NOAA Earth Systems Research Laboratories (ESRL) in Boulder, CO, USA
-and
-Cooperative Institute for Research in Environmental Sciences at the University of Colorado Boulder
+Research Scientist  
+NOAA Physical Sciences Laboratory (PSL) in Boulder, CO, USA  
+and  
+Cooperative Institute for Research in Environmental Sciences at the University of Colorado Boulder  
 
 (Formerly: Professor, University of Maryland College Park)
