@@ -24,9 +24,12 @@ AOSC658E at the University of Maryland to study CDA.
 
 Currently: 
 
-Research Scientist  
-NOAA Physical Sciences Laboratory (PSL) in Boulder, CO, USA  
-and  
+Principal Research Scientist  
+[Sofar Ocean](https://www.sofarocean.com/)  
+San Francisco, CA
+
+Research Affiliate  
 Cooperative Institute for Research in Environmental Sciences at the University of Colorado Boulder  
 
-(Formerly: Professor, University of Maryland College Park)
+Visiting Professor  
+University of Maryland College Park  
