@@ -1,5 +1,8 @@
 # DA_Tutorial
-This open source project originated as a 'hands-on' tutorial for the RIKEN International School on Data Assimilation (RISDA2018).
+This open source project originated as a 'hands-on' tutorial for the RIKEN International School on Data Assimilation [RISDA2018](https://www.data-assimilation.riken.jp/risda2018/index.html).
+
+![image](https://github.com/user-attachments/assets/40190150-ef98-4fee-8b73-d7b9e8e6000b)
+
 
 The tutorial focuses on the Lorenz-63 (Lorenz 1963) model. The purpose is to assimilate observational data drawn from a 'true' driver
 system to synchronize a response system (the data assimilation system). Some of the most popular data assimilation methods are made
