@@ -27,7 +27,7 @@ AOSC658E at the University of Maryland to study CDA.
 
 Currently: 
 
-Principal Research Scientist  
+Head of Weather  
 [Sofar Ocean](https://www.sofarocean.com/)  
 San Francisco, CA
 
